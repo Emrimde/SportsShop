@@ -1,0 +1,48 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "About us";
+}
+
+<div class="container about-us mb-4">
+    <div class="row pt-3">
+        <header class="col-12 text-center display-3">
+            About us
+        </header>
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mt-4">
+                <div class="offset-lg-4 col-lg-8 col-md-12 text-center text-md-start">
+                    <p>
+                        Gym Sigma is a modern sports store designed for enthusiasts of an active lifestyle.
+                        We offer a wide range of equipment, apparel, and accessories for gym lovers, fitness
+                        enthusiasts, and endurance athletes. Our mission is to provide top-quality products that
+                        help you achieve your sports goals. We collaborate with renowned brands to ensure that everyone
+                        can find the perfect solution tailored to their needs. No matter your experience level
+                        – Gym Sigma is the place for anyone looking to train effectively and comfortably.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 mt-4 text-center">
+                <img class="company-icon-big img-fluid" src="~/images/gymsigma.png" alt="GymSigma company logo" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center pb-5">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <div class="card p-4 shadow-sm">
+                <h3 class="text-center">Zapisz się na newsletter</h3>
+                <form id="newsletterForm" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adres e-mail:</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Zapisz się</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
