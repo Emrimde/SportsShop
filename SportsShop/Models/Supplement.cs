@@ -5,8 +5,8 @@ namespace SportsShop.Models
 {
     public class Supplement
     {
-        [Key] // ✅ Oznacza 'ProductId' jako klucz główny
-        [ForeignKey("Product")] // ✅ Relacja 1:1 do Product
+        [Key] 
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
 
         public string Flavor { get; set; } = default!;

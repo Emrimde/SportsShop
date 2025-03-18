@@ -15,11 +15,11 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //var supplements = await DatabaseContext.Supplements.Where(item => item.Product.IsActive).ToListAsync();
+           
             var supplements = await DatabaseContext.Supplements
-    .Include(s => s.Product) // ✅ Dołączenie relacji Product
-    .Where(s => s.Product != null && s.Product.IsActive)
-    .ToListAsync();
+            .Include(s => s.Product) //Allows to access the Product navigation property
+            .Where(s => s.Product.IsActive)
+            .ToListAsync();
             return View(supplements);
         }
 

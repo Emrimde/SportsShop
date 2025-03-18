@@ -1,0 +1,67 @@
+﻿@using SportsShop.Models;
+@model List<Cloth>;
+
+@{
+    ViewData["Title"] = "Clothes";
+}
+
+
+<div class="container pt-4">
+    <div class="row g-4">
+
+        <div class="col-md-3 col-lg-2">
+            <form action="/" method="post">
+                <h5><label class="fw-bold" for="options">Clothes type</label></h5>
+                <select class="form-select">
+                    <option value="leggins">Leggins</option>
+                    <option value="tank-top">Tank Top</option>
+                    <option value="t-shirts">T-shirts</option>
+                </select>
+                <div>
+                    <h5><label class="fw-bold mt-3">Sex</label></h5>
+                    <select class="form-select">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="unknown">I don't know</option>
+                    </select>
+                </div>
+                <div>
+                    <h5><label class="fw-bold mt-3">Size</label></h5>
+                    <select class="form-select">
+                        <option value="xs">XS</option>
+                        <option value="s">S</option>
+                        <option value="m">M</option>
+                        <option value="l">L</option>
+                        <option value="xl">XL</option>
+                        <option value="xxl">XXL</option>
+                    </select>
+                </div>
+                <div>
+                    <h5><label class="fw-bold mt-3">Material</label></h5>
+                    <select class="form-select">
+                        <option value="cotton">Cotton</option>
+                        <option value="polyester">Poliester</option>
+                        <option value="mixed">Mixed</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-9 col-lg-10 ">
+            <div class="row g-4 mb-3">
+        @foreach (Cloth cloth in Model)
+        {
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card h-100">
+                            <img class="card-img-top" src="@Url.Content(cloth.ImagePath)" alt="@cloth.Product.Name" />
+                            <div class="card-body text-center">
+                                <h5 class="card-title">  @cloth.Product.Producer - @cloth.Product.Name</h5>
+                                <p class="card-text">@cloth.Product.Price PLN</p>
+                            </div>
+                        </div>
+                    </div>
+        }
+    </div>
+        </div>
+        </div>
+        </div>
+        
