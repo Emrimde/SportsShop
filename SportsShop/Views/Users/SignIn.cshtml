@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "Sign in";
+}
+<div class="container min-vh-100 d-flex align-items-start  justify-content-center">
+    <div class="row w-100 mt-5">
+        <div class="col-md-6 offset-md-3 bg-white p-4 rounded shadow">
+            <h2 class="text-center mb-4">Sign in</h2>
+            <form action="/register" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" required class="form-control">
+                </div>
+                <button type="submit" class="btn btn-dark text-white w-100">Register</button>
+                <div><a class="text-muted" asp-action="CreateUser">Don't have account? Register!!</a> </div>
+            </form>
+        </div>
+    </div>
+</div>
