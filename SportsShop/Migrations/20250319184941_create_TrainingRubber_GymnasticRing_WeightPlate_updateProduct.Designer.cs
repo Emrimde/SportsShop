@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportsShop.Models;
 
@@ -11,9 +12,11 @@ using SportsShop.Models;
 namespace SportsShop.Migrations
 {
     [DbContext(typeof(SportsShopDbContext))]
-    partial class SportsShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250319184941_create_TrainingRubber_GymnasticRing_WeightPlate_updateProduct")]
+    partial class create_TrainingRubber_GymnasticRing_WeightPlate_updateProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -7,6 +7,7 @@
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string Producer { get; set; } = default!;
+        public string? Code { get; set; }
 
         public int Price { get; set; }
 
