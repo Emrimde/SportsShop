@@ -1,0 +1,37 @@
+﻿@using SportsShop.ViewModels;
+@model List<DrinksViewModel>
+@{
+    ViewData["Title"] = "Drinks";
+}
+<div class="container pt-4">
+    <div class="row g-4">
+        <div class="col-md-3 col-lg-2">
+            <form action="/" method="post">
+                <h5><label class="fw-bold" for="options">Flavor</label></h5>
+                <select class="form-select">
+                    <option value="fruity">Fruity</option>
+                    <option value="tea">Tea</option>
+                    <option value="coffee">Coffee</option>
+                </select>
+            </form>
+        </div>
+
+
+        <div class="col-md-9 col-lg-10">
+            <div class="row g-4">
+                @foreach (DrinksViewModel drink in Model)
+                {
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card h-100">
+                            <img class="card-img-top" src="@Url.Content(drink.ImagePath)" alt="@drink.Name" />
+                            <div class="card-body">
+                                <h5 class="card-title">@drink.Name - @drink.Flavor</h5>
+                                <p class="card-text">@drink.Price PLN</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

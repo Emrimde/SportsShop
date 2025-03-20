@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportsShop.Models;
 
@@ -11,9 +12,11 @@ using SportsShop.Models;
 namespace SportsShop.Migrations
 {
     [DbContext(typeof(SportsShopDbContext))]
-    partial class SportsShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320131402_create_drink_model")]
+    partial class create_drink_model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,36 +154,6 @@ namespace SportsShop.Migrations
                     b.HasKey("ProductId");
 
                     b.ToTable("Clothes");
-                });
-
-            modelBuilder.Entity("SportsShop.Models.Drink", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Flavor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Volume")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VolumeUnit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("Drinks");
                 });
 
             modelBuilder.Entity("SportsShop.Models.GymnasticRing", b =>
@@ -407,17 +380,6 @@ namespace SportsShop.Migrations
                 });
 
             modelBuilder.Entity("SportsShop.Models.Cloth", b =>
-                {
-                    b.HasOne("SportsShop.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("SportsShop.Models.Drink", b =>
                 {
                     b.HasOne("SportsShop.Models.Product", "Product")
                         .WithMany()

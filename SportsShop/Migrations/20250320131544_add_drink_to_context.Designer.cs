@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportsShop.Models;
 
@@ -11,9 +12,11 @@ using SportsShop.Models;
 namespace SportsShop.Migrations
 {
     [DbContext(typeof(SportsShopDbContext))]
-    partial class SportsShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320131544_add_drink_to_context")]
+    partial class add_drink_to_context
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,10 +160,6 @@ namespace SportsShop.Migrations
                 {
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Flavor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImagePath")
                         .IsRequired()

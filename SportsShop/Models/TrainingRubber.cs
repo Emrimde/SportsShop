@@ -12,5 +12,6 @@ namespace SportsShop.Models
         public string Resistance { get; set; } = default!;
         public Product Product { get; set; } = default!;
         public string? ImagePath { get; set; } = default!;
+        
     }
 }
