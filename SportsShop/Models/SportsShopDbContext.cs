@@ -11,6 +11,9 @@ namespace SportsShop.Models
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<WeightPlate> WeightPlates { get; set; }
+        public DbSet<TrainingRubber> TrainingRubbers { get; set; }
+        public DbSet<GymnasticRing> GymnasticRings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
