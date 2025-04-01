@@ -8,7 +8,7 @@
             <h1>Account settings</h1>
             <h2>Addresses/Change Password</h2>
             <div class="mb-3">
-                <button class="btn btn-outline-dark" id="showAddressesBtn">Show addresses</button>
+                <a asp-controller="Account" asp-action="ShowAddresses" class="btn btn-outline-dark">Show addresses</a>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
             
 
             <div class="bg-white p-4 mb-3 rounded shadow">
-                <h2 class="text-center mb-4">Add Address</h2>
+                <h2 class="text-center mb-4">Add address for future orders!</h2>
                 <form asp-action="AddAddress" method="POST">
                     <div class="mb-3">
                         <label for="country" class="form-label">Country</label>
@@ -41,32 +41,31 @@
                         <input type="text" id="zipcode" asp-for="ZipCode" class="form-control">
                         <span asp-validation-for="ZipCode" class="text-danger"></span>
                     </div>
-                    <button type="submit" class="btn btn-dark text-white w-100">Add Address</button>
+                    <button type="submit" class="btn btn-dark text-white w-100">Add address</button>
                 </form>
             </div>
         </div>
 
-        <!-- Right column: Password change -->
         <div class="col-md-6 mt-4">
             <div class="bg-white p-4 mb-3 rounded shadow">
-                <h2 class="text-center mb-4">Change Password</h2>
+                <h2 class="text-center mb-4">Change password</h2>
                 <form asp-action="ChangePassword" method="POST">
                     <div class="mb-3">
-                        <label for="currentPassword" class="form-label">Current Password</label>
-                        <input type="password" id="currentPassword" name="CurrentPassword" class="form-control">
-                        <span class="text-danger" data-valmsg-for="CurrentPassword"></span>
+                        <label for="currentPassword" class="form-label">Current password</label>
+                        <input type="password"  name="CurrentPassword" class="form-control">
+                        <span class="text-danger" ></span>
                     </div>
                     <div class="mb-3">
-                        <label for="newPassword" class="form-label">New Password</label>
-                        <input type="password" id="newPassword" name="NewPassword" class="form-control">
-                        <span class="text-danger" data-valmsg-for="NewPassword"></span>
+                        <label for="newPassword" class="form-label">New password</label>
+                        <input type="password"   class="form-control">
+                        <span class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" id="confirmPassword" name="ConfirmPassword" class="form-control">
-                        <span class="text-danger" data-valmsg-for="ConfirmPassword"></span>
+                        <label for="confirmPassword" class="form-label">Confirm password</label>
+                        <input type="password" class="form-control">
+                        <span class="text-danger" ></span>
                     </div>
-                    <button type="submit" class="btn btn-dark text-white w-100">Change Password</button>
+                    <button type="submit" class="btn btn-dark text-white w-100">Change password</button>
                 </form>
             </div>
         </div>

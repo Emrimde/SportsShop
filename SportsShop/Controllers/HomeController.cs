@@ -17,37 +17,11 @@ public class HomeController : Controller
     {
         return View();
     }
-
-    public IActionResult Clothes()
-    {
-        return View();
-    }
-
-    public IActionResult Drinks()
-    {
-        return View();
-    }
-
-    public IActionResult Supplements()
-    {
-        return View();
-    }
-
-    public IActionResult Accesories()
-    {
-        return View();
-    }
-
-   
     public IActionResult AboutUs()
     {
         return View();
     }
-    
-
-
-  
-
+ 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

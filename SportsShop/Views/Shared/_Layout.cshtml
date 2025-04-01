@@ -24,7 +24,7 @@
 
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -45,7 +45,7 @@
                     <li class="nav-item mx-lg-3">
                         <a class="nav-link text-dark" asp-controller="Home" asp-action="AboutUs">About us</a>
                     </li>
-                    
+
 
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
@@ -66,7 +66,7 @@
                         <li class="nav-item mx-lg-3">
                             <a class="nav-link text-dark" asp-controller="Account" asp-action="SignIn">Sign in</a>
                         </li>
-                        <li><a class="nav-link text-dark" asp-controller="Account" asp-action="Settings">Settings</a></li>
+
                     }
 
                 </ul>

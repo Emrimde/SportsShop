@@ -127,8 +127,95 @@ namespace SportsShop.Controllers
 
             DatabaseContext.Addresses.Add(address);
             await DatabaseContext.SaveChangesAsync();
-            return RedirectToAction("Settings");
+            return RedirectToAction("ShowAddresses");
+        }
+        
+        public async Task<IActionResult> ShowAddresses()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            List<Address> addresses = await DatabaseContext.Addresses.Where(item => item.UserId == user.Id && item.IsActive).ToListAsync();
+            List<AddressViewModel> addressesViewModel = new List<AddressViewModel>();
+            foreach (Address address in addresses)
+            {
+                addressesViewModel.Add(new AddressViewModel
+                {
+                    Id = address.Id,
+                    Country = address.Country,
+                    City = address.City,
+                    Street = address.Street,
+                    ZipCode = address.ZipCode
+                });
+            }
+
+            return View(addressesViewModel);
         }
 
+        
+        public async Task<IActionResult> DeleteAddress(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            Address? address = await DatabaseContext.Addresses.FirstOrDefaultAsync(item => item.Id == id && item.UserId == user.Id);
+            if (address == null)
+            {
+                return NotFound();
+            }
+            address.IsActive = false;
+            address.DeleteDate = DateTime.Now;
+            await DatabaseContext.SaveChangesAsync();
+            return RedirectToAction("ShowAddresses");
+        }
+
+        
+        public async Task<IActionResult> EditAddress(int id)
+        {
+            Address? address = await DatabaseContext.Addresses.FirstOrDefaultAsync(item => item.Id == id);
+            if (address == null)
+            {
+                return NotFound();
+            }
+            AddressViewModel addressViewModel = new AddressViewModel
+            {
+                Id = address.Id,
+                Country = address.Country,
+                City = address.City,
+                Street = address.Street,
+                ZipCode = address.ZipCode
+            };
+            return View("EditAddress", addressViewModel);
+        }
+
+        public async Task<IActionResult> EditAddresss(AddressViewModel addressViewModel)
+        {
+
+             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            Address? address = await DatabaseContext.Addresses.FirstOrDefaultAsync(a =>  a.UserId == user.Id && a.Id == addressViewModel.Id );
+
+            if (address == null)
+            {
+                return NotFound();
+            }
+            address.Country = addressViewModel.Country;
+            address.City = addressViewModel.City;
+            address.Street = addressViewModel.Street;
+            address.ZipCode = addressViewModel.ZipCode;
+            address.EditDate = DateTime.Now;
+
+            DatabaseContext.Update(address);
+            await DatabaseContext.SaveChangesAsync();
+
+            return RedirectToAction("ShowAddresses");
+        }
     }
 }
