@@ -3,12 +3,11 @@
     public class Address
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string Country { get; set; } = default!;
         public string City { get; set; } = default!;
         public string Street { get; set; } = default!;
         public string ZipCode { get; set; } = default!;
-        public string PhoneNumber { get; set; } = default!;
         public User User { get; set; } = default!;
         public DateTime CreatedDate { get; set; } = default!;
         public DateTime? EditDate { get; set; }

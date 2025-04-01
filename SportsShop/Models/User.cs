@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace SportsShop.Models
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        public int Id { get; set; }
-        public string Email { get; set; } = default!;
-        public string PasswordHash { get; set; } = default!;
+        
         public string FirstName { get; set; } = default!;
         public string LastName { get; set; } = default!;
         public ICollection<Address> Addresses { get; set; } = new List<Address>();

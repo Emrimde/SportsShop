@@ -38,25 +38,12 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult SpringSale()
-    {
-        return View();
-    }
-
-    public IActionResult Register()
-    {
-        return View();
-    }
-
+   
     public IActionResult AboutUs()
     {
         return View();
     }
-
-    public IActionResult SignIn()
-    {
-        return View();
-    }
+    
 
 
   
