@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace SportsShop.Models
+namespace Entities.DatabaseContext
 {
     public class SportsShopDbContext : IdentityDbContext<User,UserRole,Guid>
     {
@@ -24,18 +25,6 @@ namespace SportsShop.Models
                 .Property(c => c.Price)
                 .HasPrecision(18, 2); 
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         public SportsShopDbContext(DbContextOptions<SportsShopDbContext> options) : base(options) { }
 

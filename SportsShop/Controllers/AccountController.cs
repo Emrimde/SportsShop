@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using SportsShop.DTO;
 using SportsShop.Models;
 using SportsShop.ViewModels;
+using Entities.Models;
+using Entities.DatabaseContext;
 
 namespace SportsShop.Controllers
 {

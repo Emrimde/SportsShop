@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportsShop.Models;
+using Entities.DatabaseContext; 
 
 namespace SportsShop.Views.Shared.Components
 {

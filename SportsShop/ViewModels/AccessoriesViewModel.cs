@@ -1,4 +1,5 @@
 ﻿using SportsShop.Models;
+using Entities.Models;
 
 namespace SportsShop.ViewModels
 {

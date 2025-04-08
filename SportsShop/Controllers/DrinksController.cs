@@ -2,19 +2,22 @@
 using Microsoft.EntityFrameworkCore;
 using SportsShop.Models;
 using SportsShop.ViewModels;
+using Entities.Models;
+using Entities.DatabaseContext;
+using ServiceContracts;
 
 namespace SportsShop.Controllers
 {
     public class DrinksController : Controller
     {
-        private readonly SportsShopDbContext DatabaseContext;
-        public DrinksController(SportsShopDbContext databaseContext)
+        private readonly IDrinksService _drinksService;
+        public DrinksController(IDrinksService drinksService)
         {
-            DatabaseContext = databaseContext;
+            _drinksService = drinksService;
         }
         public IActionResult Index()
         {
-            List<Drink> drinks = DatabaseContext.Drinks.Include(item => item.Product).Where(item=>item.Product.IsActive).ToList();
+            List<Drink> drinks = _drinksService.GetDrinks();
             List<DrinksViewModel> drinksViewModels = new List<DrinksViewModel>();
             foreach (Drink drink in drinks)
             {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace SportsShop.Models
+namespace Entities.Models
 {
     public class User : IdentityUser<Guid>
     {
@@ -10,7 +10,7 @@ namespace SportsShop.Models
         public string LastName { get; set; } = default!;
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
-        [ValidateNever]
+        //[ValidateNever]
         public Cart Cart { get; set; } = default!;
         public DateTime CreatedDate { get; set; } = default!;
         public DateTime? LastLoginDate { get; set; }

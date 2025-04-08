@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SportsShop.Models;
 using SportsShop.ViewModels;
+using Entities.Models;
+using Entities.DatabaseContext;
 
 namespace SportsShop.Controllers
 {

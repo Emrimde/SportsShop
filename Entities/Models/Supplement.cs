@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace SportsShop.Models
+namespace Entities.Models
 {
     public class Supplement
     {

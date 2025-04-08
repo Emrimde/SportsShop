@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SportsShop.Models;
 using Microsoft.EntityFrameworkCore;
+using Entities.Models;
+using Entities.DatabaseContext;
 
 namespace SportsShop.Controllers
 {

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SportsShop.Models;
+using Entities.DatabaseContext;
+using Entities.Models;
+using ServiceContracts;
+using Services;
 
 namespace SportsShop
 {
@@ -11,8 +14,10 @@ namespace SportsShop
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<SportsShopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            // Add services to the container.
+
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IDrinksService, DrinksService>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {
