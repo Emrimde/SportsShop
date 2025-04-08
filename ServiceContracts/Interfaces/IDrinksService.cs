@@ -1,6 +1,6 @@
 ﻿using Entities.Models;
 
-namespace ServiceContracts
+namespace ServiceContracts.Interfaces
 {
     public interface IDrinksService
     {

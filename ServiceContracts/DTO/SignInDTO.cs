@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SportsShop.ViewModels
+namespace ServiceContracts.DTO
 {
-    public class SignInViewModel
+    public class SignInDTO
     {
-        [Required(ErrorMessage ="Email is required")]
+        [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid Email")]
         public string Email { get; set; } = default!;
 

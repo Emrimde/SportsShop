@@ -2,11 +2,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
-using SportsShop.DTO;
 using SportsShop.Models;
 using SportsShop.ViewModels;
 using Entities.Models;
 using Entities.DatabaseContext;
+using ServiceContracts.DTO;
+using ServiceContracts.Interfaces;
+using System.Security.Claims;
+using System.Net;
+
+
 
 namespace SportsShop.Controllers
 {
@@ -16,12 +21,14 @@ namespace SportsShop.Controllers
         private readonly PasswordHasher<User> passwordHasher;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public AccountController(SportsShopDbContext databaseContext, UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IAccountService _accountService;
+        public AccountController(SportsShopDbContext databaseContext, UserManager<User> userManager, SignInManager<User> signInManager, IAccountService accountService)
         {
             DatabaseContext = databaseContext;
             passwordHasher = new PasswordHasher<User>();
             _userManager = userManager;
             _signInManager = signInManager;
+            _accountService = accountService;
         }
         public IActionResult SignIn()
         {
@@ -29,7 +36,7 @@ namespace SportsShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn(SignInViewModel model)
+        public async Task<IActionResult> SignIn(SignInDTO model)
         {
 
             if (!ModelState.IsValid)
@@ -38,7 +45,7 @@ namespace SportsShop.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+            var result = await _accountService.SignInAsync(model);
 
             if (result.Succeeded)
             {
@@ -54,37 +61,16 @@ namespace SportsShop.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(RegisterViewModel model)
+        public async Task<IActionResult> CreateUser(RegisterDTO model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var user = new User
-            {
-                UserName = model.FirstName + " " + model.LastName,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                CreatedDate = DateTime.Now,
-                IsActive = true
-            };
-
-            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _accountService.RegisterAsync(model);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: true);
-
-
-                var cart = new Cart
-                {
-                    UserId = user.Id,
-                    IsActive = true,
-                    CreatedDate = DateTime.UtcNow
-                };
-                DatabaseContext.Carts.Add(cart);
-                await DatabaseContext.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -110,28 +96,18 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> AddAddress(AddressDTO model)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _accountService.AddAddress(model, user);
+
+            if (result)
             {
-                return Unauthorized();
+                return RedirectToAction("ShowAddresses");
+
             }
 
-            Address address = new Address
-            {
-                UserId = user.Id,
-                Country = model.Country,
-                City = model.City,
-                Street = model.Street,
-                ZipCode = model.ZipCode,
-                CreatedDate = DateTime.Now,
-                IsActive = true
-            };
-
-            DatabaseContext.Addresses.Add(address);
-            await DatabaseContext.SaveChangesAsync();
-            return RedirectToAction("ShowAddresses");
+            return Unauthorized();
         }
-        
+
         public async Task<IActionResult> ShowAddresses()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -139,24 +115,21 @@ namespace SportsShop.Controllers
             {
                 return Unauthorized();
             }
-            List<Address> addresses = await DatabaseContext.Addresses.Where(item => item.UserId == user.Id && item.IsActive).ToListAsync();
-            List<AddressViewModel> addressesViewModel = new List<AddressViewModel>();
-            foreach (Address address in addresses)
+
+            List<Address> addresses = await _accountService.ShowAddresses(user.Id);
+            List<AddressViewModel> addressesViewModel = addresses.Select(item => new AddressViewModel()
             {
-                addressesViewModel.Add(new AddressViewModel
-                {
-                    Id = address.Id,
-                    Country = address.Country,
-                    City = address.City,
-                    Street = address.Street,
-                    ZipCode = address.ZipCode
-                });
-            }
+                Id = item.Id,
+                Country = item.Country,
+                City = item.City,
+                Street = item.Street,
+                ZipCode = item.ZipCode
+            }).ToList();
 
             return View(addressesViewModel);
         }
 
-        
+
         public async Task<IActionResult> DeleteAddress(int id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -164,21 +137,19 @@ namespace SportsShop.Controllers
             {
                 return Unauthorized();
             }
-            Address? address = await DatabaseContext.Addresses.FirstOrDefaultAsync(item => item.Id == id && item.UserId == user.Id);
-            if (address == null)
+            bool result = await _accountService.DeleteAddress(id);
+            if (!result)
             {
                 return NotFound();
             }
-            address.IsActive = false;
-            address.DeleteDate = DateTime.Now;
-            await DatabaseContext.SaveChangesAsync();
+
             return RedirectToAction("ShowAddresses");
         }
 
-        
+
         public async Task<IActionResult> EditAddress(int id)
         {
-            Address? address = await DatabaseContext.Addresses.FirstOrDefaultAsync(item => item.Id == id);
+            Address? address = await _accountService.GetAddress(id);
             if (address == null)
             {
                 return NotFound();
@@ -197,25 +168,25 @@ namespace SportsShop.Controllers
         public async Task<IActionResult> EditAddresss(AddressViewModel addressViewModel)
         {
 
-             var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Unauthorized();
             }
-            Address? address = await DatabaseContext.Addresses.FirstOrDefaultAsync(a =>  a.UserId == user.Id && a.Id == addressViewModel.Id );
+            Address? address = await _accountService.GetAddress(addressViewModel.Id);
 
             if (address == null)
             {
                 return NotFound();
             }
-            address.Country = addressViewModel.Country;
-            address.City = addressViewModel.City;
-            address.Street = addressViewModel.Street;
-            address.ZipCode = addressViewModel.ZipCode;
-            address.EditDate = DateTime.Now;
-
-            DatabaseContext.Update(address);
-            await DatabaseContext.SaveChangesAsync();
+            await _accountService.EditAddress(new AddressDTO
+            {
+                Id = addressViewModel.Id,
+                Country = addressViewModel.Country,
+                City = addressViewModel.City,
+                Street = addressViewModel.Street,
+                ZipCode = addressViewModel.ZipCode
+            });
 
             return RedirectToAction("ShowAddresses");
         }

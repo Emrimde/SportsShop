@@ -4,7 +4,7 @@ using SportsShop.Models;
 using SportsShop.ViewModels;
 using Entities.Models;
 using Entities.DatabaseContext;
-using ServiceContracts;
+using ServiceContracts.Interfaces;
 
 namespace SportsShop.Controllers
 {

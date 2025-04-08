@@ -1,8 +1,8 @@
 ﻿using SportsShop.Models;
-using ServiceContracts;
 using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using ServiceContracts.Interfaces;
 namespace Services
 {
     public class DrinksService : IDrinksService
