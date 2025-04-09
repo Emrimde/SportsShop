@@ -4,26 +4,27 @@ using SportsShop.Models;
 using SportsShop.ViewModels;
 using Entities.Models;
 using Entities.DatabaseContext;
+using ServiceContracts.Interfaces;
 
 namespace SportsShop.Controllers
 {
     public class AccessoriesController : Controller
     {
-        private readonly SportsShopDbContext DatabaseContext;
+        
+        private readonly IAccessoriesService _accesoriesService;
 
-        public AccessoriesController(SportsShopDbContext databaseContext)
+        public AccessoriesController(IAccessoriesService accessoriesService)
         {
-            DatabaseContext = databaseContext;
+            _accesoriesService = accessoriesService;
         }
 
         public async Task<IActionResult> Index()
         {
             AccessoriesViewModel accessories = new AccessoriesViewModel()
             {
-                WeightPlates = await DatabaseContext.WeightPlates.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync(),
-                GymnasticRings =await DatabaseContext.GymnasticRings.Include(item =>item.Product).Where(item => item.Product.IsActive).ToListAsync(),
-                TrainingRubbers = await DatabaseContext.TrainingRubbers.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync()
-
+                WeightPlates =await _accesoriesService.GetAllWeightPlates(),
+                GymnasticRings = await _accesoriesService.GetAllGymnasticRings(),
+                TrainingRubbers = await _accesoriesService.GetAllTrainingRubbers()
             };
             return View(accessories);
         }

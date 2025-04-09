@@ -1,24 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SportsShop.Models;
+﻿using Entities.DatabaseContext;
 using Entities.Models;
-using Entities.DatabaseContext;
+using Microsoft.AspNetCore.Mvc;
+using ServiceContracts.Interfaces;
 
 namespace SportsShop.Controllers
 {
     public class ClothesController : Controller
     {
-        private readonly SportsShopDbContext DatabaseContext;
+        private readonly IClothesService _clothesService;
 
-        public ClothesController(SportsShopDbContext databaseContext)
+        public ClothesController(SportsShopDbContext databaseContext,IClothesService clothesService)
         {
-            DatabaseContext = databaseContext;
+            _clothesService = clothesService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var clothes = await DatabaseContext.Clothes.Include(item => item.Product)
-                .Where(item => item.Product.IsActive).ToListAsync();
+            List<Cloth> clothes = await _clothesService.GetAllClothes();
             return View(clothes);
         }
     }

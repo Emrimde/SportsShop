@@ -8,7 +8,7 @@
             <h1>Account settings</h1>
             <h2>Addresses/Change Password</h2>
             <div class="mb-3">
-                <a asp-controller="Account" asp-action="ShowAddresses" class="btn btn-outline-dark">Show addresses</a>
+                <a asp-controller="Address" asp-action="ShowAddresses" class="btn btn-outline-dark">Show addresses</a>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
 
             <div class="bg-white p-4 mb-3 rounded shadow">
                 <h2 class="text-center mb-4">Add address for future orders!</h2>
-                <form asp-action="AddAddress" method="POST">
+                <form asp-controller="Address" asp-action="AddAddress" method="POST">
                     <div class="mb-3">
                         <label for="country" class="form-label">Country</label>
                         <input type="text" id="country" asp-for="Country" class="form-control">

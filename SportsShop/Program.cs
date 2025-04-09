@@ -13,12 +13,16 @@ namespace SportsShop
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<SportsShopDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IDrinksService, DrinksService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IAccessoriesService, AccessoriesService>();
+            builder.Services.AddScoped<ISupplementsService, SupplementsService>();
+            builder.Services.AddScoped<IClothesService, ClothesService>();
+            builder.Services.AddScoped<IAddressesService, AddressesService>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {
