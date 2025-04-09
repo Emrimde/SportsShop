@@ -5,6 +5,7 @@ namespace SportsShop.ViewModels
 {
     public class AccessoriesViewModel
     {
+        
         public List<WeightPlate> WeightPlates { get; set; } = default!;
         public List<GymnasticRing> GymnasticRings { get; set; } = default!;
         public List<TrainingRubber> TrainingRubbers { get; set;} = default!;

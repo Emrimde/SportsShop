@@ -4,6 +4,7 @@ namespace SportsShop.ViewModels
 {
     public class DrinksViewModel
     {
+        public int Id { get; set; }
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string Producer { get; set; } = default!;

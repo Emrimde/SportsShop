@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entities.Models;
+﻿using Entities.Models;
 
 namespace ServiceContracts.Interfaces
 {
@@ -12,5 +7,11 @@ namespace ServiceContracts.Interfaces
         Task<List<WeightPlate>> GetAllWeightPlates();
         Task<List<GymnasticRing>> GetAllGymnasticRings();
         Task<List<TrainingRubber>> GetAllTrainingRubbers();
+        Task<WeightPlate> GetWeightPlate(int id);
+        Task<GymnasticRing> GetGymnasticRing(int id);
+        Task<TrainingRubber> GetTrainingRubber(int id);
+
+        Task<dynamic> GetObject(int id);
+
     }
 }

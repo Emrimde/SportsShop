@@ -24,5 +24,10 @@ namespace Services
         {
            return await _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
         }
+
+        public async Task<Cloth?> GetCloth(int id)
+        {
+           return await _context.Clothes.Include(item=> item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+        }
     }
 }

@@ -26,13 +26,14 @@ namespace SportsShop
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {
-                options.User.RequireUniqueEmail = true;
-                options.Lockout.MaxFailedAccessAttempts = 4;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+               // options.User.RequireUniqueEmail = true;
+                //options.Lockout.MaxFailedAccessAttempts = 4;
+                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 3;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
+                
             })
                 .AddEntityFrameworkStores<SportsShopDbContext>()
                 .AddDefaultTokenProviders();

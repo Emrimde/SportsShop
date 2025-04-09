@@ -4,6 +4,7 @@ namespace ServiceContracts.Interfaces
 {
     public interface IDrinksService
     {
-        List<Drink> GetDrinks();
+        Task<List<Drink>> GetDrinks();
+        Task<Drink> GetDrink(int id);
     }
 }

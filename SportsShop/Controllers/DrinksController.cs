@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SportsShop.Models;
-using SportsShop.ViewModels;
-using Entities.Models;
-using Entities.DatabaseContext;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.Interfaces;
+using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
@@ -15,14 +12,15 @@ namespace SportsShop.Controllers
         {
             _drinksService = drinksService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Drink> drinks = _drinksService.GetDrinks();
+            List<Drink> drinks =await _drinksService.GetDrinks();
             List<DrinksViewModel> drinksViewModels = new List<DrinksViewModel>();
             foreach (Drink drink in drinks)
             {
                 drinksViewModels.Add(new DrinksViewModel()
                 {
+                    Id = drink.ProductId,
                     Code = drink.Product.Code ?? "Code hidden",
                     Description = drink.Product.Description,
                     Name = drink.Product.Name,
@@ -37,6 +35,27 @@ namespace SportsShop.Controllers
             }
 
             return View(drinksViewModels);
+        }
+        public async Task<IActionResult> ShowDrink(int id)
+        {
+            Drink? drink = await _drinksService.GetDrink(id);
+            if (drink == null)
+            {
+                return NotFound();
+            }
+            DrinksViewModel drinkViewModel = new DrinksViewModel()
+            {
+                Id = drink.ProductId,
+                Description = drink.Product.Description,
+                Name = drink.Product.Name,
+                Price = drink.Product.Price,
+                Producer = drink.Product.Producer,
+                Volume = drink.Volume,
+                VolumeUnit = drink.VolumeUnit,
+                ImagePath = drink.ImagePath,
+                Flavor = drink.Flavor
+            };
+            return View(drinkViewModel);
         }
     }
 }

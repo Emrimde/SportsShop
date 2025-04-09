@@ -13,10 +13,19 @@ namespace Services
         {
             _context = context;
         }
-
-        public List<Drink> GetDrinks()
+        public async Task<Drink> GetDrink(int id)
         {
-            return _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).ToList();
+            Drink? drink = await _context.Drinks.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+            if (drink == null)
+            {
+                return null!;
+            }
+            return drink;
+        }
+
+        public async Task<List<Drink>> GetDrinks()
+        {
+            return await _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
         }
     }
 }

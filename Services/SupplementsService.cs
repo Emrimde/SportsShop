@@ -23,5 +23,15 @@ namespace Services
         {
             return await _context.Supplements.Include(item => item.Product).Where(item=> item.Product.IsActive).ToListAsync();
         }
+
+        public async Task<Supplement> GetSupplement(int id)
+        {
+            Supplement? supplement = await _context.Supplements.Include(item=>item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+            if (supplement == null)
+            {
+                return null!;
+            }
+            return supplement;
+        }
     }
 }

@@ -31,78 +31,12 @@ namespace Services
             _signInManager = signInManager;
         }
 
-        //public async Task<bool> AddAddress(AddressDTO model, string UserId)
-        //{
-        //    User? user = await _userManager.FindByIdAsync(UserId.ToString());
-
-        //    if (user == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    Address address = new Address
-        //    {
-        //        UserId = user.Id,
-        //        Country = model.Country,
-        //        City = model.City,
-        //        Street = model.Street,
-        //        ZipCode = model.ZipCode,
-        //        CreatedDate = DateTime.Now,
-        //        IsActive = true
-        //    };
-
-        //    _context.Addresses.Add(address);
-        //    await _context.SaveChangesAsync();
-        //    return true;
-        //}
-
-        //public async Task<bool> DeleteAddress(int id)
-        //{
-        //    Address? address = await _context.Addresses.FindAsync(id);
-        //    if (address == null)
-        //    {
-        //        return false;
-        //    }
-        //    address.IsActive = false;
-        //    address.DeleteDate = DateTime.UtcNow;
-        //    await _context.SaveChangesAsync();
-        //    return true;
-        //}
-
-        //public async Task<bool> EditAddress(AddressDTO model)
-        //{
-        //    Address? address = await GetAddress(model.Id);
-        //    if (address == null)
-        //    {
-        //        return false;
-        //    }
-        //    address.Country = model.Country;
-        //    address.City = model.City;
-        //    address.Street = model.Street;
-        //    address.ZipCode = model.ZipCode;
-        //    address.EditDate = DateTime.UtcNow;
-        //    _context.Addresses.Update(address);
-        //    await _context.SaveChangesAsync();
-        //    return true;
-        //}
-
-        //public async Task<Address> GetAddress(int id)
-        //{
-        //    Address? address = await _context.Addresses.FirstOrDefaultAsync(item => item.Id == id);
-        //    if (address == null)
-        //    {
-        //        return null!;
-        //    }
-        //    return address;
-
-
-        //}
 
         public async Task<IdentityResult> RegisterAsync(RegisterDTO model)
         {
             var user = new User
             {
-                UserName = model.FirstName + " " + model.LastName,
+                UserName = model.FirstName,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,

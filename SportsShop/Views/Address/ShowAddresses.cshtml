@@ -3,11 +3,12 @@
     ViewData["Title"] = "Addresses";
 }
 
-<div class="container pt-4">
+<div class="container pt-4 min-vh-100 d-flex flex-column">
     <div class="row">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            
         @foreach (var item in Model)
         {
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">@item.City</h5>
@@ -21,8 +22,9 @@
                         <a asp-controller="Address" asp-action="EditAddress" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
                         <a asp-controller="Address" asp-action="DeleteAddress" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
                     </div>
-                </div>
             </div>
+              
         }
+        </div>
     </div>
 </div>

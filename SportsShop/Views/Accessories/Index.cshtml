@@ -4,7 +4,7 @@
     ViewData["Title"] = "Accessories";
 }
 
-<div class="container pt-4">
+<div class="container pt-4 pb-4">
     <div class="row g-4">
         <div class="col-md-3 col-lg-2">
             <form action="/" method="post">
@@ -22,11 +22,13 @@
                 {
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card h-100">
+                            <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.Data.ProductId" asp-route-type="@accessory.Data.GetType().Name">
                             <img class="card-img-top" src="@Url.Content(accessory.Data.ImagePath)" alt="@accessory.Data.Product.Name" />
                             <div class="card-body">
                                 <h5 class="card-title">@accessory.Data.Product.Name</h5>
                                 <p class="card-text">@accessory.Data.Product.Price</p>
                             </div>
+                            </a>
                         </div>
                     </div>
 

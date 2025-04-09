@@ -29,11 +29,13 @@
                 {
                     <div class="col-12 col-sm-6 col-md-4 mb-3">
                         <div class="card h-100">
+                            <a style="text-decoration:none; display:block; color:black;" asp-controller="Supplements" asp-action="ShowSupplement" asp-route-id="@item.ProductId">
                             <img class="card-img-top" src="@(Url.Content(item.ImagePath))" alt="@item.Product.Name" />
                             <div class="card-body text-center">
                                 <h5 class="card-title">@item.Product.Name - @item.Weight </h5>
                                 <p class="card-text">@item.Product.Price </p>
                             </div>
+                            </a>
                         </div>
                     </div>
                 }

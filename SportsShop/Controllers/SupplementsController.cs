@@ -1,6 +1,7 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.Interfaces;
+using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
@@ -15,9 +16,28 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-           
+
             List<Supplement> supplements = await _supplementsService.GetAllSupplements();
             return View(supplements);
+        }
+
+        public async Task<IActionResult> ShowSupplement(int id)
+        {
+            Supplement? supplement = await _supplementsService.GetSupplement(id);
+            if (supplement == null)
+            {
+                return NotFound();
+            }
+            SupplementsViewModel supplementViewModel = new SupplementsViewModel()
+            {
+                Id = supplement.ProductId,
+                Description = supplement.Product.Description,
+                Name = supplement.Product.Name,
+                Price = supplement.Product.Price,
+                ImagePath = supplement.ImagePath,
+                Weight = supplement.Weight
+            };
+            return View(supplementViewModel);
         }
     }
 }

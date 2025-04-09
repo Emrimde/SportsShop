@@ -1,8 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SportsShop.Models;
-using Entities.Models;
-using Entities.DatabaseContext;
+using System.Diagnostics;
 
 namespace SportsShop.Controllers;
 

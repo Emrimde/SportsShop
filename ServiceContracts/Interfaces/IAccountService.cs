@@ -1,12 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceContracts.DTO;
-using Entities.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceContracts.Interfaces
 {

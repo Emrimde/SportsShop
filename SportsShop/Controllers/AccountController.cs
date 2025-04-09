@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO;
 using ServiceContracts.Interfaces;
-using SportsShop.ViewModels;
-using System.Security.Claims;
 
 namespace SportsShop.Controllers
 {

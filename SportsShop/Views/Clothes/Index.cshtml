@@ -52,11 +52,13 @@
         {
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card h-100">
+                             <a style="text-decoration:none; display:block; color:black;" asp-controller="Clothes" asp-action="ShowCloth" asp-route-id="@cloth.ProductId">
                             <img class="card-img-top" src="@Url.Content(cloth.ImagePath)" alt="@cloth.Product.Name" />
                             <div class="card-body text-center">
                                 <h5 class="card-title">  @cloth.Product.Producer - @cloth.Product.Name</h5>
                                 <p class="card-text">@cloth.Product.Price PLN</p>
                             </div>
+                            </a>
                         </div>
                     </div>
         }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entities.DatabaseContext
 {
-    public class SportsShopDbContext : IdentityDbContext<User,UserRole,Guid>
+    public class SportsShopDbContext : IdentityDbContext<User, UserRole, Guid>
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Cloth> Clothes { get; set; }
@@ -23,7 +23,7 @@ namespace Entities.DatabaseContext
 
             modelBuilder.Entity<CartItem>()
                 .Property(c => c.Price)
-                .HasPrecision(18, 2); 
+                .HasPrecision(18, 2);
         }
 
         public SportsShopDbContext(DbContextOptions<SportsShopDbContext> options) : base(options) { }

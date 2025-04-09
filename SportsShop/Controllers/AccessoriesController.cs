@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SportsShop.Models;
-using SportsShop.ViewModels;
-using Entities.Models;
-using Entities.DatabaseContext;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.Interfaces;
+using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
@@ -27,6 +24,29 @@ namespace SportsShop.Controllers
                 TrainingRubbers = await _accesoriesService.GetAllTrainingRubbers()
             };
             return View(accessories);
+        }
+        public async Task<IActionResult> ShowAccessory(int id, string type)
+        {
+            
+            
+            if (type == "GymnasticRing")
+            {
+                GymnasticRing? gymnasticRing = await _accesoriesService.GetGymnasticRing(id);
+                return View("ShowGymnasticRing",gymnasticRing);
+            }
+            else if (type == "TrainingRubber")
+            {
+                TrainingRubber? trainingRubber = await _accesoriesService.GetTrainingRubber(id);
+                return View("ShowTrainingRubber",trainingRubber);
+            }
+            else if (type == "WeightPlate")
+            {
+                WeightPlate? weightPlate = await _accesoriesService.GetWeightPlate(id);
+                return View("ShowWeightPlate",weightPlate);
+            }
+
+            return NotFound();
+
         }
     }
 }
