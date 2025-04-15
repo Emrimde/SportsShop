@@ -1,0 +1,142 @@
+﻿@model List<CartItemViewModel>
+@{
+    ViewBag.Title = "Shopping Cart";
+
+}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <h2 class="mb-4">@ViewBag.Title</h2>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center" role="alert">
+                    Twój koszyk jest pusty.
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="row align-items-center py-3 border-bottom">
+
+                        <div class="col-3 col-md-2">
+                            @* @if (!string.IsNullOrEmpty(item.Product.ImagePath)) *@
+                            @* { *@
+                            @*     <img src="@Url.Content(item.Product.ImagePath)" *@
+                            @*          alt="@item.Product.Name" *@
+                            @*          class="img-fluid rounded" /> *@
+                            @* } *@
+                            @* else *@
+                            @* { *@
+                            <img src="https://via.placeholder.com/150"
+                            alt="Placeholder"
+                            class="img-fluid rounded" />
+                            @* } *@
+                        </div>
+
+                        <div class="col-9 col-md-4">
+                            <h5 class="mb-1"><a asp-controller="Product" asp-action="Index" asp-route-type="@item.Type" asp-route-id="@item.ProductId">@item.ProductName</a></h5>
+                            <small class="text-muted">@item.Producer</small>
+                            <div>
+                                <small>@item.ProductDescription</small>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6 col-md-2 text-right mt-3 mt-md-0">
+                            <strong>@item.Price zł</strong>
+                        </div>
+
+                        <div class="col-6 col-md-2 text-right mt-3 mt-md-0">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <form asp-action="UpdateQuantity"
+                                asp-controller="Cart"
+                                asp-route-id="@item.Id"
+                                method="post"
+                                class="form-inline">
+                                    @* <input type="hidden" name="cartItemId" value="@item.Id" /> *@
+                                    <input type="number"
+                                    name="quantity"
+                                    value="@item.Quantity"
+                                    min="1"
+                                    class="form-control w-75"
+                                    style="max-width: 70px;"
+                                    onchange="this.form.submit()" />
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-2 text-right mt-3 mt-md-0">
+                            <a asp-action="RemoveFromCart"
+                            asp-controller="Cart"
+                            asp-route-id="@item.Id"
+                            class="btn btn-dark"
+                            style="color: #fff;">
+                                Usuń
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="p-4 border rounded" style="background-color: #fff;">
+                <h4 class="mb-3">Summary</h4>
+
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Products:</span>
+                    <strong>
+                        @ViewBag.TotalCost zł
+                    </strong>
+                </div>
+
+                @* @{ *@
+                @*     var productsSum = Model.Sum(ci => ci.Product.Price * ci.Quantity); *@
+                @*     decimal shippingCost = productsSum >= 200 ? 0 : 13.50M; *@
+                @* } *@
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Wysyłka:</span>
+                    <strong>13.50 zł</strong>
+                </div>
+
+                <hr />
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Do zapłaty:</span>
+
+                    <strong>@ViewBag.TotalCost zł</strong>
+                </div>
+                // ja tutaj chce sprawdzac kupon
+                <div class="input-group mb-3">
+                    <form asp-action="Index" method="get">
+                        <input type="text" name="coupon" class="form-control" placeholder="Wpisz kod rabatowy" />
+                        <div class="input-group-append">
+                            <button class="btn btn-dark mt-2" style="color: #fff;" type="submit">Activate</button>
+                        </div>
+                    </form>
+                        @if (ViewBag.CouponMessage == true)
+                        {
+
+                            <div class="alert alert-success" role="alert">
+                                Kupon rabatowy @ViewBag.CouponMessage został aktywowany!
+                            </div>
+                        }
+
+                    
+                    
+                    
+                </div>
+
+                <a asp-action="Checkout"
+                   asp-controller="Cart"
+                   class="btn btn-dark btn-block"
+                   style="color: #fff;">
+                    Przejdź do kasy
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

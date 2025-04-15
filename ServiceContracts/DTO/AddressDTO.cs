@@ -3,7 +3,6 @@
 namespace ServiceContracts.DTO
 {
     public class AddressDTO
-
     {
         public int Id { get; set; }
 

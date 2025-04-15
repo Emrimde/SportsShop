@@ -15,20 +15,22 @@
             <p class="mb-4">
                 @Model.Product.Description
             </p>
-            <button class="btn btn-dark btn-lg mb-4" type="button">
-                Add to Cart
-            </button>
-            <div class="row">
-                <div class="col-6 mb-3">
-                    <h5>Choose Quantity</h5>
-                    <select class="form-control w-50">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                    </select>
+            <form asp-controller="Cart" asp-action="AddToCart" asp-route-id=@Model.Product.Id asp-route-type="TrainingRubber" method="post">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <h5>Choose Quantity</h5>
+                        <select name="quantity" class="form-control w-50">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
+                        <button type="submit" class="btn btn-dark btn-lg mb-4">
+                            Add to Cart
+                        </button>
+            </form>
         </div>
     </div>
 </div>

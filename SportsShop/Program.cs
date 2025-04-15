@@ -13,7 +13,7 @@ namespace SportsShop
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<SportsShopDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("Entities")));
 
             builder.Services.AddControllersWithViews();
 
@@ -23,6 +23,7 @@ namespace SportsShop
             builder.Services.AddScoped<ISupplementsService, SupplementsService>();
             builder.Services.AddScoped<IClothesService, ClothesService>();
             builder.Services.AddScoped<IAddressesService, AddressesService>();
+            builder.Services.AddScoped<ICartService, CartService>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {

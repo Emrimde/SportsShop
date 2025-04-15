@@ -2,6 +2,7 @@
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using ServiceContracts.DTO;
 using ServiceContracts.Interfaces;
 
@@ -44,7 +45,6 @@ namespace Services
             await _context.SaveChangesAsync();
             return true;
         }
-
         public async Task<bool> DeleteAddress(int id)
         {
             Address? address = await _context.Addresses.FindAsync(id);
