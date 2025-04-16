@@ -16,6 +16,7 @@ namespace Entities.DatabaseContext
         public DbSet<TrainingRubber> TrainingRubbers { get; set; }
         public DbSet<GymnasticRing> GymnasticRings { get; set; }
         public DbSet<Drink> Drinks { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

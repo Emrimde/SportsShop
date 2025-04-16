@@ -1,72 +1,66 @@
-﻿@{
+﻿@model CheckoutViewModel
+@{
     ViewBag.Title = "Checkout";
 }
 
 <div class="container py-4" style="max-width:1200px;">
-    <!-- Section: Delivery -->
     <div class="row">
         <div class="col-md-8">
-            <!-- Header / Info about free shipping -->
             <h2 class="mb-3 fw-bold" style="color: #333;">Delivery</h2>
             <p class="text-muted" style="font-size: 0.9rem;">
                 Free shipping from $300. If your order is at least $70, shipping can also be discounted.
             </p>
 
-            <!-- Country Selection -->
             <div class="mb-4">
-                <label for="countrySelect" class="form-label fw-semibold" style="color: #333;">Select country</label>
+                <label for="countrySelect" class="form-label fw-semibold" style="color: #333;">Select Address</label>
                 <select class="form-select" id="countrySelect">
-                    <option selected>Poland</option>
-                    <option>Germany</option>
-                    <option>France</option>
-                    <option>United States</option>
+                    @if (Model.Addresses.Count == 0)
+                    {
+                        <option>No addresses saved</option>
+                    }
+                    else
+                    {
+                        @foreach (var address in Model.Addresses)
+                        {
+                            <option>@address.Street</option>
+                        }
+                    }
+
+
+
                 </select>
             </div>
 
-            <!-- Shipping Methods -->
             <div class="mb-4">
                 <h5 class="fw-bold" style="color: #333;">Shipping Methods</h5>
 
-                <!-- Option 1 -->
                 <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" name="shippingMethod" id="shippingMethod1" checked>
-                    <label class="form-check-label" for="shippingMethod1" style="color: #333;">
-                        GLS - Door-to-door delivery for packages up to 30kg
-                    </label>
-                    <p class="text-muted ms-4" style="font-size: 0.9rem;">Cost: $10.00</p>
+                    <form asp-action="GetShippingCost">
+                        
+                        @foreach (Supplier supplier in Model.Suppliers)
+                    { 
+                            <input onchange="this.form.submit()" class="form-check-input" type="radio" name="supplierId" value="@supplier.Id">
+                        @* <input type="hidden" name="supplierId" value="@supplier.Id" /> *@
+                        <label class="form-check-label" for="shippingMethod1" style="color: #333;">
+                            @supplier.Name
+                        </label>
+                        <p class="text-muted ms-4" style="font-size: 0.9rem;">Cost: $@supplier.Price</p>
+                    }
+
+                    </form>
                 </div>
 
-                <!-- Option 2 -->
-                <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" name="shippingMethod" id="shippingMethod2">
-                    <label class="form-check-label" for="shippingMethod2" style="color: #333;">
-                        InPost Parcel Locker 24/7
-                    </label>
-                    <p class="text-muted ms-4" style="font-size: 0.9rem;">Cost: $8.00</p>
-                </div>
-
-                <!-- Option 3 -->
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shippingMethod" id="shippingMethod3">
-                    <label class="form-check-label" for="shippingMethod3" style="color: #333;">
-                        Same-day Warsaw
-                    </label>
-                    <p class="text-muted ms-4" style="font-size: 0.9rem;">Delivery within the same day in Warsaw for orders placed before noon</p>
-                </div>
             </div>
 
-            <!-- Payment Method -->
             <div class="mb-4">
                 <h5 class="fw-bold" style="color: #333;">Payment</h5>
-                <!-- Option 1 -->
+
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethod1" checked>
                     <label class="form-check-label" for="paymentMethod1" style="color: #333;">
                         PayPal Express Checkout
                     </label>
                 </div>
-
-                <!-- Option 2 -->
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethod2">
                     <label class="form-check-label" for="paymentMethod2" style="color: #333;">
@@ -76,16 +70,18 @@
             </div>
         </div>
 
-        <!-- Section: Cart Summary -->
         <div class="col-md-4">
             <div class="border p-3" style="background-color: #f9f9f9; border-radius:4px;">
                 <h3 class="fw-bold mb-4" style="color: #333;">Your Cart</h3>
 
-                <!-- Example cart item -->
+                    @foreach (CartItem cartItem in Model.CartItems)
+                    {
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span style="color: #333;">Premium Whey Bar</span>
-                    <span style="color: #333;">$90.00</span>
+                        <div><span style="color: #333;">@cartItem.Product.Name</span></div>
+                        <span style="color: #333;">$@cartItem.Product.Price</span>
+                        <span style="color: #333;">Quantity: @cartItem.Quantity</span>
                 </div>
+                    }
                 <hr>
 
                 <!-- Discount Code -->
@@ -97,24 +93,21 @@
                 @*     </div> *@
                 @* </div> *@
 
-                <!-- Subtotal and Shipping -->
                 <div class="d-flex justify-content-between align-items-center">
                     <span style="color: #333;">Subtotal</span>
-                    <span style="color: #333;">$90.00</span>
+                    <span style="color: #333;">$@Model.ItemsPrice</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <span style="color: #333;">Shipping</span>
-                    <span style="color: #333;">$0.00</span>
+                    <span style="color: #333;">$@Model.ShippingCost</span>
                 </div>
                 <hr>
 
-                <!-- Total -->
                 <div class="d-flex justify-content-between align-items-center mb-3 fw-bold">
                     <span style="color: #333;">Total</span>
-                    <span style="color: #333;">$90.00</span>
+                    <span style="color: #333;">$@Model.TotalCost</span>
                 </div>
 
-                <!-- Place Order Button -->
                 <button class="btn w-100" style="background-color: #FFC107; color: #333; font-weight:600;">
                     Place Order
                 </button>

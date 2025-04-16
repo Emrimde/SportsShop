@@ -24,6 +24,7 @@ namespace SportsShop
             builder.Services.AddScoped<IClothesService, ClothesService>();
             builder.Services.AddScoped<IAddressesService, AddressesService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<ISupplierService, SupplierService>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {

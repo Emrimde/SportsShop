@@ -10,10 +10,14 @@ namespace SportsShop.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ICartService _cartService;
-        public CartController(UserManager<User> userManager, ICartService cartService)
+        private readonly IAddressesService _addressesService;
+        private readonly ISupplierService _supplierService;
+        public CartController(UserManager<User> userManager, ICartService cartService, IAddressesService addressesService, ISupplierService supplierService)
         {
             _userManager = userManager;
             _cartService = cartService;
+            _addressesService = addressesService;
+            _supplierService = supplierService;
         }
 
         [HttpGet]
@@ -23,8 +27,6 @@ namespace SportsShop.Controllers
             if (coupon == "PROMO2025")
             {
                 ViewBag.CouponMessage = true;
-                
-                // Możesz zapisać informację o aktywnym kuponie do sesji lub przekazać do widoku jako część ViewModelu
             }
 
             string? user = _userManager.GetUserId(User);
@@ -40,7 +42,7 @@ namespace SportsShop.Controllers
                 {
                     Id = item.Id,
                     Quantity = item.Quantity,
-                    Price =(int) item.Price,
+                    Price = (int)item.Price,
                     ProductName = item.Product.Name,
                     ProductDescription = item.Product.Description,
                     Producer = item.Product.Producer,
@@ -48,12 +50,12 @@ namespace SportsShop.Controllers
                     Type = item.Type!,
 
                 });
-                
+
             }
-            //ViewBag.CouponMessage = "";
+            
             ViewBag.TotalCost = totalCost;
 
-            
+
 
             return View(cartItemViewModel);
         }
@@ -64,7 +66,7 @@ namespace SportsShop.Controllers
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
 
-            bool result = await _cartService.AddToCart(id, user, quantity,type);
+            bool result = await _cartService.AddToCart(id, user, quantity, type);
             if (!result)
                 return NotFound("Product not found");
 
@@ -72,12 +74,12 @@ namespace SportsShop.Controllers
         }
         public async Task<IActionResult> RemoveFromCart(int id)
         {
-            string userId = _userManager.GetUserId(User);
+            string userId = _userManager.GetUserId(User)!;
             if (userId == null)
             {
                 return RedirectToAction("SignIn", "Account");
             }
-             bool ok =await _cartService.RemoveFromCart(id, userId);
+            bool ok = await _cartService.RemoveFromCart(id, userId);
             return RedirectToAction("Index");
 
         }
@@ -90,10 +92,37 @@ namespace SportsShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult Checkout()
+        public async Task<IActionResult> Checkout(string? coupon,decimal shippingCost)
         {
-            return View();
+            User? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("SignIn", "Account");
+            ViewBag.CouponMessage = false;
+            if (coupon == "PROMO2025")
+            {
+                ViewBag.CouponMessage = true;
+
+               
+            }
+            CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
+            checkoutViewModel.Addresses = await _addressesService.ShowAddresses(user.Id);
+            checkoutViewModel.Suppliers = await _supplierService.GetAllSuppliers();
+            checkoutViewModel.CartItems = await _cartService.GetCartItems(user.Id.ToString());
+            int itemsPrice = _cartService.GetTotalCost(checkoutViewModel.CartItems, ViewBag.CouponMessage);
+            checkoutViewModel.ItemsPrice = itemsPrice;
+            if(shippingCost == 0m || itemsPrice >= 300m)
+            {
+                checkoutViewModel.ShippingCost = 0m;
+            }
+            checkoutViewModel.ShippingCost = shippingCost;
+            checkoutViewModel.TotalCost = itemsPrice + shippingCost;
+            return View(checkoutViewModel);
         }
-        
+
+        public async Task<IActionResult> GetShippingCost(int supplierId)
+        {
+            decimal shippingCost = await _supplierService.GetSupplierPriceById(supplierId);
+            return RedirectToAction("Checkout", new {shippingCost = shippingCost});
+        }
     }
 }

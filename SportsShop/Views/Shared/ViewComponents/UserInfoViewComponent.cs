@@ -17,10 +17,6 @@ namespace SportsShop.Views.Shared.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             int? userId = HttpContext.Session.GetInt32("User");
-
-
-            //User? user = userId.HasValue ? await DatabaseContext.Users.FindAsync(userId) : null;
-            //return View("Default",user);
             return View("Default");
 
 
