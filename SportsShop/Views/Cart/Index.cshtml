@@ -109,7 +109,7 @@
 
                     <strong>@ViewBag.TotalCost zł</strong>
                 </div>
-                // ja tutaj chce sprawdzac kupon
+
                 <div class="input-group mb-3">
                     <form asp-action="Index" method="get">
                         <input type="text" name="coupon" class="form-control" placeholder="Wpisz kod rabatowy" />
@@ -117,25 +117,28 @@
                             <button class="btn btn-dark mt-2" style="color: #fff;" type="submit">Activate</button>
                         </div>
                     </form>
-                        @if (ViewBag.CouponMessage == true)
-                        {
+                    @if (ViewBag.CouponMessage == true)
+                    {
 
-                            <div class="alert alert-success" role="alert">
-                                Kupon rabatowy @ViewBag.CouponMessage został aktywowany!
-                            </div>
-                        }
+                        <div class="alert alert-success" role="alert">
+                            Kupon rabatowy @ViewBag.CouponMessage został aktywowany!
+                        </div>
+                    }
 
-                    
-                    
-                    
+
+
+
                 </div>
-
+                @if(Model.Count > 0)
+                {
                 <a asp-action="Checkout"
                    asp-controller="Cart"
                    class="btn btn-dark btn-block"
                    style="color: #fff;">
                     Przejdź do kasy
                 </a>
+                    
+                }
             </div>
         </div>
     </div>

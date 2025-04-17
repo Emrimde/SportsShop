@@ -34,6 +34,11 @@ namespace SportsShop.Controllers
                 return RedirectToAction("SignIn", "Account");
 
             var cartItems = await _cartService.GetCartItems(user);
+
+            //if(cartItems.Count == 0)
+            //{
+
+            //}
             int totalCost = _cartService.GetTotalCost(cartItems, ViewBag.CouponMessage);
             List<CartItemViewModel> cartItemViewModel = new List<CartItemViewModel>();
             foreach (var item in cartItems)
@@ -92,18 +97,22 @@ namespace SportsShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Checkout(string? coupon,decimal shippingCost)
+        public async Task<IActionResult> Checkout(string? coupon,decimal shippingCost, int? supplierId)
         {
+            //if(checkoutFromForm.SupplierId != null)
+            //{
+            //    return View(checkoutFromForm);
+            //}
             User? user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
+
             ViewBag.CouponMessage = false;
             if (coupon == "PROMO2025")
             {
                 ViewBag.CouponMessage = true;
-
-               
             }
+
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
             checkoutViewModel.Addresses = await _addressesService.ShowAddresses(user.Id);
             checkoutViewModel.Suppliers = await _supplierService.GetAllSuppliers();
@@ -116,13 +125,14 @@ namespace SportsShop.Controllers
             }
             checkoutViewModel.ShippingCost = shippingCost;
             checkoutViewModel.TotalCost = itemsPrice + shippingCost;
+            checkoutViewModel.SupplierId = supplierId;
             return View(checkoutViewModel);
         }
 
         public async Task<IActionResult> GetShippingCost(int supplierId)
         {
             decimal shippingCost = await _supplierService.GetSupplierPriceById(supplierId);
-            return RedirectToAction("Checkout", new {shippingCost = shippingCost});
+            return RedirectToAction("Checkout", new {shippingCost = shippingCost, supplierId = supplierId });
         }
     }
 }

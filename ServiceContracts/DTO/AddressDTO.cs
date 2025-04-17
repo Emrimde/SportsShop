@@ -4,7 +4,7 @@ namespace ServiceContracts.DTO
 {
     public class AddressDTO
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required(ErrorMessage = "Country is required")]
         public string Country { get; set; } = default!;

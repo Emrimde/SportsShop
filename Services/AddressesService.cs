@@ -21,13 +21,13 @@ namespace Services
             _context = dbContext;
             _userManager = userManager;
         }
-        public async Task<bool> AddAddress(AddressDTO model, string UserId)
+        public async Task<int> AddAddress(AddressDTO model, string UserId)
         {
             User? user = await _userManager.FindByIdAsync(UserId.ToString());
 
             if (user == null)
             {
-                return false;
+                return -1;
             }
 
             Address address = new Address
@@ -43,7 +43,7 @@ namespace Services
 
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
-            return true;
+            return address.Id;
         }
         public async Task<bool> DeleteAddress(int id)
         {
@@ -75,8 +75,12 @@ namespace Services
             return true;
         }
 
-        public async Task<Address> GetAddress(int id)
+        public async Task<Address> GetAddress(int? id)
         {
+            if (id == null)
+            {
+                return null!;
+            }
             Address? address = await _context.Addresses.FirstOrDefaultAsync(item => item.Id == id);
             if (address == null)
             {

@@ -27,7 +27,7 @@ namespace SportsShop.Controllers
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _addressesService.AddAddress(model, user);
 
-            if (result)
+            if (result>0)
             {
                 return RedirectToAction("ShowAddresses");
             }
