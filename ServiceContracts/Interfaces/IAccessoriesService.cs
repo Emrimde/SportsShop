@@ -11,6 +11,8 @@ namespace ServiceContracts.Interfaces
         Task<GymnasticRing> GetGymnasticRing(int id);
         Task<TrainingRubber> GetTrainingRubber(int id);
 
+        Task<List<dynamic>> FilterAccessory(string type);
+
         Task<dynamic> GetObject(int id);
 
     }

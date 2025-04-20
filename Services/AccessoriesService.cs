@@ -18,9 +18,40 @@ namespace Services
             _context = context;
         }
 
+        public async Task<List<dynamic>> FilterAccessory(string type)
+        {
+            if (type == "GymnasticRings")
+            {
+
+                var rings = await _context.GymnasticRings
+                    .Include(item => item.Product)
+                    .Where(item => item.Product.IsActive)
+                    .ToListAsync();
+
+                return rings.Cast<dynamic>().ToList();
+            }
+            if (type == "RubberBand")
+            {
+                var rubbers = await _context.TrainingRubbers
+                    .Include(item => item.Product)
+                    .Where(item => item.Product.IsActive)
+                    .ToListAsync();
+                return rubbers.Cast<dynamic>().ToList();
+            }
+            if (type == "Weights")
+            {
+                var plates = await _context.WeightPlates
+                    .Include(item => item.Product)
+                    .Where(item => item.Product.IsActive)
+                    .ToListAsync();
+                return plates.Cast<dynamic>().ToList();
+            }
+            return new List<dynamic>();
+        }
+
         public async Task<List<GymnasticRing>> GetAllGymnasticRings()
         {
-            return await _context.GymnasticRings.Include(item => item.Product).Where(item=> item.Product.IsActive).ToListAsync();
+            return await _context.GymnasticRings.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
         }
 
         public async Task<List<TrainingRubber>> GetAllTrainingRubbers()
@@ -35,7 +66,7 @@ namespace Services
 
         public async Task<GymnasticRing> GetGymnasticRing(int id)
         {
-            GymnasticRing? gymnasticRing = await _context.GymnasticRings.Include(item=>item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+            GymnasticRing? gymnasticRing = await _context.GymnasticRings.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
             if (gymnasticRing == null)
             {
                 return null!;

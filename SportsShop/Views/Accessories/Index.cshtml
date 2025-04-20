@@ -3,17 +3,18 @@
 @{
     ViewData["Title"] = "Accessories";
 }
-
 <div class="container pt-4 pb-4">
     <div class="row g-4">
         <div class="col-md-3 col-lg-2">
-            <form action="/" method="post">
+            <form asp-action="FilterAccessory" method="post">
                 <h5><label class="fw-bold" for="options">Type</label></h5>
-                <select class="form-select">
-                    <option value="option-1">Weights</option>
-                    <option value="option-2">Rubber Bands</option>
-                    <option value="option-3">Gymnastic rings</option>
+                <select class="form-select" name="type">
+                    <option value="select">Select type</option>
+                    <option value="Weights">Weights</option>
+                    <option value="RubberBand">Rubber Bands</option>
+                    <option value="GymnasticRings">Gymnastic rings</option>
                 </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
             </form>
         </div>
         <div class="col-md-9 col-lg-10">
@@ -23,19 +24,34 @@
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card h-100">
                             <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.Data.ProductId" asp-route-type="@accessory.Data.GetType().Name">
-                            <img class="card-img-top" src="@Url.Content(accessory.Data.ImagePath)" alt="@accessory.Data.Product.Name" />
-                            <div class="card-body">
-                                <h5 class="card-title">@accessory.Data.Product.Name</h5>
-                                <p class="card-text">@accessory.Data.Product.Price</p>
-                            </div>
+                                <img class="card-img-top" src="@Url.Content(accessory.Data.ImagePath)" alt="@accessory.Data.Product.Name" />
+                                <div class="card-body">
+                                    <h5 class="card-title">@accessory.Data.Product.Name</h5>
+                                    <p class="card-text">@accessory.Data.Product.Price PLN</p>
+                                </div>
                             </a>
                         </div>
                     </div>
 
                 }
-
-
-                </div>
-                </div>
-                </div>
-                </div>
+                @if (Model.SpecificAccessories != null && Model.SpecificAccessories.Count > 0)
+                {
+                    @foreach(var accessory in Model.SpecificAccessories)
+                    {
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card h-100">
+                                <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.ProductId" asp-route-type="@accessory.GetType().Name">
+                                    <img class="card-img-top" src="@Url.Content(accessory.ImagePath)" alt="@accessory.Product.Name" />
+                                    <div class="card-body">
+                                        <h5 class="card-title">@accessory.Product.Name</h5>
+                                        <p class="card-text">@accessory.Product.Price PLN</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
