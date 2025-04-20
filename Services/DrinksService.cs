@@ -13,6 +13,17 @@ namespace Services
         {
             _context = context;
         }
+
+        public async Task<List<Drink>> FilterDrink(string flavor)
+        {
+            IQueryable<Drink> drinks = _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive);
+            if(flavor != "select")
+            {
+                drinks = drinks.Where(item => item.Flavor == flavor);
+            }
+            return await drinks.ToListAsync();
+        }
+
         public async Task<Drink> GetDrink(int id)
         {
             Drink? drink = await _context.Drinks.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);

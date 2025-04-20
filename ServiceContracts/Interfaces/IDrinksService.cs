@@ -6,5 +6,6 @@ namespace ServiceContracts.Interfaces
     {
         Task<List<Drink>> GetDrinks();
         Task<Drink> GetDrink(int id);
+        Task<List<Drink>> FilterDrink(string flavor);
     }
 }
