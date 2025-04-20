@@ -15,5 +15,7 @@ namespace ServiceContracts.Interfaces
         Task<List<CartItem>> GetCartItems(string userId);
         Task UpdateCartItemQuantity(int cartItem, int quantity);
         int GetTotalCost(List<CartItem> cartItems, bool isCouponValid);
+
+        
     }
 }

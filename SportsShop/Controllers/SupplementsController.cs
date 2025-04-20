@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.Interfaces;
 using SportsShop.ViewModels;
+using System.Threading.Tasks;
 
 namespace SportsShop.Controllers
 {
@@ -38,6 +39,11 @@ namespace SportsShop.Controllers
                 Weight = supplement.Weight
             };
             return View(supplementViewModel);
+        }
+        public async Task<IActionResult> FilterSupplement(string type, string flavor)
+        {
+            List<Supplement> supplements = await _supplementsService.FilterSupplement(type, flavor);
+            return View("Index", supplements);
         }
     }
 }

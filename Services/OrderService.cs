@@ -19,7 +19,8 @@ namespace Services
         }
         public async Task<List<Order>> GetAllOrders(string id)
         {
-            return await _context.Orders.Include(item => item.User).Where(item => item.User.Id.ToString() == id && item.IsActive).ToListAsync();
+            return await _context.Orders.Include(item => item.User).Include(o => o.CartItems)              
+            .ThenInclude(ci => ci.Product).Where(item => item.UserId.ToString() == id && item.IsActive).ToListAsync();
         }
     }
 }

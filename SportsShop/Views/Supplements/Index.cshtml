@@ -8,23 +8,26 @@
 <div class="container pt-4">
     <div class="row g-4">
         <div class="col-md-3 col-lg-2">
-            <form action="/" method="post">
+            <form asp-action="FilterSupplement" method="post">
                 <h5><label class="fw-bold" for="flavor">Flavor</label></h5>
-                <select class="form-select" id="flavor">
-                    <option value="option-1">Fruity</option>
-                    <option value="option-2">Tea</option>
-                    <option value="option-3">Coffee</option>
+                <select class="form-select" id="flavor" name="flavor">
+                    <option value="select">Select supplement</option>
+                    <option value="Apple">Apple</option>
+                    <option value="Unflavored">Unflavored</option>
+                    <option value="Tropical">Tropical</option>
                 </select>
                 <h5 class="mt-2"><label class="fw-bold" for="supplements">Supplements:</label></h5>
-                <select class="form-select" id="supplements">
-                    <option value="option-1">Creatine</option>
-                    <option value="option-2">Citrulline</option>
-                    <option value="option-3">Caffeine</option>
+                <select class="form-select" id="supplements" name="type">
+                    <option value="select">Select type</option>
+                    <option value="Creatine">Creatine</option>
+                    <option value="Citrulline">Citrulline</option>
+                    <option value="Caffeine">Caffeine</option>
                 </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
             </form>
         </div>
         <div class="col-12 col-md-9">
-            <div class="row g-4 justify-content-center">
+            <div class="row g-4">
                 @foreach (Supplement item in Model)
                 {
                     <div class="col-12 col-sm-6 col-md-4 mb-3">

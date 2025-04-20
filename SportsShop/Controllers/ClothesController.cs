@@ -14,7 +14,6 @@ namespace SportsShop.Controllers
         {
             _clothesService = clothesService;
         }
-
         public async Task<IActionResult> Index()
         {
             List<Cloth> clothes = await _clothesService.GetAllClothes();
@@ -44,6 +43,12 @@ namespace SportsShop.Controllers
 
             };
             return View(clothViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> FilterCloth(string size, string gender, string type)
+        {
+            List<Cloth> clothes = await _clothesService.FilterCloth(size,gender,type);
+            return View("Index",clothes);
         }
     }
 }

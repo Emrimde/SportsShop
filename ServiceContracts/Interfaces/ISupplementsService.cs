@@ -6,5 +6,6 @@ namespace ServiceContracts.Interfaces
     {
         Task<List<Supplement>> GetAllSupplements();
         Task<Supplement> GetSupplement(int id);
+        Task<List<Supplement>> FilterSupplement(string type, string flavor);
     }
 }

@@ -1,0 +1,46 @@
+﻿@model List<OrderViewModel>
+
+@{
+    ViewBag.Title = "Order History";
+}
+
+
+
+<div class="container">
+    <h2 class="my-4">Order History</h2>
+    <p>Your order history is displayed below. Click on an order to view its details.</p>
+    @foreach (OrderViewModel order in Model)
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>Order Date:</strong> @order.OrderDate.ToString("MM/dd/yyyy")
+                </div>
+                <div>
+                    <strong>Status:</strong>
+                    @if (order.IsPaid)
+                    {
+                        <span class="badge bg-success">Paid</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Unpaid</span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Ordered Items:</h5>
+                <ul class="list-group list-group-flush mb-3">
+                    @foreach (CartItem cartItem in order.CartItems)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            @cartItem.Product.Name
+                        </li>
+                    }
+                </ul>
+                <p class="mb-1"><strong>Shipping Cost:</strong> $@order.ShippingCost</p>
+                <p class="mb-1"><strong>Total Cost:</strong> $@order.TotalCost</p>
+            </div>
+        </div>
+    }
+</div>

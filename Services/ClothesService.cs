@@ -19,15 +19,35 @@ namespace Services
         public ClothesService(SportsShopDbContext context)
         {
             _context = context;
-        } 
+        }
+
+        public async Task<List<Cloth>> FilterCloth(string size, string gender, string type)
+        {
+            IQueryable<Cloth> clothes = _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
+
+            if (gender != "select")
+            {
+                clothes = clothes.Where(item => item.Gender == gender);
+            }
+            if (size != "select")
+            {
+                clothes = clothes.Where(item => item.Size == size);
+            }
+            if (type != "select")
+            {
+                clothes = clothes.Where(item => item.Type == type);
+            }
+            return await clothes.ToListAsync();
+        }
+
         public async Task<List<Cloth>> GetAllClothes()
         {
-           return await _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
+            return await _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
         }
 
         public async Task<Cloth?> GetCloth(int id)
         {
-           return await _context.Clothes.Include(item=> item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+            return await _context.Clothes.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
         }
     }
 }

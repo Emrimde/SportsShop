@@ -35,10 +35,7 @@ namespace SportsShop.Controllers
 
             var cartItems = await _cartService.GetCartItems(user);
 
-            //if(cartItems.Count == 0)
-            //{
-
-            //}
+            
             int totalCost = _cartService.GetTotalCost(cartItems, ViewBag.CouponMessage);
             List<CartItemViewModel> cartItemViewModel = new List<CartItemViewModel>();
             foreach (var item in cartItems)
