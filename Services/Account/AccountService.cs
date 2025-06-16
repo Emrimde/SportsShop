@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using ServiceContracts.Interfaces;
 using ServiceContracts.DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceContracts.Interfaces.Account;
 
 
 
-namespace Services
+namespace Services.Account
 {
     public class AccountService : IAccountService
     {

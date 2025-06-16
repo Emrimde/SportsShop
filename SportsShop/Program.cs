@@ -3,7 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Entities.DatabaseContext;
 using Entities.Models;
 using Services;
-using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.Account;
+using Services.Accessory;
+using Services.Account;
+using ServiceContracts.Interfaces.IAccessory;
+using ServiceContracts.Interfaces.IDrink;
+using ServiceContracts.Interfaces.ISupplement;
+using ServiceContracts.Interfaces.ICloth;
+using ServiceContracts.Interfaces.IAddress;
+using Services.IAddress;
+using ServiceContracts.Interfaces.ICart;
+using ServiceContracts.Interfaces.ISupplier;
+using ServiceContracts.Interfaces.IOrder;
 
 namespace SportsShop
 {
@@ -17,15 +28,22 @@ namespace SportsShop
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddScoped<IDrinksService, DrinksService>();
+            builder.Services.AddScoped<IDrinkGetterService, DrinkGetterService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IAccessoriesService, AccessoriesService>();
-            builder.Services.AddScoped<ISupplementsService, SupplementsService>();
-            builder.Services.AddScoped<IClothesService, ClothesService>();
-            builder.Services.AddScoped<IAddressesService, AddressesService>();
-            builder.Services.AddScoped<ICartService, CartService>();
-            builder.Services.AddScoped<ISupplierService, SupplierService>();
-            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IAccessoryGetterService, AccessoryGetterService>();
+            builder.Services.AddScoped<ISupplementGetterService, SupplementGetterService>();
+            builder.Services.AddScoped<IClothGetterService, ClothGetterService>();
+            builder.Services.AddScoped<IAddressGetterService, AddressGetterService>();
+            builder.Services.AddScoped<IAddressUpdaterService, AddressUpdaterService>();
+            builder.Services.AddScoped<IAddressDeleterService, AddressDeleterService>();
+            builder.Services.AddScoped<IAddressAdderService, AddressAdderService>();
+            builder.Services.AddScoped<ICartGetterService, CartGetterService>();
+            builder.Services.AddScoped<ICartAdderService, CartAdderService>();
+            builder.Services.AddScoped<ICartUpdaterService, CartUpdaterService>();
+            builder.Services.AddScoped<ICartDeleterService, CartDeleterService>();
+            builder.Services.AddScoped<ISupplierGetterService, SupplierGetterService>();
+            builder.Services.AddScoped<IOrderAdderService, OrderAdderService>();
+            builder.Services.AddScoped<IOrderGetterService, OrderGetterService>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {

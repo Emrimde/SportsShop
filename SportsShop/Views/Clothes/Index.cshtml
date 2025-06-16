@@ -1,5 +1,5 @@
 ﻿@using SportsShop.Models
-@model List<Cloth>
+@model List<ClothesViewModel>
 
 @{
     ViewData["Title"] = "Clothes";
@@ -45,16 +45,16 @@
                             <a class="text-decoration-none text-dark"
                                asp-controller="Clothes"
                                asp-action="ShowCloth"
-                               asp-route-id="@cloth.ProductId">
+                               asp-route-id="@cloth.Id">
                                 <img class="card-img-top"
                                      src="@Url.Content(cloth.ImagePath)"
-                                     alt="@cloth.Product.Name" />
+                                     alt="@cloth.Name" />
                                 <div class="card-body text-center">
                                     <h5 class="card-title">
-                                        @cloth.Product.Producer – @cloth.Product.Name
+                                        @cloth.Producer – @cloth.Name
                                     </h5>
                                     <p class="card-text">
-                                        @cloth.Product.Price PLN
+                                        @cloth.Price PLN
                                     </p>
                                 </div>
                             </a>

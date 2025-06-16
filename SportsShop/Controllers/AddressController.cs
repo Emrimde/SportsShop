@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO;
-using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.IAddress;
 using SportsShop.ViewModels;
 using System.Security.Claims;
 
@@ -10,11 +10,17 @@ namespace SportsShop.Controllers
 {
     public class AddressController : Controller
     {
-        private readonly IAddressesService _addressesService;
+        private readonly IAddressAdderService _addressAdderService;
+        private readonly IAddressGetterService _addressGetterService;
+        private readonly IAddressUpdaterService _addressUpdaterService;
+        private readonly IAddressDeleterService _addressDeleterService;
         private readonly UserManager<User> _userManager;
-        public AddressController(IAddressesService addressesService, UserManager<User> userManager)
+        public AddressController(IAddressGetterService addressGetterService,IAddressDeleterService addressDeleterService, IAddressUpdaterService addressUpdaterService,IAddressAdderService addressAdderService, UserManager<User> userManager)
         {
-            _addressesService = addressesService;
+            _addressAdderService = addressAdderService;
+            _addressUpdaterService = addressUpdaterService;
+            _addressGetterService = addressGetterService;
+            _addressDeleterService = addressDeleterService;
             _userManager = userManager;
         }
         public IActionResult Index()
@@ -25,7 +31,7 @@ namespace SportsShop.Controllers
         public async Task<IActionResult> AddAddress(AddressDTO model)
         {
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _addressesService.AddAddress(model, user);
+            var result = await _addressAdderService.AddAddress(model, user);
 
             if (result>0)
             {
@@ -43,7 +49,7 @@ namespace SportsShop.Controllers
                 return Unauthorized();
             }
 
-            List<Address> addresses = await _addressesService.ShowAddresses(user.Id);
+            List<Address> addresses = await _addressGetterService.ShowAddresses(user.Id);
             List<AddressViewModel> addressesViewModel = addresses.Select(item => new AddressViewModel()
             {
                 Id = item.Id,
@@ -64,7 +70,7 @@ namespace SportsShop.Controllers
             {
                 return Unauthorized();
             }
-            bool result = await _addressesService.DeleteAddress(id);
+            bool result = await _addressDeleterService.DeleteAddress(id);
             if (!result)
             {
                 return NotFound();
@@ -76,7 +82,7 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> EditAddress(int id)
         {
-            Address? address = await _addressesService.GetAddress(id);
+            Address? address = await _addressGetterService.GetAddress(id);
             if (address == null)
             {
                 return NotFound();
@@ -100,13 +106,13 @@ namespace SportsShop.Controllers
             {
                 return Unauthorized();
             }
-            Address? address = await _addressesService.GetAddress(addressViewModel.Id);
+            Address? address = await _addressGetterService.GetAddress(addressViewModel.Id);
 
             if (address == null)
             {
                 return NotFound();
             }
-            await _addressesService.EditAddress(new AddressDTO
+            await _addressUpdaterService.EditAddress(new AddressDTO
             {
                 Id = addressViewModel.Id,
                 Country = addressViewModel.Country,

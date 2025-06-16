@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using Entities.Models;
 using Entities.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
+using ServiceContracts.Interfaces.ISupplier;
 
 
 namespace Services
 {
-    public class SupplierService : ISupplierService
+    public class SupplierGetterService : ISupplierGetterService
     {
         private readonly SportsShopDbContext _context;
 
-        public SupplierService(SportsShopDbContext context)
+        public SupplierGetterService(SportsShopDbContext context)
         {
             _context = context;
         }

@@ -10,5 +10,6 @@
         public string Producer { get; set; } = default!;
         public string ProductName { get; set; } = default!;
         public string ProductDescription { get; set; } = default!;
+        public string ImagePath { get; set; } = default!;
     }
 }

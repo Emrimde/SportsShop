@@ -1,8 +1,8 @@
 ﻿using Entities.Models;
 
-namespace ServiceContracts.Interfaces
+namespace ServiceContracts.Interfaces.ISupplement
 {
-    public interface ISupplementsService
+    public interface ISupplementGetterService
     {
         Task<List<Supplement>> GetAllSupplements();
         Task<Supplement> GetSupplement(int id);

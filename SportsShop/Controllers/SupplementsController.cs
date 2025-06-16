@@ -1,30 +1,45 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.ISupplement;
 using SportsShop.ViewModels;
-using System.Threading.Tasks;
 
 namespace SportsShop.Controllers
 {
     public class SupplementsController : Controller
     {
-        private readonly ISupplementsService _supplementsService;
+        private readonly ISupplementGetterService _supplementGetterService;
 
-        public SupplementsController(ISupplementsService supplementsService)
+        public SupplementsController(ISupplementGetterService supplementGetterService)
         {
-            _supplementsService = supplementsService;
+            _supplementGetterService = supplementGetterService;
         }
 
         public async Task<IActionResult> Index()
         {
 
-            List<Supplement> supplements = await _supplementsService.GetAllSupplements();
-            return View(supplements);
+            List<Supplement> supplements = await _supplementGetterService.GetAllSupplements();
+            List<SupplementsViewModel> supplementsViewModels = new List<SupplementsViewModel>();
+            foreach (var supplement in supplements)
+            {
+                SupplementsViewModel supplementViewModel = new SupplementsViewModel()
+                {
+                    Id = supplement.ProductId,
+                    Name = supplement.Product.Name,
+                    Description = supplement.Product.Description,
+                    Price = supplement.Product.Price,
+                    Flavor = supplement.Flavor,
+                    Weight = supplement.Weight,
+                    Type = supplement.Type,
+                    ImagePath = supplement.ImagePath
+                };
+                supplementsViewModels.Add(supplementViewModel);
+            }
+            return View(supplementsViewModels);
         }
 
         public async Task<IActionResult> ShowSupplement(int id)
         {
-            Supplement? supplement = await _supplementsService.GetSupplement(id);
+            Supplement? supplement = await _supplementGetterService.GetSupplement(id);
             if (supplement == null)
             {
                 return NotFound();
@@ -42,8 +57,24 @@ namespace SportsShop.Controllers
         }
         public async Task<IActionResult> FilterSupplement(string type, string flavor)
         {
-            List<Supplement> supplements = await _supplementsService.FilterSupplement(type, flavor);
-            return View("Index", supplements);
+            List<Supplement> supplements = await _supplementGetterService.FilterSupplement(type, flavor);
+            List<SupplementsViewModel> supplementsViewModels = new List<SupplementsViewModel>();
+            foreach(var supplement in supplements)
+            {
+                SupplementsViewModel supplementViewModel = new SupplementsViewModel()
+                {
+                    Id = supplement.ProductId,
+                    Name = supplement.Product.Name,
+                    Description = supplement.Product.Description,
+                    Price = supplement.Product.Price,
+                    Flavor = supplement.Flavor,
+                    Weight = supplement.Weight,
+                    Type = supplement.Type,
+                    ImagePath = supplement.ImagePath
+                };
+                supplementsViewModels.Add(supplementViewModel);
+            }
+            return View("Index", supplementsViewModels);
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.ISupplement;
 
 
 namespace Services
 {
-    public class SupplementsService : ISupplementsService
+    public class SupplementGetterService : ISupplementGetterService
     {
         private readonly SportsShopDbContext _context;
 
-        public SupplementsService(SportsShopDbContext context)
+        public SupplementGetterService(SportsShopDbContext context)
         {
             _context = context;
         }

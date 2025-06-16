@@ -3,13 +3,15 @@ using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.IDrink;
+
 namespace Services
 {
-    public class DrinksService : IDrinksService
+    public class DrinkGetterService : IDrinkGetterService
     {
         private readonly SportsShopDbContext _context;
 
-        public DrinksService(SportsShopDbContext context)
+        public DrinkGetterService(SportsShopDbContext context)
         {
             _context = context;
         }

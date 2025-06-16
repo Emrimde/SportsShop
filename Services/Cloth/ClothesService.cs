@@ -3,6 +3,7 @@ using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.ICloth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class ClothesService : IClothesService
+    public class ClothGetterService : IClothGetterService
     {
         private readonly SportsShopDbContext _context;
 
-        public ClothesService(SportsShopDbContext context)
+        public ClothGetterService(SportsShopDbContext context)
         {
             _context = context;
         }

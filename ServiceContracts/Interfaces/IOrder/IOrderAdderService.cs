@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceContracts.Interfaces
+namespace ServiceContracts.Interfaces.IOrder
 {
-    public interface IOrderService
+    public interface IOrderAdderService
     {
-        Task<List<Order>> GetAllOrders(string id);
+        Task<Order> AddOrder(Order order);
     }
 }

@@ -1,15 +1,14 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.IAccessory;
 using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
     public class AccessoriesController : Controller
     {
-
-        private readonly IAccessoriesService _accesoriesService;
-        public AccessoriesController(IAccessoriesService accessoriesService)
+        private readonly IAccessoryGetterService _accesoriesService;
+        public AccessoriesController(IAccessoryGetterService accessoriesService)
         {
             _accesoriesService = accessoriesService;
         }

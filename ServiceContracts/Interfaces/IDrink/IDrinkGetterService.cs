@@ -1,8 +1,8 @@
 ﻿using Entities.Models;
 
-namespace ServiceContracts.Interfaces
+namespace ServiceContracts.Interfaces.IDrink
 {
-    public interface IDrinksService
+    public interface IDrinkGetterService
     {
         Task<List<Drink>> GetDrinks();
         Task<Drink> GetDrink(int id);

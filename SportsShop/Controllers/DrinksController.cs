@@ -1,20 +1,21 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.IDrink;
 using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
     public class DrinksController : Controller
     {
-        private readonly IDrinksService _drinksService;
-        public DrinksController(IDrinksService drinksService)
+        private readonly IDrinkGetterService _drinkGetterService;
+        public DrinksController(IDrinkGetterService drinkGetterService)
         {
-            _drinksService = drinksService;
+            _drinkGetterService = drinkGetterService;
         }
         public async Task<IActionResult> Index()
         {
-            List<Drink> drinks =await _drinksService.GetDrinks();
+            List<Drink> drinks =await _drinkGetterService.GetDrinks();
             List<DrinksViewModel> drinksViewModels = new List<DrinksViewModel>();
             foreach (Drink drink in drinks)
             {
@@ -38,7 +39,7 @@ namespace SportsShop.Controllers
         }
         public async Task<IActionResult> ShowDrink(int id)
         {
-            Drink? drink = await _drinksService.GetDrink(id);
+            Drink? drink = await _drinkGetterService.GetDrink(id);
             if (drink == null)
             {
                 return NotFound();
@@ -60,7 +61,7 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> FilterDrink(string flavor)
         {
-            List<Drink> drinks = await _drinksService.FilterDrink(flavor);
+            List<Drink> drinks = await _drinkGetterService.FilterDrink(flavor);
             List<DrinksViewModel> drinksViewModels = new List<DrinksViewModel>();
             foreach (Drink drink in drinks)
             {

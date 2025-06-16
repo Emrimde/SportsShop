@@ -1,5 +1,5 @@
 ﻿@using SportsShop.Models;
-@model List<Supplement>
+@model List<SupplementsViewModel>
 
 @{
     ViewData["Title"] = "Supplements";
@@ -11,7 +11,7 @@
             <form asp-action="FilterSupplement" method="post">
                 <h5><label class="fw-bold" for="flavor">Flavor</label></h5>
                 <select class="form-select" id="flavor" name="flavor">
-                    <option value="select">Select supplement</option>
+                    <option value="select">Select flavor</option>
                     <option value="Apple">Apple</option>
                     <option value="Unflavored">Unflavored</option>
                     <option value="Tropical">Tropical</option>
@@ -28,15 +28,15 @@
         </div>
         <div class="col-12 col-md-9">
             <div class="row g-4">
-                @foreach (Supplement item in Model)
+                @foreach (SupplementsViewModel item in Model)
                 {
                     <div class="col-12 col-sm-6 col-md-4 mb-3">
                         <div class="card h-100">
-                            <a style="text-decoration:none; display:block; color:black;" asp-controller="Supplements" asp-action="ShowSupplement" asp-route-id="@item.ProductId">
-                            <img class="card-img-top" src="@(Url.Content(item.ImagePath))" alt="@item.Product.Name" />
+                            <a style="text-decoration:none; display:block; color:black;" asp-controller="Supplements" asp-action="ShowSupplement" asp-route-id="@item.Id">
+                            <img class="card-img-top" src="@(Url.Content(item.ImagePath))" alt="@item.Name" />
                             <div class="card-body text-center">
-                                <h5 class="card-title">@item.Product.Name - @item.Weight </h5>
-                                <p class="card-text">@item.Product.Price </p>
+                                <h5 class="card-title">@item.Name - @item.Weight </h5>
+                                <p class="card-text">@item.Price </p>
                             </div>
                             </a>
                         </div>

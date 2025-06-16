@@ -2,18 +2,19 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.IAccessory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services
+namespace Services.Accessory
 {
-    public class AccessoriesService : IAccessoriesService
+    public class AccessoryGetterService : IAccessoryGetterService
     {
         private readonly SportsShopDbContext _context;
-        public AccessoriesService(SportsShopDbContext context)
+        public AccessoryGetterService(SportsShopDbContext context)
         {
             _context = context;
         }

@@ -1,29 +1,32 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTO;
-using ServiceContracts.Interfaces;
-using Services;
+using ServiceContracts.Interfaces.IAddress;
+using ServiceContracts.Interfaces.ICart;
+using ServiceContracts.Interfaces.IOrder;
 using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly SportsShopDbContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly IAddressesService _addressService;
-        private readonly ICartService _cartService;
-        private readonly IOrderService _orderService;
-        public OrderController(SportsShopDbContext context, UserManager<User> userManager, IAddressesService addressesService, ICartService cartService, IOrderService orderService)
+        private readonly IAddressGetterService _addressGetterService;
+        private readonly IAddressAdderService _addressAdderService;
+        private readonly ICartGetterService _cartGetterService;
+        private readonly ICartAdderService _cartAdderService;
+        private readonly IOrderGetterService _orderGetterService;
+        private readonly IOrderAdderService _orderAdderService;
+        public OrderController(UserManager<User> userManager, IAddressGetterService addressesService, IAddressAdderService addressAdderService, ICartGetterService cartService, ICartAdderService cartAdderService, IOrderGetterService orderService, IOrderAdderService orderAdderService)
         {
-            _context = context;
             _userManager = userManager;
-            _addressService = addressesService;
-            _cartService = cartService;
-            _orderService = orderService;
+            _addressGetterService = addressesService;
+            _addressAdderService = addressAdderService;
+            _cartGetterService = cartService;
+            _orderGetterService = orderService;
+            _orderAdderService = orderAdderService;
+            _cartAdderService = cartAdderService;   
         }
         public IActionResult Index()
         {
@@ -39,12 +42,10 @@ namespace SportsShop.Controllers
                 return BadRequest();
             }
 
-            // Common code for both paths
-            List<CartItem> cartItems = await _cartService.GetCartItems(user.Id.ToString());
-            int totalCost = _cartService.GetTotalCost(cartItems, false);
+            List<CartItem> cartItems = await _cartGetterService.GetCartItems(user.Id.ToString());
+            int totalCost = _cartGetterService.GetTotalCost(cartItems);
             Order order = new Order();
 
-            // Handle address selection
             if (checkoutViewModel.AddressId > 0)
             {
                 order = new Order()
@@ -58,10 +59,18 @@ namespace SportsShop.Controllers
                     SupplierId = checkoutViewModel.SupplierId ?? 0,
                     CreatedDate = DateTime.Now,
                     IsActive = true,
-                    CartItems = cartItems
+                    CartItems = cartItems.Select(item => new CartItem()
+                    {
+                        ProductId = item.ProductId,
+                        //CartId = item.Cart.Id,bez cartId I tyle?
+                        CreatedDate = DateTime.Now,
+                        IsActive = true,
+                        Quantity = item.Quantity,
+                        Price = item.Product.Price,
+                        Type = item.Type,
+                    }).ToList()
                 };
             }
-            // Handle new address
             else if (ModelState.IsValid)
             {
                 AddressDTO address = new AddressDTO()
@@ -72,7 +81,7 @@ namespace SportsShop.Controllers
                     ZipCode = checkoutViewModel.Address.ZipCode
                 };
 
-                int addressId = await _addressService.AddAddress(address, user.Id.ToString());
+                int addressId = await _addressAdderService.AddAddress(address, user.Id.ToString());
                 order = new Order()
                 {
                     CreatedDate = DateTime.Now,
@@ -84,7 +93,16 @@ namespace SportsShop.Controllers
                     SupplierId = checkoutViewModel.SupplierId ?? 0,
                     OrderDate = DateTime.Now,
                     UserId = user.Id,
-                    CartItems = cartItems
+                    CartItems = cartItems.Select(item => new CartItem()
+                    {
+                        ProductId = item.ProductId,
+                        
+                        CreatedDate = DateTime.Now,
+                        IsActive = true,
+                        Quantity = item.Quantity,
+                        Price = item.Product.Price,
+                        Type = item.Type,
+                    }).ToList()
                 };
             }
             else
@@ -92,162 +110,41 @@ namespace SportsShop.Controllers
                 return RedirectToAction("GetShippingCost", "Cart", new { supplierId = checkoutViewModel.SupplierId });
             }
 
-            // Save the order and update cart items
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            await _orderAdderService.AddOrder(order);
+            
+            //cartItems.ForEach(item =>
+            //{
+            //    item.Order = order;
+            //    item.OrderId = order.Id;
+            //    item.IsActive = false;
+            //    item.DeleteDate = DateTime.Now;
+            //});
+            await _cartAdderService.SaveToDb();
 
-            // Update cart items with order ID
-            cartItems.ForEach(item =>
-            {
-                item.Order = order;
-                item.OrderId = order.Id;
-                item.IsActive = false;
-                item.DeleteDate = DateTime.Now;
-            });
-            await _context.SaveChangesAsync();
-
-            // Get the user's cart and mark all items as inactive
-            Cart? cart = await _context.Carts
-                .Include(item => item.CartItems)
-                .FirstOrDefaultAsync(item =>
-                    item.UserId.ToString() == user.Id.ToString() &&
-                    item.IsActive);
+            Cart? cart = await _cartGetterService.GetCart(user.Id.ToString());
 
             if (cart != null)
             {
-                foreach (var item in cart.CartItems)
-                {
-                    if (item.OrderId == null)
-                    {
-                        item.IsActive = false;
-                        item.DeleteDate = DateTime.Now;
-                    }
-                }
-                await _context.SaveChangesAsync();
+                cart.CartItems.Clear();
+                
+                await _cartAdderService.SaveToDb();
             }
 
             return View();
         }
-        //[HttpPost]
-        //public async Task<IActionResult> PlaceOrder(CheckoutViewModel checkoutViewModel, decimal shippingCost)
-        //{
-        //    User? user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    //jezeli wybiore w selekcie
-        //    if (checkoutViewModel.AddressId > 0)
-        //    {
-        //        List<CartItem> cartItems = await _cartService.GetCartItems(user.Id.ToString());
-        //        int totalCost = _cartService.GetTotalCost(cartItems, false);
-        //        Order order = new Order()
-        //        {
-        //            TotalCost =totalCost,
-        //            ShippingCost = shippingCost,
-        //            IsPaid = true,
-        //            OrderDate = DateTime.Now,
-        //            AddressId = checkoutViewModel.AddressId ?? 0,
-        //            UserId = user.Id,
-        //            SupplierId = checkoutViewModel.SupplierId ?? 0,
-        //            CreatedDate = DateTime.Now,
-        //            IsActive = true,
-        //            CartItems = cartItems
-
-        //        };
-        //        _context.Orders.Add(order);
-        //        await _context.SaveChangesAsync();
-        //        cartItems.ForEach(item =>
-        //        {
-        //            item.Order = order;
-        //            item.OrderId = order.Id; 
-        //        });
-        //        await _context.SaveChangesAsync();
-
-
-        //        //Cart? cart = await _context.Carts
-        //        //.Include(item => item.CartItems)
-        //        //.FirstOrDefaultAsync(item =>
-        //        //item.UserId.ToString() == user.Id.ToString() &&
-        //        //item.IsActive);
-
-        //        //if (cart != null)
-        //        //{
-        //        //    cart.CartItems.Clear();
-        //        //    await _context.SaveChangesAsync();
-        //        //}
-
-        //        return View();
-        //    }
-
-        //    //jezeli wypelnilespole
-        //    else if (ModelState.IsValid)
-        //    {
-        //        AddressDTO address = new AddressDTO()
-        //        {
-        //            City = checkoutViewModel.Address.City,
-        //            Country = checkoutViewModel.Address.Country,
-        //            Street = checkoutViewModel.Address.Street,
-        //            ZipCode = checkoutViewModel.Address.ZipCode
-        //        };
-        //        List<CartItem> cartItems = await _cartService.GetCartItems(user.Id.ToString());
-        //        int totalCost = _cartService.GetTotalCost(cartItems, false);
-
-        //        int addressId = await _addressService.AddAddress(address, user.Id.ToString());
-        //        Order order = new Order()
-        //        {
-        //            CreatedDate = DateTime.Now,
-        //            IsActive = true,
-        //            IsPaid = true,
-        //            ShippingCost = shippingCost,
-        //            TotalCost = totalCost,
-        //            AddressId = addressId,
-        //            SupplierId = checkoutViewModel.SupplierId ?? 0,
-        //            OrderDate = DateTime.Now,
-        //            UserId = user.Id,
-        //            CartItems = cartItems
-        //        };
-        //        _context.Orders.Add(order);
-        //        await _context.SaveChangesAsync();
-        //        cartItems.ForEach(item => item.Order = order);
-        //        await _context.SaveChangesAsync();
-        //        Cart? cart = await _context.Carts
-        //       .Include(item => item.CartItems)
-        //       .FirstOrDefaultAsync(item =>
-        //       item.UserId.ToString() == user.Id.ToString() &&
-        //       item.IsActive);
-
-        //        foreach (var item in cart.CartItems)
-        //        {
-        //            if (item.OrderId == null)
-        //            {
-        //                item.IsActive = false;
-        //                item.DeleteDate = DateTime.Now;
-        //            }
-        //        }
-        //        await _context.SaveChangesAsync();
-
-        //        return View();
-        //    }
-        //    else
-        //    {
-        //        return RedirectToAction("GetShippingCost", "Cart", new { supplierId = checkoutViewModel.SupplierId });
-        //    }
-        //}
-
         public async Task<IActionResult> History()
         {
             User? user = await _userManager.GetUserAsync(User);
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
-            List<Order> orders =await _orderService.GetAllOrders(user.Id.ToString());
+            List<Order> orders = await _orderGetterService.GetAllOrders(user.Id.ToString());
             if (orders == null)
             {
                 return BadRequest();
             }
-            
+
             List<OrderViewModel> ordersViewModel = orders.Select(item => new OrderViewModel()
             {
                 IsPaid = item.IsPaid,
@@ -256,7 +153,7 @@ namespace SportsShop.Controllers
                 ShippingCost = item.ShippingCost,
                 CartItems = item.CartItems
             }).ToList();
-           
+
             return View(ordersViewModel);
         }
     }

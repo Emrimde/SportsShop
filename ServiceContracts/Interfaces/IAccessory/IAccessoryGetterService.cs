@@ -1,8 +1,8 @@
 ﻿using Entities.Models;
 
-namespace ServiceContracts.Interfaces
+namespace ServiceContracts.Interfaces.IAccessory
 {
-    public interface IAccessoriesService
+    public interface IAccessoryGetterService
     {
         Task<List<WeightPlate>> GetAllWeightPlates();
         Task<List<GymnasticRing>> GetAllGymnasticRings();
@@ -10,10 +10,7 @@ namespace ServiceContracts.Interfaces
         Task<WeightPlate> GetWeightPlate(int id);
         Task<GymnasticRing> GetGymnasticRing(int id);
         Task<TrainingRubber> GetTrainingRubber(int id);
-
         Task<List<dynamic>> FilterAccessory(string type);
-
         Task<dynamic> GetObject(int id);
-
     }
 }

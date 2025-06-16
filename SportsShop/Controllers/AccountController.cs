@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO;
-using ServiceContracts.Interfaces;
+using ServiceContracts.Interfaces.Account;
 
 namespace SportsShop.Controllers
 {
@@ -46,6 +46,7 @@ namespace SportsShop.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(RegisterDTO model)
