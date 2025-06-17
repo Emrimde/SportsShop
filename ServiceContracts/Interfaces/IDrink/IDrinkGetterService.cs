@@ -1,11 +1,11 @@
-﻿using Entities.Models;
+﻿using ServiceContracts.DTO.DrinkDto;
 
 namespace ServiceContracts.Interfaces.IDrink
 {
     public interface IDrinkGetterService
     {
-        Task<List<Drink>> GetDrinks();
-        Task<Drink> GetDrink(int id);
-        Task<List<Drink>> FilterDrink(string flavor);
+        Task<List<DrinkResponse>> GetAllDrinks();
+        Task<DrinkResponse> GetDrinkById(int id);
+        Task<List<DrinkResponse>> FilterDrinks(string flavor);
     }
 }

@@ -1,5 +1,4 @@
-﻿@using SportsShop.ViewModels;
-@model List<DrinksViewModel>
+﻿@model List<DrinkResponse>
 @{
     ViewData["Title"] = "Drinks";
 }
@@ -19,7 +18,7 @@
 
         <div class="col-md-9 col-lg-10">
             <div class="row g-4 ">
-                @foreach (DrinksViewModel drink in Model)
+                @foreach (DrinkResponse drink in Model)
                 {
                     <div class="col-12 col-sm-6 col-lg-4 ">
                         <div class="card h-100">

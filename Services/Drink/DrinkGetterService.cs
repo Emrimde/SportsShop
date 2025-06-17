@@ -1,8 +1,7 @@
-﻿using SportsShop.Models;
-using Entities.DatabaseContext;
+﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using ServiceContracts.Interfaces;
+using ServiceContracts.DTO.DrinkDto;
 using ServiceContracts.Interfaces.IDrink;
 
 namespace Services
@@ -16,29 +15,31 @@ namespace Services
             _context = context;
         }
 
-        public async Task<List<Drink>> FilterDrink(string flavor)
+        public async Task<List<DrinkResponse>> FilterDrinks(string flavor)
         {
-            IQueryable<Drink> drinks = _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive);
-            if(flavor != "select")
+            IQueryable<DrinkResponse> drinks = _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToDrinkResponse());
+            if (flavor != "select")
             {
                 drinks = drinks.Where(item => item.Flavor == flavor);
             }
             return await drinks.ToListAsync();
         }
 
-        public async Task<Drink> GetDrink(int id)
+        public async Task<DrinkResponse> GetDrinkById(int id)
         {
             Drink? drink = await _context.Drinks.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+
             if (drink == null)
             {
                 return null!;
             }
-            return drink;
+
+            return drink.ToDrinkResponse();
         }
 
-        public async Task<List<Drink>> GetDrinks()
+        public async Task<List<DrinkResponse>> GetAllDrinks()
         {
-            return await _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
+            return await _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToDrinkResponse()).ToListAsync();
         }
     }
 }
