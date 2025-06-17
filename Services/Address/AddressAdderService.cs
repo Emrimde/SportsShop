@@ -1,15 +1,14 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using ServiceContracts.DTO;
+using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 
 namespace Services
 {
     /// <summary>
-    /// Its a service for managing user's addresses. They can input their address, edit it, delete it and show all addresses before order time.
+    /// Interface for adding addresses to the database.
     /// </summary>
     public class AddressAdderService : IAddressAdderService
     {
@@ -45,6 +44,27 @@ namespace Services
             await _context.SaveChangesAsync();
             return address.Id;
         }
-       
+
+        /// <summary>
+        /// Add to the database a new address for the specific user.
+        /// </summary>
+        /// <param name="model">Address</param>
+        /// <param name="userId"></param>
+        /// <returns>Address with Id</returns>
+        public async Task<AddressResponse?> AddAddress(AddressAddRequest model, Guid userId)
+        {
+            User? user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null || model == null)
+            {
+                return null;
+            }
+
+            Address address = model.ToAddress(user.Id);
+      
+            _context.Addresses.Add(address);
+            await _context.SaveChangesAsync();
+            return address.ToAddressResponse();
+        }
     }
 }

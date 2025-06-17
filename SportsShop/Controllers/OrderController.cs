@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO;
+using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.IOrder;
@@ -81,7 +82,9 @@ namespace SportsShop.Controllers
                     ZipCode = checkoutViewModel.Address.ZipCode
                 };
 
-                int addressId = await _addressAdderService.AddAddress(address, user.Id.ToString());
+               
+                int addressId = await _addressAdderService.AddAddress(address, user.Id.ToString()); // tu musi być getAddressId, a nie AddAddressId
+
                 order = new Order()
                 {
                     CreatedDate = DateTime.Now,
@@ -111,14 +114,6 @@ namespace SportsShop.Controllers
             }
 
             await _orderAdderService.AddOrder(order);
-            
-            //cartItems.ForEach(item =>
-            //{
-            //    item.Order = order;
-            //    item.OrderId = order.Id;
-            //    item.IsActive = false;
-            //    item.DeleteDate = DateTime.Now;
-            //});
             await _cartAdderService.SaveToDb();
 
             Cart? cart = await _cartGetterService.GetCart(user.Id.ToString());

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using ServiceContracts.DTO;
+using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 
 namespace Services.IAddress
@@ -33,8 +34,28 @@ namespace Services.IAddress
                 return null!;
             }
             return address;
+        }
 
+        public async Task<AddressResponse?> GetAddressById(int? id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
 
+            Address? address = await _context.Addresses.FirstOrDefaultAsync(item => item.Id == id);
+
+            if (address == null)
+            {
+                return null;
+            }
+
+            return address.ToAddressResponse();
+        }
+
+        public async Task<List<AddressResponse>> GetAllAddresses(Guid userId)
+        {
+            return await _context.Addresses.Where(item => item.UserId == userId && item.IsActive).Select(item => item.ToAddressResponse()).ToListAsync();
         }
 
         public async Task<List<Address>> ShowAddresses(Guid userId)

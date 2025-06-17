@@ -24,8 +24,6 @@ namespace SportsShop.Controllers
         }
         public async Task<IActionResult> ShowAccessory(int id, string type)
         {
-
-
             if (type == "GymnasticRing")
             {
                 GymnasticRing? gymnasticRing = await _accesoriesService.GetGymnasticRing(id);
@@ -41,9 +39,7 @@ namespace SportsShop.Controllers
                 WeightPlate? weightPlate = await _accesoriesService.GetWeightPlate(id);
                 return View("ShowWeightPlate", weightPlate);
             }
-
             return NotFound();
-
         }
         public async Task<IActionResult> FilterAccessory(string type)
         {

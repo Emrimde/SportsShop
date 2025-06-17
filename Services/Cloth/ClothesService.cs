@@ -2,14 +2,8 @@
 using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using ServiceContracts.Interfaces;
+using ServiceContracts.DTO.ClothDto;
 using ServiceContracts.Interfaces.ICloth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Services
 {
@@ -22,7 +16,7 @@ namespace Services
             _context = context;
         }
 
-        public async Task<List<Cloth>> FilterCloth(string size, string gender, string type)
+        public async Task<List<ClothResponse>> FilterClothes(string size, string gender, string type)
         {
             IQueryable<Cloth> clothes = _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
 
@@ -38,17 +32,19 @@ namespace Services
             {
                 clothes = clothes.Where(item => item.Type == type);
             }
-            return await clothes.ToListAsync();
+            List<ClothResponse> clothResponses =await clothes.Select(item => item.ToClothResponse()).ToListAsync();
+
+            return clothResponses;
         }
 
-        public async Task<List<Cloth>> GetAllClothes()
+        public async Task<List<ClothResponse>> GetAllClothess()
         {
-            return await _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
+            return await _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToClothResponse()).ToListAsync();
         }
 
-        public async Task<Cloth?> GetCloth(int id)
+        public async Task<ClothResponse?> GetClothById(int id)
         {
-            return await _context.Clothes.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+            return await _context.Clothes.Include(item => item.Product).Where(item => item.ProductId == id && item.Product.IsActive).Select(item => item.ToClothResponse()).FirstOrDefaultAsync();
         }
     }
 }

@@ -1,27 +1,24 @@
-﻿@model AddressDTO
+﻿@model AddressAddRequest
 @{
     ViewBag.Title = "Account Settings";
 }
 <div class="container pb-4">
     <div class="row">
         <div class="col-12 mt-4">
-            @if (User.Identity.IsAuthenticated)
+            @if (User.Identity!.IsAuthenticated)
             {
                 <h2 class="text-center">Hello @User.Identity.Name!</h2>
             }
             
             <h2>Addresses/Change Password</h2>
             <div class="mb-3">
-                <a asp-controller="Address" asp-action="ShowAddresses" class="btn btn-outline-dark">Show addresses</a>
+                <a asp-controller="Address" asp-action="GetAllAddresses" class="btn btn-outline-dark">Show addresses</a>
             </div>
         </div>
     </div>
 
     <div class="row mt-2">
-        
         <div class="col-md-6">
-            
-
             <div class="bg-white p-4 mb-3 rounded shadow">
                 <h2 class="text-center mb-4">Add address for future orders!</h2>
                 <form asp-controller="Address" asp-action="AddAddress" method="POST">
