@@ -1,11 +1,11 @@
-﻿using Entities.Models;
+﻿using ServiceContracts.DTO.SupplementDto;
 
 namespace ServiceContracts.Interfaces.ISupplement
 {
     public interface ISupplementGetterService
     {
-        Task<List<Supplement>> GetAllSupplements();
-        Task<Supplement> GetSupplement(int id);
-        Task<List<Supplement>> FilterSupplement(string type, string flavor);
+        Task<List<SupplementResponse>> GetAllSupplements();
+        Task<SupplementResponse> GetSupplementById(int id);
+        Task<List<SupplementResponse>> FilterSupplements(string type, string flavor);
     }
 }

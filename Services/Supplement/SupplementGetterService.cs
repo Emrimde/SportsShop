@@ -1,6 +1,7 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using ServiceContracts.DTO.SupplementDto;
 using ServiceContracts.Interfaces.ISupplement;
 
 
@@ -15,34 +16,38 @@ namespace Services
             _context = context;
         }
 
-        public async Task<List<Supplement>> FilterSupplement(string type, string flavor)
+        public async Task<List<SupplementResponse>> GetAllSupplements()
         {
-            IQueryable<Supplement> supplements = _context.Supplements.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
-
-            if (type !="select")
-            {
-                supplements = supplements.Where(item => item.Type == type);
-            }
-            if(flavor != "select")
-            {
-                supplements = supplements.Where(item => item.Flavor == flavor);
-            }
-            return await supplements.ToListAsync();
+            return await _context.Supplements.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToSupplementResponse()).ToListAsync();
         }
 
-        public async Task<List<Supplement>> GetAllSupplements()
+        public async Task<SupplementResponse> GetSupplementById(int id)
         {
-            return await _context.Supplements.Include(item => item.Product).Where(item=> item.Product.IsActive).ToListAsync();
-        }
+            Supplement? supplement = await _context.Supplements.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
 
-        public async Task<Supplement> GetSupplement(int id)
-        {
-            Supplement? supplement = await _context.Supplements.Include(item=>item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
             if (supplement == null)
             {
                 return null!;
             }
-            return supplement;
+
+            return supplement.ToSupplementResponse();
+        }
+
+        public async Task<List<SupplementResponse>> FilterSupplements(string type, string flavor)
+        {
+            IQueryable<SupplementResponse> supplements = _context.Supplements.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToSupplementResponse());
+
+            if (type != "select")
+            {
+                supplements = supplements.Where(item => item.Type == type);
+            }
+
+            if (flavor != "select")
+            {
+                supplements = supplements.Where(item => item.Flavor == flavor);
+            }
+
+            return await supplements.ToListAsync();
         }
     }
 }

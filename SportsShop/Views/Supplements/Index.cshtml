@@ -1,5 +1,4 @@
-﻿@using SportsShop.Models;
-@model List<SupplementsViewModel>
+﻿@model List<SupplementResponse>
 
 @{
     ViewData["Title"] = "Supplements";
@@ -28,7 +27,7 @@
         </div>
         <div class="col-12 col-md-9">
             <div class="row g-4">
-                @foreach (SupplementsViewModel item in Model)
+                @foreach(SupplementResponse item in Model)
                 {
                     <div class="col-12 col-sm-6 col-md-4 mb-3">
                         <div class="card h-100">
