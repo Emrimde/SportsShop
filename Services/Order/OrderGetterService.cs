@@ -1,6 +1,7 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using ServiceContracts.DTO.OrderDto;
 using ServiceContracts.Interfaces.IOrder;
 
 namespace Services
@@ -12,6 +13,12 @@ namespace Services
         {
             _context = context;
         }
+
+        public Task<List<OrderResponse>> GetAllOrderss(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<Order>> GetAllOrders(string id)
         {
             return await _context.Orders.Include(item => item.User).Include(o => o.CartItems)

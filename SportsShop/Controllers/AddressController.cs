@@ -1,11 +1,8 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.DTO;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
-using SportsShop.ViewModels;
-using System.Security.Claims;
 
 namespace SportsShop.Controllers
 {
@@ -24,9 +21,17 @@ namespace SportsShop.Controllers
             _addressDeleterService = addressDeleterService;
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            List<AddressResponse> addresses = await _addressGetterService.GetAllAddresses(user.Id);
+            return View(addresses);
         }
 
         public async Task<IActionResult> AddAddress(AddressAddRequest model)
@@ -42,25 +47,11 @@ namespace SportsShop.Controllers
 
             if (result != null)
             {
-                return RedirectToAction("ShowAddresses");
+                return RedirectToAction("Index");
             }
 
             return BadRequest();
         }
-
-        public async Task<IActionResult> GetAllAddresses()
-        {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            List<AddressResponse> addresses = await _addressGetterService.GetAllAddresses(user.Id);
-            return View(addresses);
-        }
-
 
         public async Task<IActionResult> DeleteAddress(int id)
         {
@@ -75,52 +66,38 @@ namespace SportsShop.Controllers
                 return NotFound();
             }
 
-            return RedirectToAction("ShowAddresses");
+            return RedirectToAction("Index");
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> EditAddress(int id)
         {
-            Address? address = await _addressGetterService.GetAddress(id);
+            AddressResponse? address = await _addressGetterService.GetAddressById(id);
             if (address == null)
             {
                 return NotFound();
             }
-            AddressViewModel addressViewModel = new AddressViewModel
-            {
-                Id = address.Id,
-                Country = address.Country,
-                City = address.City,
-                Street = address.Street,
-                ZipCode = address.ZipCode
-            };
-            return View("EditAddress", addressViewModel);
+            
+            return View(address);
         }
 
-        public async Task<IActionResult> EditAddresss(AddressViewModel addressViewModel)
+        [HttpPost]
+        public async Task<IActionResult> EditAddress(AddressUpdateRequest model)
         {
-
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return Unauthorized();
             }
-            Address? address = await _addressGetterService.GetAddress(addressViewModel.Id);
 
-            if (address == null)
+            if (model == null)
             {
-                return NotFound();
+                return BadRequest();
             }
-            await _addressUpdaterService.EditAddress(new AddressDTO
-            {
-                Id = addressViewModel.Id,
-                Country = addressViewModel.Country,
-                City = addressViewModel.City,
-                Street = addressViewModel.Street,
-                ZipCode = addressViewModel.ZipCode
-            });
 
-            return RedirectToAction("ShowAddresses");
+            await _addressUpdaterService.UpdateAddress(model);
+            return RedirectToAction("Index");
         }
     }
 }

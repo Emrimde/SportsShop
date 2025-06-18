@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTO.SupplementDto;
 using ServiceContracts.Interfaces.ISupplement;
 
-
 namespace Services
 {
     public class SupplementGetterService : ISupplementGetterService

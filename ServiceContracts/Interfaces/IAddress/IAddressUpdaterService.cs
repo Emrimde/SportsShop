@@ -1,10 +1,9 @@
-﻿using Entities.Models;
-using ServiceContracts.DTO;
+﻿using ServiceContracts.DTO.AddressDto;
 
 namespace ServiceContracts.Interfaces.IAddress
 {
     public interface IAddressUpdaterService
     {
-        Task<bool> EditAddress(AddressDTO model);
+        Task UpdateAddress(AddressUpdateRequest model);
     }
 }

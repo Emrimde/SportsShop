@@ -1,11 +1,8 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
-using ServiceContracts.DTO;
+using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
-using Services.IAddress;
 
 namespace Services
 {
@@ -24,22 +21,15 @@ namespace Services
             _userManager = userManager;
             _addressGetterService = addressGetterService;
         }
-      
-        public async Task<bool> EditAddress(AddressDTO model)
+   
+        public async Task UpdateAddress(AddressUpdateRequest model)
         {
-            Address? address = await _addressGetterService.GetAddress(model.Id);
-            if (address == null)
-            {
-                return false;
-            }
-            address.Country = model.Country;
+            Address? address = await _context.Addresses.FindAsync(model.Id);
+            address!.Country = model.Country;
             address.City = model.City;
             address.Street = model.Street;
             address.ZipCode = model.ZipCode;
-            address.EditDate = DateTime.UtcNow;
-            _context.Addresses.Update(address);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

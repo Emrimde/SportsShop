@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Entities.Models;
-using ServiceContracts.Interfaces;
-using SportsShop.ViewModels;
-using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.IAddress;
+using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.ISupplier;
+using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
@@ -103,12 +102,6 @@ namespace SportsShop.Controllers
             User? user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
-
-            //ViewBag.CouponMessage = false;
-            //if (coupon == "PROMO2025")
-            //{
-            //    ViewBag.CouponMessage = true;
-            //}
 
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
             checkoutViewModel.Addresses = await _addressGetterService.ShowAddresses(user.Id);
