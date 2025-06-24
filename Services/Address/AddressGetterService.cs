@@ -62,5 +62,15 @@ namespace Services.IAddress
         {
             return await _context.Addresses.Where(item => item.UserId == userId && item.IsActive).Select(item => item.ToAddressResponse()).ToListAsync();
         }
+
+        public bool IsAddressProvided(AddressAddRequest request)
+        {
+            if(!string.IsNullOrEmpty(request.ZipCode) || !string.IsNullOrEmpty(request.Country) || !string.IsNullOrEmpty(request.Street) || !string.IsNullOrEmpty(request.City))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

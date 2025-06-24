@@ -7,5 +7,6 @@ namespace ServiceContracts.Interfaces.IAddress
         Task<AddressResponse?> GetAddressById(int? id);
         Task<List<AddressResponse>> GetAllAddresses(Guid userId);
         Task<int> GetAddressId(int id);
+        bool IsAddressProvided(AddressAddRequest request);
     }
 }

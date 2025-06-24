@@ -8,12 +8,12 @@ namespace ServiceContracts.DTO.OrderDto
         public List<CartItemAddRequest> CartItems { get; set; } = new List<CartItemAddRequest>();
         public decimal TotalCost { get; set; }
         public decimal ShippingCost { get; set; }
-        public DateTime OrderDate { get; set; }
+        public DateTime OrderDate { get; set; } = DateTime.Now;
         public int AddressId { get; set; }
         public int SupplierId { get; set; }
         public Guid UserId { get; set; }
-        public string? Coupon { get; set; }
-        public bool IsPaid { get; set; }
+        public string? Coupon { get; set; } = "";
+        public bool IsPaid { get; set; } = true;
 
         public Order ToOrder()
         {
@@ -24,10 +24,10 @@ namespace ServiceContracts.DTO.OrderDto
                 ShippingCost = ShippingCost,
                 OrderDate = OrderDate,
                 Coupon = Coupon,
-                IsPaid = IsPaid,
                 AddressId = AddressId,
                 SupplierId = SupplierId,
                 UserId = UserId,
+                IsPaid = IsPaid,
                 IsActive = true,
                 CreatedDate = DateTime.Now,
             };

@@ -8,15 +8,19 @@ namespace Services
     public class CartDeleterService : ICartDeleterService
     {
         private readonly SportsShopDbContext _context;
+        private readonly ICartGetterService  _cartGetterService;
 
-        public CartDeleterService(SportsShopDbContext context)
+        public CartDeleterService(SportsShopDbContext context, ICartGetterService cartGetterService)
         {
             _context = context;
+            _cartGetterService = cartGetterService;
         }
 
-        public Task<bool> ClearCart(string userId)
+        public async Task ClearCart(string userId)
         {
-            throw new NotImplementedException();
+            Cart cart = await _cartGetterService.GetCart(userId);
+            cart.CartItems.Clear();
+            await _context.SaveChangesAsync();
         }
         public async Task<bool> RemoveFromCart(int productId, string userId)
         {
@@ -30,8 +34,6 @@ namespace Services
             await _context.SaveChangesAsync();
             return true;
 
-
         }
-
     }
 }
