@@ -1,38 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entities.DatabaseContext;
+﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using ServiceContracts.DTO;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+using ServiceContracts.DTO.AccountDto;
 using ServiceContracts.Interfaces.Account;
-
-
 
 namespace Services.Account
 {
     public class AccountService : IAccountService
     {
         private readonly SportsShopDbContext _context;
-        private readonly PasswordHasher<User> passwordHasher;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-
 
         public AccountService(SportsShopDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _context = context;
-            passwordHasher = new PasswordHasher<User>();
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-
-        public async Task<IdentityResult> RegisterAsync(RegisterDTO model)
+        public async Task<IdentityResult> RegisterAsync(RegisterDto model)
         {
             var user = new User
             {
@@ -62,9 +49,7 @@ namespace Services.Account
             return result;
         }
 
-       
-
-        public async Task<SignInResult> SignInAsync(SignInDTO model)
+        public async Task<SignInResult> SignInAsync(SignInDto model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
             return result;

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceContracts.DTO
+namespace ServiceContracts.DTO.AccountDto
 {
-    public class SignInDTO
+    public class SignInDto
     {
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid Email")]

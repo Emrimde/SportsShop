@@ -1,7 +1,7 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.DTO;
+using ServiceContracts.DTO.AccountDto;
 using ServiceContracts.Interfaces.Account;
 
 namespace SportsShop.Controllers
@@ -11,21 +11,22 @@ namespace SportsShop.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IAccountService _accountService;
+
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IAccountService accountService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _accountService = accountService;
         }
+
         public IActionResult SignIn()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn(SignInDTO model)
+        public async Task<IActionResult> SignIn(SignInDto model)
         {
-
             if (!ModelState.IsValid)
             {
                 ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
@@ -49,7 +50,7 @@ namespace SportsShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(RegisterDTO model)
+        public async Task<IActionResult> CreateUser(RegisterDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -81,7 +82,5 @@ namespace SportsShop.Controllers
         {
             return View();
         }
-
-       
     }
 }
