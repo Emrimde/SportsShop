@@ -4,7 +4,6 @@ namespace ServiceContracts.DTO
 {
     public class RegisterDTO
     {
-        
             [Required(ErrorMessage = "The email is required")]
             [EmailAddress(ErrorMessage = "Write correct email!")]
             public string Email { get; set; } = default!;
@@ -24,7 +23,6 @@ namespace ServiceContracts.DTO
             [Compare("Password", ErrorMessage = "Passwords are't the same")]
             [DataType(DataType.Password)]
             public string ConfirmPassword { get; set; } = default!;
-
         }
     }
 

@@ -53,14 +53,14 @@ namespace Services.IAddress
             return address.ToAddressResponse();
         }
 
+        public async Task<int> GetAddressId(int id)
+        {
+            return await _context.Addresses.Where(item => item.Id == id).Select(item => item.Id).FirstOrDefaultAsync();
+        }
+
         public async Task<List<AddressResponse>> GetAllAddresses(Guid userId)
         {
             return await _context.Addresses.Where(item => item.UserId == userId && item.IsActive).Select(item => item.ToAddressResponse()).ToListAsync();
-        }
-
-        public async Task<List<Address>> ShowAddresses(Guid userId)
-        {
-            return await _context.Addresses.Where(item => item.UserId == userId && item.IsActive).ToListAsync();
         }
     }
 }

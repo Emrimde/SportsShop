@@ -1,8 +1,9 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.DTO;
 using ServiceContracts.DTO.AddressDto;
+using ServiceContracts.DTO.CartItemDto;
+using ServiceContracts.DTO.OrderDto;
 using ServiceContracts.Interfaces.IAddress;
 using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.IOrder;
@@ -43,13 +44,13 @@ namespace SportsShop.Controllers
                 return BadRequest();
             }
 
-            List<CartItem> cartItems = await _cartGetterService.GetCartItems(user.Id.ToString());
-            int totalCost = _cartGetterService.GetTotalCost(cartItems);
-            Order order = new Order();
+            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(user.Id.ToString());
+            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(user.Id.ToString());
+            OrderAddRequest order = new OrderAddRequest();
 
             if (checkoutViewModel.AddressId > 0)
             {
-                order = new Order()
+                order = new OrderAddRequest()
                 {
                     TotalCost = totalCost,
                     ShippingCost = shippingCost,
@@ -58,37 +59,25 @@ namespace SportsShop.Controllers
                     AddressId = checkoutViewModel.AddressId ?? 0,
                     UserId = user.Id,
                     SupplierId = checkoutViewModel.SupplierId ?? 0,
-                    CreatedDate = DateTime.Now,
-                    IsActive = true,
-                    CartItems = cartItems.Select(item => new CartItem()
+                    
+                    CartItems = cartItems.Select(item => new CartItemAddRequest()
                     {
                         ProductId = item.ProductId,
-                        //CartId = item.Cart.Id,bez cartId I tyle?
-                        CreatedDate = DateTime.Now,
-                        IsActive = true,
                         Quantity = item.Quantity,
-                        Price = item.Product.Price,
+                        Price = item.Price,
                         Type = item.Type,
                     }).ToList()
                 };
             }
             else if (ModelState.IsValid)
             {
-                AddressDTO address = new AddressDTO()
-                {
-                    City = checkoutViewModel.Address.City,
-                    Country = checkoutViewModel.Address.Country,
-                    Street = checkoutViewModel.Address.Street,
-                    ZipCode = checkoutViewModel.Address.ZipCode
-                };
+                AddressAddRequest address = checkoutViewModel.Address;
+                AddressResponse? adressResponse = await _addressAdderService.AddAddress(address, user.Id);
 
-               
-                int addressId = await _addressAdderService.AddAddress(address, user.Id.ToString()); // tu musi być getAddressId, a nie AddAddressId
+                int addressId = await _addressGetterService.GetAddressId(adressResponse!.Id);
 
-                order = new Order()
+                order = new OrderAddRequest()
                 {
-                    CreatedDate = DateTime.Now,
-                    IsActive = true,
                     IsPaid = true,
                     ShippingCost = shippingCost,
                     TotalCost = totalCost,
@@ -96,14 +85,11 @@ namespace SportsShop.Controllers
                     SupplierId = checkoutViewModel.SupplierId ?? 0,
                     OrderDate = DateTime.Now,
                     UserId = user.Id,
-                    CartItems = cartItems.Select(item => new CartItem()
+                    CartItems = cartItems.Select(item => new CartItemAddRequest()
                     {
                         ProductId = item.ProductId,
-                        
-                        CreatedDate = DateTime.Now,
-                        IsActive = true,
                         Quantity = item.Quantity,
-                        Price = item.Product.Price,
+                        Price = item.Price,
                         Type = item.Type,
                     }).ToList()
                 };
@@ -121,7 +107,6 @@ namespace SportsShop.Controllers
             if (cart != null)
             {
                 cart.CartItems.Clear();
-                
                 await _cartAdderService.SaveToDb();
             }
 
@@ -134,22 +119,13 @@ namespace SportsShop.Controllers
             {
                 return BadRequest();
             }
-            List<Order> orders = await _orderGetterService.GetAllOrders(user.Id.ToString());
+            List<OrderResponse> orders = await _orderGetterService.GetAllOrders(user.Id.ToString());
             if (orders == null)
             {
                 return BadRequest();
             }
 
-            List<OrderViewModel> ordersViewModel = orders.Select(item => new OrderViewModel()
-            {
-                IsPaid = item.IsPaid,
-                OrderDate = item.OrderDate,
-                TotalCost = item.TotalCost,
-                ShippingCost = item.ShippingCost,
-                CartItems = item.CartItems
-            }).ToList();
-
-            return View(ordersViewModel);
+            return View(orders);
         }
     }
 }

@@ -14,15 +14,10 @@ namespace Services
             _context = context;
         }
 
-        public Task<List<OrderResponse>> GetAllOrderss(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Order>> GetAllOrders(string id)
+        public async Task<List<OrderResponse>> GetAllOrders(string id)
         {
             return await _context.Orders.Include(item => item.User).Include(o => o.CartItems)
-            .ThenInclude(ci => ci.Product).Where(item => item.UserId.ToString() == id && item.IsActive).ToListAsync();
+             .ThenInclude(ci => ci.Product).Where(item => item.UserId.ToString() == id && item.IsActive).Select(item => item.ToOrderResponse()).ToListAsync();
         }
     }
 }

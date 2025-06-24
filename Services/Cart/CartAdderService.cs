@@ -17,34 +17,30 @@ namespace Services
         public async Task<bool> AddToCart(int productId, string userId, int quantity, string type)
         {
             Product? product = await _context.Products.FirstOrDefaultAsync(item => item.Id == productId);
+
             if (product == null)
             {
                 return false;
             }
-            Cart? cart = await _context.Carts.Include(item=>item.CartItems).FirstOrDefaultAsync(item => item.UserId.ToString() == userId);
+
+            Cart? cart = await _context.Carts.Include(item=> item.CartItems).FirstOrDefaultAsync(item => item.UserId.ToString() == userId);
+
             if (cart == null)
             {
                 return false;
             }
 
-            Console.WriteLine(cart.CartItems);
+            CartItem? existingCartItem = cart.CartItems.FirstOrDefault(item => item.ProductId == productId && item.Type == type && item.IsActive);
 
-            if (cart.CartItems.Any(item => item.ProductId == productId && item.Type == type))
+            // it executes if the cart item is existing in the cart and we want to increase quantity of the item.
+            if(existingCartItem != null)
             {
-                CartItem? existingCartItem = cart.CartItems.FirstOrDefault(item => item.ProductId == productId && item.Type == type);
-                //if (existingCartItem != null)
-                //{
-                // 4a. Jeśli jest, to tylko zwiększamy ilość
-                existingCartItem!.Quantity += quantity;
-                //}
-
-                
-
-
+                existingCartItem.Quantity += quantity;
             }
+
+            //it executes if we add a new cart item which wasn't present in the cart
             else
             {
-                // 4b. Jeśli nie ma, to tworzymy nowy
                 var cartItem = new CartItem
                 {
                     ProductId = productId,
@@ -56,11 +52,10 @@ namespace Services
                     Type = type,
                 };
                 cart.CartItems.Add(cartItem);
-                
             }
+
             await _context.SaveChangesAsync();
             return true;
-
         }
 
         public Task SaveToDb()

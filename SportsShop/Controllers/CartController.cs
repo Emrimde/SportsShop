@@ -1,6 +1,7 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.IAddress;
 using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.ISupplier;
@@ -36,36 +37,18 @@ namespace SportsShop.Controllers
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
 
-            var cartItems = await _cartGetterService.GetCartItems(user);
+            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(user);
 
-            
-            int totalCost = _cartGetterService.GetTotalCost(cartItems);
-            List<CartItemViewModel> cartItemViewModel = new List<CartItemViewModel>();
-            foreach (var item in cartItems)
-            {
-                cartItemViewModel.Add(new CartItemViewModel
-                {
-                    Id = item.Id,
-                    Quantity = item.Quantity,
-                    Price = (int)item.Price,
-                    ProductName = item.Product.Name,
-                    ProductDescription = item.Product.Description,
-                    Producer = item.Product.Producer,
-                    ProductId = item.ProductId,
-                    Type = item.Type!,
-                    ImagePath = item.Product.ImagePath ?? "https://via.placeholder.com/150",
-
-                });
-            }
-            
+            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(user);
             ViewBag.TotalCost = totalCost;
 
-            return View(cartItemViewModel);
+            return View(cartItems);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddToCart(int id, int quantity, string type)
         {
-            var user = _userManager.GetUserId(User);
+            string? user = _userManager.GetUserId(User);
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
 
@@ -83,9 +66,17 @@ namespace SportsShop.Controllers
             {
                 return RedirectToAction("SignIn", "Account");
             }
-            bool ok = await _cartDeleterService.RemoveFromCart(id, userId);
-            return RedirectToAction("Index");
 
+            bool ok = await _cartDeleterService.RemoveFromCart(id, userId);
+
+            if (ok)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         [HttpPost]
@@ -104,10 +95,10 @@ namespace SportsShop.Controllers
                 return RedirectToAction("SignIn", "Account");
 
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
-            checkoutViewModel.Addresses = await _addressGetterService.ShowAddresses(user.Id);
+            checkoutViewModel.Addresses = await _addressGetterService.GetAllAddresses(user.Id);
             checkoutViewModel.Suppliers = await _supplierGetterService.GetAllSuppliers();
-            checkoutViewModel.CartItems = await _cartGetterService.GetCartItems(user.Id.ToString());
-            int itemsPrice = _cartGetterService.GetTotalCost(checkoutViewModel.CartItems);
+            checkoutViewModel.CartItems = await _cartGetterService.GetAllCartItems(user.Id.ToString());
+            int itemsPrice = await _cartGetterService.GetTotalCostOfAllCartItems(user.Id.ToString());
             checkoutViewModel.ItemsPrice = itemsPrice;
             if(shippingCost == 0m || itemsPrice >= 300m)
             {

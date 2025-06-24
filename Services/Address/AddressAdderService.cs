@@ -1,7 +1,6 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using ServiceContracts.DTO;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 
@@ -20,31 +19,7 @@ namespace Services
             _context = dbContext;
             _userManager = userManager;
         }
-        public async Task<int> AddAddress(AddressDTO model, string UserId)
-        {
-            User? user = await _userManager.FindByIdAsync(UserId.ToString());
-
-            if (user == null)
-            {
-                return -1;
-            }
-
-            Address address = new Address
-            {
-                UserId = user.Id,
-                Country = model.Country,
-                City = model.City,
-                Street = model.Street,
-                ZipCode = model.ZipCode,
-                CreatedDate = DateTime.Now,
-                IsActive = true
-            };
-
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
-            return address.Id;
-        }
-
+       
         /// <summary>
         /// Add to the database a new address for the specific user.
         /// </summary>

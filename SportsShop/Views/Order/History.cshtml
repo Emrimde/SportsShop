@@ -1,4 +1,4 @@
-﻿@model List<OrderViewModel>
+﻿@model List<OrderResponse>
 
 @{
     ViewBag.Title = "Order History";
@@ -6,7 +6,7 @@
 
 <div class="container pb-2">
     <h2 class="py-4 ">Order History</h2>
-    @foreach (OrderViewModel order in Model)
+    @foreach (OrderResponse order in Model)
     {
         <div class="card mb-4 shadow-sm">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -28,10 +28,10 @@
             <div class="card-body">
                 <h5 class="card-title">Ordered Items:</h5>
                 <ul class="list-group list-group-flush pb-3">
-                    @foreach (CartItem cartItem in order.CartItems)
+                    @foreach (CartItemResponse cartItem in order.CartItems)
                     {
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @cartItem.Product.Name
+                            @cartItem.ProductName
                         </li>
                     }
                 </ul>

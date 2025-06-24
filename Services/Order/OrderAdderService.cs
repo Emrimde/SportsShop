@@ -1,8 +1,7 @@
 ﻿using Entities.DatabaseContext;
-
-using Microsoft.EntityFrameworkCore;
-using ServiceContracts.Interfaces.IOrder;
 using Entities.Models;
+using ServiceContracts.DTO.OrderDto;
+using ServiceContracts.Interfaces.IOrder;
 
 namespace Services
 {
@@ -13,11 +12,13 @@ namespace Services
         {
             _context = context;
         }
-        public async Task<Order> AddOrder(Order order)
+
+        public async Task<OrderResponse> AddOrder(OrderAddRequest model)
         {
+            Order order = model.ToOrder();
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            return order;
+            return order.ToOrderResponse();
         }
     }
 }

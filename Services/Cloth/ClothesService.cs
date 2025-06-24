@@ -37,7 +37,7 @@ namespace Services
             return clothResponses;
         }
 
-        public async Task<List<ClothResponse>> GetAllClothess()
+        public async Task<List<ClothResponse>> GetAllClothes()
         {
             return await _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToClothResponse()).ToListAsync();
         }

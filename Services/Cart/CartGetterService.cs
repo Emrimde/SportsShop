@@ -1,6 +1,7 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.ICart;
 
 namespace Services
@@ -12,6 +13,15 @@ namespace Services
         {
             _context = context;
         }
+
+        public async Task<List<CartItemResponse>> GetAllCartItems(string userId)
+        {
+            List <CartItemResponse> cartitems = await _context.Carts.Include(item => item.CartItems).ThenInclude(item => item.Product)
+                .Where(item => item.UserId.ToString() == userId).SelectMany(item => item.CartItems.Where(item => item.IsActive)).Select(item => item.ToCartItemResponse()).ToListAsync();
+
+            return cartitems;
+        }
+
         public async Task<Cart> GetCart(string userId)
         {
             Cart? cart = await _context.Carts
@@ -23,18 +33,16 @@ namespace Services
                 return cart;
             return null!;
         }
-        public async Task<List<CartItem>> GetCartItems(string userId)
+
+        public Task<List<CartItem>> GetCartItems(string userId)
         {
-            Cart? cart = await _context.Carts.Include(item => item.CartItems).ThenInclude(item => item.Product)
-                .FirstOrDefaultAsync(item => item.UserId.ToString() == userId);
-            List<CartItem> cartItems = cart.CartItems.Where(item => item.IsActive).ToList();
-            return cartItems;
+            throw new NotImplementedException();
         }
-        public int GetTotalCost(List<CartItem> cartItems)
+
+        public async Task<int> GetTotalCostOfAllCartItems(string userId)
         {
-                //decimal price = cartItems.Sum(item => item.Price * item.Quantity) * 0.75m;
-                //return Convert.ToInt32(price);   
-            return Convert.ToInt32(cartItems.Sum(item => item.Price * item.Quantity));
+            return Convert.ToInt32((await GetAllCartItems(userId)).Sum(item => item.Price * item.Quantity));
         }
+
     }
 }

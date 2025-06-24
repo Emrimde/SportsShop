@@ -1,7 +1,4 @@
-﻿using Entities.Models;
-using ServiceContracts.DTO;
-
-namespace ServiceContracts.Interfaces.IAddress
+﻿namespace ServiceContracts.Interfaces.IAddress
 {
     public interface IAddressDeleterService
     {

@@ -1,12 +1,9 @@
-﻿using Entities.Models;
-using ServiceContracts.DTO.OrderDto;
+﻿using ServiceContracts.DTO.OrderDto;
 
 namespace ServiceContracts.Interfaces.IOrder
 {
     public interface IOrderGetterService
     {
-        Task<List<Order>> GetAllOrders(string id);
-
-        Task<List<OrderResponse>> GetAllOrderss(string id);
+        Task<List<OrderResponse>> GetAllOrders(string id);
     }
 }
