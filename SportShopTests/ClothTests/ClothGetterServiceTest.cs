@@ -19,7 +19,7 @@ namespace SportShopTests.ClothTests
         {
             _fixture = new Fixture();
 
-            var options = new DbContextOptionsBuilder<SportsShopDbContext>()
+            DbContextOptions<SportsShopDbContext> options = new DbContextOptionsBuilder<SportsShopDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) 
                 .Options;
 
@@ -89,7 +89,6 @@ namespace SportShopTests.ClothTests
         }
 
         #endregion
-
 
         #region GetClothById
 
