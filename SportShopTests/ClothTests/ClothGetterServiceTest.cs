@@ -89,5 +89,60 @@ namespace SportShopTests.ClothTests
         }
 
         #endregion
+
+
+        #region GetClothById
+
+        [Fact]
+        public async Task GetClothById_ReturnProperCloth()
+        {
+            //Arrange
+            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            Cloth cloth = _fixture.Build<Cloth>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
+            _context.Clothes.Add(cloth);
+            await _context.SaveChangesAsync();
+
+            //Act
+            ClothResponse? result = await _clothGetterService.GetClothById(cloth.ProductId);
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Id.Should().Be(cloth.ProductId);
+        }
+
+        [Fact]
+        public async Task GetClothById_ClothIsNull()
+        {
+            int missingId = 123456; 
+
+            // Act
+            ClothResponse? result = await _clothGetterService.GetClothById(missingId);
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetClothById_ClothIsActive_IsNull()
+        {
+            //Arrange
+            Product product = _fixture.Build<Product>().With(item => item.IsActive, false).Create();
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            Cloth cloth = _fixture.Build<Cloth>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
+            _context.Clothes.Add(cloth);
+            await _context.SaveChangesAsync();
+
+            //Act
+            ClothResponse? result = await _clothGetterService.GetClothById(cloth.ProductId);
+
+            //Assert
+            result.Should().BeNull();
+        }
+        #endregion
     }
 }
