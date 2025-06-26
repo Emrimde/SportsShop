@@ -78,5 +78,59 @@ namespace SportShopTests.DrinkTests
         }
 
         #endregion
+
+        #region GetDrinkById
+
+        [Fact]
+        public async Task GetDrinkById_ReturnProperDrink()
+        {
+            //Arrange
+            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            Drink drink = _fixture.Build<Drink>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
+            _context.Drinks.Add(drink);
+            await _context.SaveChangesAsync();
+
+            //Act
+            DrinkResponse result = await _drinkGetterService.GetDrinkById(drink.ProductId);
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Id.Should().Be(drink.ProductId);
+        }
+
+        [Fact]
+        public async Task GetDrinkById_ReturnNull()
+        {
+            int fakeId = 123456;
+            //Act
+            DrinkResponse result = await _drinkGetterService.GetDrinkById(fakeId);
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetDrinkById_PropertyIsActiveFalse_ReturnNull()
+        {
+            //Arrange
+            Product product = _fixture.Build<Product>().With(item => item.IsActive, false).Create();
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            Drink drink = _fixture.Build<Drink>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
+            _context.Drinks.Add(drink);
+            await _context.SaveChangesAsync();
+
+            //Act
+            DrinkResponse result = await _drinkGetterService.GetDrinkById(drink.ProductId);
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        #endregion  
     }
 }
