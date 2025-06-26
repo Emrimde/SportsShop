@@ -39,7 +39,6 @@ namespace SportsShop.Controllers
             return View();
         }
 
-       
         [HttpPost]
         public async Task<IActionResult> PlaceOrder(OrderAddRequest orderRequest, AddressAddRequest addressRequest)
         {
@@ -81,6 +80,7 @@ namespace SportsShop.Controllers
             {
                 return BadRequest();
             }
+
             List<OrderResponse> orders = await _orderGetterService.GetAllOrders(user.Id.ToString());
             if (orders == null)
             {

@@ -8,12 +8,10 @@ namespace Services
     public class CartAdderService : ICartAdderService
     {
         private readonly SportsShopDbContext _context;
-
         public CartAdderService(SportsShopDbContext context)
         {
             _context = context;
         }
-
         public async Task<bool> AddToCart(int productId, string userId, int quantity, string type)
         {
             Product? product = await _context.Products.FirstOrDefaultAsync(item => item.Id == productId);
@@ -57,10 +55,6 @@ namespace Services
             await _context.SaveChangesAsync();
             return true;
         }
-
-        public Task SaveToDb()
-        {
-            return _context.SaveChangesAsync();
-        }
     }
 }
+ 
