@@ -15,6 +15,12 @@ using Services.IAddress;
 using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.ISupplier;
 using ServiceContracts.Interfaces.IOrder;
+using ServiceContracts.Interfaces.IWeightPlate;
+using Services.WeightPlate;
+using ServiceContracts.Interfaces.IGymnasticRing;
+using Services.GymnasticRing;
+using ServiceContracts.Interfaces.ITrainingRubber;
+using Services.TrainingRubber;
 
 namespace SportsShop
 {
@@ -44,6 +50,9 @@ namespace SportsShop
             builder.Services.AddScoped<ISupplierGetterService, SupplierGetterService>();
             builder.Services.AddScoped<IOrderAdderService, OrderAdderService>();
             builder.Services.AddScoped<IOrderGetterService, OrderGetterService>();
+            builder.Services.AddScoped<IWeightPlateGetterService, WeightPlateGetterService>();
+            builder.Services.AddScoped<IGymnasticRingGetterService, GymnasticRingGetterService>();
+            builder.Services.AddScoped<ITrainingRubberGetterService, TrainingRubberGetterService>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {

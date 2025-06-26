@@ -1,6 +1,6 @@
-﻿@model WeightPlate
+﻿@model WeightPlateResponse
 @{
-    ViewData["Title"] = "Weight plate - " + Model.Product.Name;
+    ViewData["Title"] = "Weight plate - " + Model.Name;
 }
 <div class="container py-5">
     <div class="row">
@@ -10,12 +10,12 @@
                  alt="Product Image" />
         </div>
         <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-center">
-            <h1 class="mb-3">@Model.Product.Name</h1>
-            <h4 class="mb-4">@Model.Product.Price PLN</h4>
+            <h1 class="mb-3">@Model.Name</h1>
+            <h4 class="mb-4">@Model.Price PLN</h4>
             <p class="mb-4">
-                @Model.Product.Description
+                @Model.Description
             </p>
-            <form asp-controller="Cart" asp-action="AddToCart" asp-route-id=@Model.Product.Id asp-route-type="WeightPlate"  method="post">
+            <form asp-controller="Cart" asp-action="AddToCart" asp-route-id=@Model.ProductId asp-route-type="WeightPlate" method="post">
 
                 <div class="row">
                     <div class="col-6 mb-3">

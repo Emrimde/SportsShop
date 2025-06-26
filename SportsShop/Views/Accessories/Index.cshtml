@@ -23,11 +23,11 @@
                 {
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card h-100">
-                            <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.Data.ProductId" asp-route-type="@accessory.Data.GetType().Name">
-                                <img class="card-img-top" src="@Url.Content(accessory.Data.ImagePath)" alt="@accessory.Data.Product.Name" />
+                            <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.Data.ProductId" asp-route-type="@accessory.Type">
+                                <img class="card-img-top" src="@Url.Content(accessory.Data.ImagePath)" alt="@accessory.Data.Name" />
                                 <div class="card-body">
-                                    <h5 class="card-title">@accessory.Data.Product.Name</h5>
-                                    <p class="card-text">@accessory.Data.Product.Price PLN</p>
+                                    <h5 class="card-title">@accessory.Data.Name</h5>
+                                    <p class="card-text">@accessory.Data.Price PLN</p>
                                 </div>
                             </a>
                         </div>
@@ -41,10 +41,10 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <div class="card h-100">
                                 <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.ProductId" asp-route-type="@accessory.GetType().Name">
-                                    <img class="card-img-top" src="@Url.Content(accessory.ImagePath)" alt="@accessory.Product.Name" />
+                                    <img class="card-img-top" src="@Url.Content(accessory.ImagePath)" alt="@accessory.Name" />
                                     <div class="card-body">
-                                        <h5 class="card-title">@accessory.Product.Name</h5>
-                                        <p class="card-text">@accessory.Product.Price PLN</p>
+                                        <h5 class="card-title">@accessory.Name</h5>
+                                        <p class="card-text">@accessory.Price PLN</p>
                                     </div>
                                 </a>
                             </div>
