@@ -3,7 +3,6 @@ using Entities.DatabaseContext;
 using Entities.Models;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using ServiceContracts.DTO.SupplementDto;
 using ServiceContracts.DTO.TrainingRubberDto;
 using ServiceContracts.Interfaces.ITrainingRubber;
 using Services.TrainingRubber;
