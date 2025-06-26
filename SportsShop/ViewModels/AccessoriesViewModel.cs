@@ -6,11 +6,9 @@ namespace SportsShop.ViewModels
 {
     public class AccessoriesViewModel
     {
-        
         public List<WeightPlateResponse> WeightPlates { get; set; } = new List<WeightPlateResponse>();
         public List<GymnasticRingResponse> GymnasticRings { get; set; } = new List<GymnasticRingResponse>();
         public List<TrainingRubberResponse> TrainingRubbers { get; set;} = new List<TrainingRubberResponse>();
-
         public List<dynamic>? SpecificAccessories { get; set; } 
         public List<dynamic> MixedAccessories
         {
@@ -31,7 +29,6 @@ namespace SportsShop.ViewModels
                         mixedList.Add(new { Type = "WeightPlate", Data = WeightPlates[i] });
                 }
                 return mixedList;
-
             }
         }
         
