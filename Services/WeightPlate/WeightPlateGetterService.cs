@@ -1,27 +1,37 @@
-﻿using Entities.DatabaseContext;
+﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
 using ServiceContracts.DTO.WeightPlateDto;
 using ServiceContracts.Interfaces.IWeightPlate;
 
-namespace Services.WeightPlate
+namespace Services
 {
     public class WeightPlateGetterService : IWeightPlateGetterService
     {
-        private readonly SportsShopDbContext _context;
+        private readonly IWeightPlateRepository _weightPlateRepository;
 
-        public WeightPlateGetterService(SportsShopDbContext context)
+        public WeightPlateGetterService(IWeightPlateRepository weightPlateRepository)
         {
-            _context = context;
+            _weightPlateRepository = weightPlateRepository;
         }
 
         public async Task<List<WeightPlateResponse>> GetAllWeightPlates()
         {
-            return await _context.WeightPlates.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToWeightPlateResponse()).ToListAsync();
+            return await _weightPlateRepository.GetAllWeightPlates()
+                .Select(item => item.ToWeightPlateResponse())
+                .ToListAsync();
         }
 
         public async Task<WeightPlateResponse?> GetWeightPlateById(int id)
         {
-            return await _context.WeightPlates.Include(item => item.Product).Where(item => item.Product.IsActive && item.ProductId == id).Select(item => item.ToWeightPlateResponse()).FirstOrDefaultAsync();
+            WeightPlate? weightPlate = await _weightPlateRepository.GetWeightPlateById(id);
+
+            if (weightPlate == null)
+            {
+                return null;
+            }
+
+            return weightPlate.ToWeightPlateResponse();
         }
     }
 }
