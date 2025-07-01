@@ -14,11 +14,6 @@ namespace Repositories
             _context = context;
         }
 
-        //public IQueryable<Supplement> FilterSupplements(string type, string flavor)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public IQueryable<Supplement> GetAllSupplements()
         {
             return _context.Supplements.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();

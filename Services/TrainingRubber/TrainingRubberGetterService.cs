@@ -1,35 +1,36 @@
-﻿using Entities.DatabaseContext;
+﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
 using ServiceContracts.DTO.TrainingRubberDto;
 using ServiceContracts.Interfaces.ITrainingRubber;
 
-namespace Services.TrainingRubber
+namespace Services
 {
     public class TrainingRubberGetterService : ITrainingRubberGetterService
     {
-        private readonly SportsShopDbContext _context;
+        private readonly ITrainingRubberRepository _trainingRubberRepository;
 
-        public TrainingRubberGetterService(SportsShopDbContext context)
+        public TrainingRubberGetterService(ITrainingRubberRepository trainingRubberRepository)
         {
-            _context = context;
+            _trainingRubberRepository = trainingRubberRepository;
         }
 
         public async Task<List<TrainingRubberResponse>> GetAllTrainingRubbers()
         {
-            return await _context.TrainingRubbers
-                .Include(item => item.Product)
-                .Where(item => item.Product.IsActive)
-                .Select(item => item.ToTrainingRubberResponse())
+            return await _trainingRubberRepository.GetAllTrainingRubbers().Select(item => item.ToTrainingRubberResponse())
                 .ToListAsync();
         }
 
         public async Task<TrainingRubberResponse?> GetTrainingRubberById(int id)
         {
-            return await _context.TrainingRubbers
-                .Include(item => item.Product)
-                .Where(item => item.Product.IsActive && item.ProductId == id)
-                .Select(item => item.ToTrainingRubberResponse())
-                .FirstOrDefaultAsync();
+            TrainingRubber? trainingRubber = await _trainingRubberRepository.GetTrainingRubberById(id);
+
+            if (trainingRubber == null)
+            {
+                return null;
+            }
+
+            return trainingRubber.ToTrainingRubberResponse();
         }
     }
 }
