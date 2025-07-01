@@ -1,6 +1,7 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
 using ServiceContracts.DTO.SupplementDto;
 using ServiceContracts.Interfaces.ISupplement;
 
@@ -8,21 +9,21 @@ namespace Services
 {
     public class SupplementGetterService : ISupplementGetterService
     {
-        private readonly SportsShopDbContext _context;
+        private readonly ISupplementRepository _supplementRepository;
 
-        public SupplementGetterService(SportsShopDbContext context)
+        public SupplementGetterService(ISupplementRepository supplementRepository)
         {
-            _context = context;
+            _supplementRepository = supplementRepository;
         }
 
         public async Task<List<SupplementResponse>> GetAllSupplements()
         {
-            return await _context.Supplements.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToSupplementResponse()).ToListAsync();
+            return await _supplementRepository.GetAllSupplements().Select(item => item.ToSupplementResponse()).ToListAsync();
         }
 
         public async Task<SupplementResponse> GetSupplementById(int id)
         {
-            Supplement? supplement = await _context.Supplements.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+            Supplement? supplement = await _supplementRepository.GetSupplementById(id);
 
             if (supplement == null)
             {
@@ -34,7 +35,7 @@ namespace Services
 
         public async Task<List<SupplementResponse>> FilterSupplements(string type, string flavor)
         {
-            IQueryable<SupplementResponse> supplements = _context.Supplements.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToSupplementResponse());
+            IQueryable<SupplementResponse> supplements = _supplementRepository.GetAllSupplements().Select(item => item.ToSupplementResponse());
 
             if (type != "select")
             {
