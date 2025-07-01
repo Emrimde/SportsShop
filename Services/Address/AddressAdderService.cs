@@ -1,6 +1,6 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
+using RepositoryContracts;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 
@@ -11,12 +11,12 @@ namespace Services
     /// </summary>
     public class AddressAdderService : IAddressAdderService
     {
-        private readonly SportsShopDbContext _context;
+        private readonly IAddressRepository _addressRepository;
         private readonly UserManager<User> _userManager;
 
-        public AddressAdderService(SportsShopDbContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AddressAdderService(IAddressRepository addressRepository, UserManager<User> userManager)
         {
-            _context = dbContext;
+            _addressRepository = addressRepository;
             _userManager = userManager;
         }
        
@@ -36,9 +36,9 @@ namespace Services
             }
 
             Address address = model.ToAddress(user.Id);
-      
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
+
+            _addressRepository.AddAddress(address);
+
             return address.ToAddressResponse();
         }
     }

@@ -16,10 +16,8 @@ using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.ISupplier;
 using ServiceContracts.Interfaces.IOrder;
 using ServiceContracts.Interfaces.IWeightPlate;
-using Services.WeightPlate;
 using ServiceContracts.Interfaces.IGymnasticRing;
 using ServiceContracts.Interfaces.ITrainingRubber;
-using Services.TrainingRubber;
 using RepositoryContracts;
 using Repositories;
 
@@ -59,6 +57,9 @@ namespace SportsShop
             builder.Services.AddScoped<IGymnasticRingRepository, GymnasticRingRepository>();
             builder.Services.AddScoped<ISupplementRepository,SupplementRepository>();
             builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+            builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+            builder.Services.AddScoped<IWeightPlateRepository, WeightPlateRepository>();
+            builder.Services.AddScoped<ITrainingRubberRepository, TrainingRubberRepository>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {

@@ -1,6 +1,5 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Entities.Models;
+using RepositoryContracts;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 
@@ -11,25 +10,17 @@ namespace Services
     /// </summary>
     public class AddressUpdaterService : IAddressUpdaterService
     {
-        private readonly SportsShopDbContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly IAddressGetterService _addressGetterService;
-
-        public AddressUpdaterService(SportsShopDbContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager, IAddressGetterService addressGetterService)
+        private readonly IAddressRepository _addressRepository;
+        
+        public AddressUpdaterService(IAddressRepository addressRepository)
         {
-            _context = dbContext;
-            _userManager = userManager;
-            _addressGetterService = addressGetterService;
+            _addressRepository = addressRepository;
         }
    
         public async Task UpdateAddress(AddressUpdateRequest model)
         {
-            Address? address = await _context.Addresses.FindAsync(model.Id);
-            address!.Country = model.Country;
-            address.City = model.City;
-            address.Street = model.Street;
-            address.ZipCode = model.ZipCode;
-            await _context.SaveChangesAsync();
+            Address address = model.ToAddress();
+            await _addressRepository.UpdateAddress(address);
         }
     }
 }

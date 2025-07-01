@@ -1,6 +1,4 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using RepositoryContracts;
 using ServiceContracts.Interfaces.IAddress;
 
 namespace Services
@@ -10,25 +8,16 @@ namespace Services
     /// </summary>
     public class AddressDeleterService : IAddressDeleterService
     {
-        private readonly SportsShopDbContext _context;
-        private readonly UserManager<User> _userManager;
-
-        public AddressDeleterService(SportsShopDbContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IAddressRepository _addressRepository;
+        
+        public AddressDeleterService(IAddressRepository addressRepository)
         {
-            _context = dbContext;
-            _userManager = userManager;
+            _addressRepository = addressRepository;
         }
+
         public async Task<bool> DeleteAddress(int id)
         {
-            Address? address = await _context.Addresses.FindAsync(id);
-            if (address == null)
-            {
-                return false;
-            }
-            address.IsActive = false;
-            address.DeleteDate = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-            return true;
+            return await _addressRepository.DeleteAddress(id);
         }
     }
 }

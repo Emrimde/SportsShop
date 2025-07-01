@@ -14,15 +14,24 @@ namespace Repositories
             _context = context;
         }
 
-        public async Task<Address?> AddAddress(Address model, Guid userId)
+        public async Task<Address> AddAddress(Address model)
         {
-            throw new NotImplementedException();
+            _context.Addresses.Add(model);
+            await _context.SaveChangesAsync();
+            return model;
         }
 
         public async Task<bool> DeleteAddress(int id)
         {
             Address? address = await _context.Addresses.FindAsync(id);
-            address!.IsActive = false;
+
+            if (address == null)
+            {
+                return false;
+            }
+
+            address.IsActive = false;
+            address.DeleteDate = DateTime.UtcNow;
             int count = await _context.SaveChangesAsync();
             return count > 0;
         }
@@ -39,7 +48,7 @@ namespace Repositories
 
         public IQueryable<Address> GetAllAddresses(Guid userId)
         {
-            return _context.Addresses.Where(address => address.UserId == userId).AsQueryable();
+            return _context.Addresses.Where(address => address.UserId == userId && address.IsActive).AsQueryable();
         }
 
         public async Task UpdateAddress(Address model)

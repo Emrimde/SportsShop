@@ -21,7 +21,7 @@ namespace Repositories
 
         public async Task<WeightPlate?> GetWeightPlateById(int id)
         {
-           return await _context.WeightPlates.Include(item => item.Product).FirstOrDefaultAsync(item => item.Id == id && item.Product.IsActive);
+           return await _context.WeightPlates.Include(item => item.Product).FirstOrDefaultAsync(item => item.Product.Id == id && item.Product.IsActive);
         }
     }
 }

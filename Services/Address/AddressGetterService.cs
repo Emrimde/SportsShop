@@ -1,9 +1,7 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
-using ServiceContracts.DTO;
+using RepositoryContracts;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 
@@ -14,28 +12,13 @@ namespace Services.IAddress
     /// </summary>
     public class AddressGetterService : IAddressGetterService
     {
-        private readonly SportsShopDbContext _context;
-        private readonly UserManager<User> _userManager;
-
-        public AddressGetterService(SportsShopDbContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IAddressRepository _addressRepository;
+        
+        public AddressGetterService(IAddressRepository addressRepository, SignInManager<User> signInManager)
         {
-            _context = dbContext;
-            _userManager = userManager;
+            _addressRepository = addressRepository;
         }
-        public async Task<Address> GetAddress(int? id)
-        {
-            if (id == null)
-            {
-                return null!;
-            }
-            Address? address = await _context.Addresses.FirstOrDefaultAsync(item => item.Id == id);
-            if (address == null)
-            {
-                return null!;
-            }
-            return address;
-        }
-
+        
         public async Task<AddressResponse?> GetAddressById(int? id)
         {
             if (id == null)
@@ -43,7 +26,7 @@ namespace Services.IAddress
                 return null;
             }
 
-            Address? address = await _context.Addresses.FirstOrDefaultAsync(item => item.Id == id);
+            Address? address = await _addressRepository.GetAddressById(id);
 
             if (address == null)
             {
@@ -55,12 +38,12 @@ namespace Services.IAddress
 
         public async Task<int> GetAddressId(int id)
         {
-            return await _context.Addresses.Where(item => item.Id == id).Select(item => item.Id).FirstOrDefaultAsync();
+            return await _addressRepository.GetAddressId(id);
         }
 
         public async Task<List<AddressResponse>> GetAllAddresses(Guid userId)
         {
-            return await _context.Addresses.Where(item => item.UserId == userId && item.IsActive).Select(item => item.ToAddressResponse()).ToListAsync();
+            return await _addressRepository.GetAllAddresses(userId).Select(item => item.ToAddressResponse()).ToListAsync();
         }
 
         public bool IsAddressProvided(AddressAddRequest request)
