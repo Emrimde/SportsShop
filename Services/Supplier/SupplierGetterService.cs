@@ -1,29 +1,27 @@
-﻿using Entities.DatabaseContext;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
 using ServiceContracts.DTO.SupplierDto;
 using ServiceContracts.Interfaces.ISupplier;
-
 
 namespace Services
 {
     public class SupplierGetterService : ISupplierGetterService
     {
-        private readonly SportsShopDbContext _context;
+        private readonly ISupplierRepository _supplierRepository;
 
-        public SupplierGetterService(SportsShopDbContext context)
+        public SupplierGetterService(ISupplierRepository supplierRepository)
         {
-            _context = context;
+            _supplierRepository = supplierRepository;
         }
 
         public async Task<decimal> GetSupplierPriceById(int id)
         {
-            return await _context.Suppliers.Where(item => item.Id == id).Select(item => item.Price)
-                .FirstOrDefaultAsync();
+            return await _supplierRepository.GetSupplierPriceById(id);
         }
 
         public async Task<List<SupplierResponse>> GetAllSuppliers()
         {
-            return await _context.Suppliers.Where(item => item.IsActive).Select(item => item.ToSupplierResponse()).ToListAsync();
+            return await _supplierRepository.GetAllSuppliers().Select(item => item.ToSupplierResponse()).ToListAsync();
         }
     }
 }

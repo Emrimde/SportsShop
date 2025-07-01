@@ -58,6 +58,7 @@ namespace SportsShop
             builder.Services.AddScoped<IDrinkRepository, DrinkRepository>();
             builder.Services.AddScoped<IGymnasticRingRepository, GymnasticRingRepository>();
             builder.Services.AddScoped<ISupplementRepository,SupplementRepository>();
+            builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {
