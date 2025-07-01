@@ -24,7 +24,7 @@ namespace SportShopTests.ClothTests
                 .Options;
 
             _context = new SportsShopDbContext(options);
-            _clothGetterService = new ClothGetterService(_context);
+            _clothGetterService = new ClothGetterService(null);
         }
 
         #region GetAllClothes

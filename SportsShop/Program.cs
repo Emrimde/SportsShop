@@ -21,6 +21,8 @@ using ServiceContracts.Interfaces.IGymnasticRing;
 using Services.GymnasticRing;
 using ServiceContracts.Interfaces.ITrainingRubber;
 using Services.TrainingRubber;
+using RepositoryContracts;
+using Repositories;
 
 namespace SportsShop
 {
@@ -53,6 +55,7 @@ namespace SportsShop
             builder.Services.AddScoped<IWeightPlateGetterService, WeightPlateGetterService>();
             builder.Services.AddScoped<IGymnasticRingGetterService, GymnasticRingGetterService>();
             builder.Services.AddScoped<ITrainingRubberGetterService, TrainingRubberGetterService>();
+            builder.Services.AddScoped<IClothRepository, ClothRepository>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>
             {
