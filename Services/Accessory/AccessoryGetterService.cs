@@ -1,5 +1,4 @@
 ﻿using Entities.DatabaseContext;
-using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts.Interfaces.IAccessory;
 
@@ -44,26 +43,6 @@ namespace Services.Accessory
             return new List<dynamic>();
         }
 
-        //public async Task<List<GymnasticRing>> GetAllGymnasticRings()
-        //{
-        //    return await _context.GymnasticRings.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
-        //}
-
-        //public async Task<List<TrainingRubber>> GetAllTrainingRubbers()
-        //{
-        //    return await _context.TrainingRubbers.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
-        //}
-
-        //public async Task<GymnasticRing> GetGymnasticRing(int id)
-        //{
-        //    GymnasticRing? gymnasticRing = await _context.GymnasticRings.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
-        //    if (gymnasticRing == null)
-        //    {
-        //        return null!;
-        //    }
-        //    return gymnasticRing;
-        //}
-
         public async Task<dynamic> GetObject(int id)
         {
             var obiekt = await _context.Products.FirstOrDefaultAsync(item => item.Id == id);
@@ -74,15 +53,5 @@ namespace Services.Accessory
             }
             return obiekt;
         }
-
-        //public async Task<TrainingRubber> GetTrainingRubber(int id)
-        //{
-        //    TrainingRubber? trainingRubber = await _context.TrainingRubbers.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
-        //    if (trainingRubber == null)
-        //    {
-        //        return null!;
-        //    }
-        //    return trainingRubber;
-        //}
     }
 }

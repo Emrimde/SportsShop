@@ -1,6 +1,6 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
 using ServiceContracts.DTO.DrinkDto;
 using ServiceContracts.Interfaces.IDrink;
 
@@ -8,16 +8,16 @@ namespace Services
 {
     public class DrinkGetterService : IDrinkGetterService
     {
-        private readonly SportsShopDbContext _context;
+        private readonly IDrinkRepository _drinkRepository;
 
-        public DrinkGetterService(SportsShopDbContext context)
+        public DrinkGetterService(IDrinkRepository drinkRepository)
         {
-            _context = context;
+            _drinkRepository = drinkRepository;
         }
 
         public async Task<List<DrinkResponse>> FilterDrinks(string flavor)
         {
-            IQueryable<DrinkResponse> drinks = _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToDrinkResponse());
+            IQueryable<DrinkResponse> drinks = _drinkRepository.FilterDrinks(flavor).Select(item => item.ToDrinkResponse());
             if (flavor != "select")
             {
                 drinks = drinks.Where(item => item.Flavor == flavor);
@@ -27,7 +27,7 @@ namespace Services
 
         public async Task<DrinkResponse> GetDrinkById(int id)
         {
-            Drink? drink = await _context.Drinks.Include(item => item.Product).FirstOrDefaultAsync(item => item.ProductId == id && item.Product.IsActive);
+            Drink? drink = await _drinkRepository.GetDrinkById(id);
 
             if (drink == null)
             {
@@ -39,7 +39,7 @@ namespace Services
 
         public async Task<List<DrinkResponse>> GetAllDrinks()
         {
-            return await _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).Select(item => item.ToDrinkResponse()).ToListAsync();
+            return await _drinkRepository.GetAllDrinks().Select(item => item.ToDrinkResponse()).ToListAsync();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SportShopTests.DrinkTests
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
             _context = new SportsShopDbContext(options);
-            _drinkGetterService = new DrinkGetterService(_context);
+            _drinkGetterService = new DrinkGetterService(null);
         }
 
         #region GetAllDrinks
