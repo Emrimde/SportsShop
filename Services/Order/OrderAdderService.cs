@@ -1,5 +1,5 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
+using RepositoryContracts;
 using ServiceContracts.DTO.OrderDto;
 using ServiceContracts.Interfaces.IOrder;
 
@@ -7,17 +7,17 @@ namespace Services
 {
     public class OrderAdderService : IOrderAdderService
     {
-        private readonly SportsShopDbContext _context;
-        public OrderAdderService(SportsShopDbContext context)
+        private readonly IOrderRepository _orderRepository;
+
+        public OrderAdderService(IOrderRepository orderRepository)
         {
-            _context = context;
+            _orderRepository = orderRepository;
         }
 
         public async Task<OrderResponse> AddOrder(OrderAddRequest model)
         {
             Order order = model.ToOrder();
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            await _orderRepository.AddOrder(order);
             return order.ToOrderResponse();
         }
     }
