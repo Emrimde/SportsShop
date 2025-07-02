@@ -1,57 +1,49 @@
-﻿using Entities.DatabaseContext;
-using Microsoft.EntityFrameworkCore;
+﻿using Entities.Models;
+using RepositoryContracts;
+using ServiceContracts.DTO.GymnasticRingDto;
+using ServiceContracts.DTO.TrainingRubberDto;
+using ServiceContracts.DTO.WeightPlateDto;
 using ServiceContracts.Interfaces.IAccessory;
 
 namespace Services.Accessory
 {
     public class AccessoryGetterService : IAccessoryGetterService
     {
-        private readonly SportsShopDbContext _context;
-        public AccessoryGetterService(SportsShopDbContext context)
+        private readonly IAccessoryRepository _accessoryRepository;
+        public AccessoryGetterService(IAccessoryRepository accessoryRepository)
         {
-            _context = context;
+            _accessoryRepository = accessoryRepository;
         }
 
         public async Task<List<dynamic>> FilterAccessory(string type)
         {
+            List<dynamic> accessories = await _accessoryRepository.FilterAccessory(type);
             if (type == "GymnasticRings")
             {
-
-                var rings = await _context.GymnasticRings
-                    .Include(item => item.Product)
-                    .Where(item => item.Product.IsActive)
-                    .ToListAsync();
-
-                return rings.Cast<dynamic>().ToList();
+                return accessories
+                    .Cast<GymnasticRing>()
+                    .Select(item => item.ToGymnasticResponse())
+                    .Cast<dynamic>()
+                    .ToList();
             }
+
             if (type == "RubberBand")
             {
-                var rubbers = await _context.TrainingRubbers
-                    .Include(item => item.Product)
-                    .Where(item => item.Product.IsActive)
-                    .ToListAsync();
-                return rubbers.Cast<dynamic>().ToList();
+                return accessories
+                    .Cast<TrainingRubber>()
+                    .Select(item => item.ToTrainingRubberResponse())
+                    .Cast<dynamic>()
+                    .ToList();
             }
             if (type == "Weights")
             {
-                var plates = await _context.WeightPlates
-                    .Include(item => item.Product)
-                    .Where(item => item.Product.IsActive)
-                    .ToListAsync();
-                return plates.Cast<dynamic>().ToList();
+                return accessories
+                    .Cast<WeightPlate>()
+                    .Select(item => item.ToWeightPlateResponse())
+                    .Cast<dynamic>()
+                    .ToList();
             }
             return new List<dynamic>();
-        }
-
-        public async Task<dynamic> GetObject(int id)
-        {
-            var obiekt = await _context.Products.FirstOrDefaultAsync(item => item.Id == id);
-
-            if (obiekt == null)
-            {
-                return null!;
-            }
-            return obiekt;
         }
     }
 }

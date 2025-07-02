@@ -24,7 +24,7 @@ namespace Repositories
         public async Task<bool> DeleteAddress(int id)
         {
             Address? address = await _context.Addresses.FindAsync(id);
-
+            
             if (address == null)
             {
                 return false;
@@ -54,7 +54,13 @@ namespace Repositories
         public async Task UpdateAddress(Address model)
         {
             Address? address = await _context.Addresses.FindAsync(model.Id);
-            address!.Country = model.Country;
+
+            if (address == null)
+            {
+                return;
+            }
+
+            address.Country = model.Country;
             address.City = model.City;
             address.Street = model.Street;
             address.ZipCode = model.ZipCode;

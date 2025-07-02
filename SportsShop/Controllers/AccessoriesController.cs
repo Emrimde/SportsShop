@@ -16,6 +16,7 @@ namespace SportsShop.Controllers
         private readonly IWeightPlateGetterService _weightPlateGetterService;
         private readonly ITrainingRubberGetterService _trainingRubberGetterService;
         private readonly IGymnasticRingGetterService _gymnasticRingGetterService;
+
         public AccessoriesController(IAccessoryGetterService accessoriesService, IWeightPlateGetterService weightPlateGetterService, ITrainingRubberGetterService trainingRubberGetterService, IGymnasticRingGetterService gymnasticRingGetterService)
         {
             _accesoriesService = accessoriesService;
@@ -57,7 +58,6 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> FilterAccessory(string type)
         {
-            
             List<dynamic> accessories = await _accesoriesService.FilterAccessory(type);
             if (accessories.Count == 0)
             {
@@ -69,7 +69,6 @@ namespace SportsShop.Controllers
             };
             
             return View("Index",accessoriesViewModels);
-
         }
     }
 }
