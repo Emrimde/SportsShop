@@ -1,39 +1,25 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using RepositoryContracts;
 using ServiceContracts.Interfaces.ICart;
 
 namespace Services
 {
     public class CartDeleterService : ICartDeleterService
     {
-        private readonly SportsShopDbContext _context;
-        private readonly ICartGetterService  _cartGetterService;
+        private readonly ICartRepository _cartRepository;
 
-        public CartDeleterService(SportsShopDbContext context, ICartGetterService cartGetterService)
+        public CartDeleterService( ICartRepository cartRepository)
         {
-            _context = context;
-            _cartGetterService = cartGetterService;
+            _cartRepository = cartRepository;
         }
 
         public async Task ClearCart(string userId)
         {
-            Cart cart = await _cartGetterService.GetCart(userId);
-            cart.CartItems.Clear();
-            await _context.SaveChangesAsync();
+            await _cartRepository.ClearCart(userId);
         }
-        public async Task<bool> RemoveFromCart(int productId, string userId)
+
+        public async Task<bool> RemoveFromCart(int productId, int cartId)
         {
-            CartItem? cartItem = await _context.CartItems.Include(item => item.Cart).FirstOrDefaultAsync(item => item.Id == productId && item.Cart.UserId.ToString() == userId);
-
-            if (cartItem == null)
-            {
-                return false;
-            }
-            cartItem.IsActive = false;
-            await _context.SaveChangesAsync();
-            return true;
-
+            return await _cartRepository.RemoveFromCart(productId, cartId);
         }
     }
 }

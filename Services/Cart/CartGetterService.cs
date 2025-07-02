@@ -1,6 +1,6 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
 using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.ICart;
 
@@ -8,41 +8,28 @@ namespace Services
 {
     public class CartGetterService : ICartGetterService
     {
-        private readonly SportsShopDbContext _context;
-        public CartGetterService(SportsShopDbContext context)
+        private readonly ICartRepository _cartRepository;
+        public CartGetterService(ICartRepository cartRepository)
         {
-            _context = context;
+            _cartRepository = cartRepository;
         }
 
-        public async Task<List<CartItemResponse>> GetAllCartItems(string userId)
+        public async Task<List<CartItemResponse>> GetAllCartItems(int cartId)
         {
-            List <CartItemResponse> cartitems = await _context.Carts.Include(item => item.CartItems).ThenInclude(item => item.Product)
-                .Where(item => item.UserId.ToString() == userId).SelectMany(item => item.CartItems.Where(item => item.IsActive)).Select(item => item.ToCartItemResponse()).ToListAsync();
-
-            return cartitems;
+            return await _cartRepository.GetAllCartItems(cartId).Select(item => item.ToCartItemResponse()).ToListAsync();
         }
 
-        public async Task<Cart> GetCart(string userId)
+        public async Task<Cart?> GetCartByUserId(string userId)
         {
-            Cart? cart = await _context.Carts
-                .Include(item => item.CartItems)
-                .FirstOrDefaultAsync(item =>
-                    item.UserId.ToString() == userId &&
-                    item.IsActive);
+            Cart? cart = await _cartRepository.GetCartByUserId(userId);
             if (cart != null)
                 return cart;
             return null!;
         }
 
-        public Task<List<CartItem>> GetCartItems(string userId)
+        public async Task<int> GetTotalCostOfAllCartItems(int cartId)
         {
-            throw new NotImplementedException();
+            return Convert.ToInt32((await GetAllCartItems(cartId)).Sum(item => item.Price * item.Quantity));
         }
-
-        public async Task<int> GetTotalCostOfAllCartItems(string userId)
-        {
-            return Convert.ToInt32((await GetAllCartItems(userId)).Sum(item => item.Price * item.Quantity));
-        }
-
     }
 }

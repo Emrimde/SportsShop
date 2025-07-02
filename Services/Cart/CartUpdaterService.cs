@@ -1,22 +1,18 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using RepositoryContracts;
 using ServiceContracts.Interfaces.ICart;
 
 namespace Services
 {
     public class CartUpdaterService : ICartUpdaterService
     {
-        private readonly SportsShopDbContext _context;
-        public CartUpdaterService(SportsShopDbContext context)
+        private ICartRepository _cartRepository;
+        public CartUpdaterService(ICartRepository cartRepository)
         {
-            _context = context;
+            _cartRepository = cartRepository; 
         }
         public async Task UpdateCartItemQuantity(int cartItemId, int quantity)
         {
-            CartItem? item = await _context.CartItems.FindAsync(cartItemId);
-            item!.Quantity = quantity;
-            await _context.SaveChangesAsync();
-
+            await _cartRepository.UpdateCartItemQuantity(cartItemId, quantity);
         }
     }
 }

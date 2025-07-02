@@ -37,7 +37,7 @@ namespace Services
 
             Address address = model.ToAddress(user.Id);
 
-            _addressRepository.AddAddress(address);
+            await _addressRepository.AddAddress(address);
 
             return address.ToAddressResponse();
         }

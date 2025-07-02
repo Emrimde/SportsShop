@@ -47,9 +47,9 @@ namespace SportsShop.Controllers
             {
                 return BadRequest();
             }
-
-            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(user.Id.ToString());
-            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(user.Id.ToString());
+            Cart? cart = await _cartGetterService.GetCartByUserId(user.Id.ToString());
+            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cart.Id);
+            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
             
             orderRequest.CartItems = cartItems.Select(item => new CartItemAddRequest() {
                 ProductId = item.ProductId,

@@ -36,10 +36,11 @@ namespace SportsShop.Controllers
             string? user = _userManager.GetUserId(User);
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
+            Cart? cart = await _cartGetterService.GetCartByUserId(user);
 
-            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(user);
+            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cart!.Id);
 
-            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(user);
+            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
             ViewBag.TotalCost = totalCost;
 
             return View(cartItems);
@@ -67,7 +68,9 @@ namespace SportsShop.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
 
-            bool ok = await _cartDeleterService.RemoveFromCart(id, userId);
+            Cart? cart = await _cartGetterService.GetCartByUserId(userId);
+
+            bool ok = await _cartDeleterService.RemoveFromCart(id, cart!.Id);
 
             if (ok)
             {
@@ -93,12 +96,13 @@ namespace SportsShop.Controllers
             User? user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
+            Cart? cart = await _cartGetterService.GetCartByUserId(user.Id.ToString());
 
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
             checkoutViewModel.Addresses = await _addressGetterService.GetAllAddresses(user.Id);
             checkoutViewModel.Suppliers = await _supplierGetterService.GetAllSuppliers();
-            checkoutViewModel.CartItems = await _cartGetterService.GetAllCartItems(user.Id.ToString());
-            int itemsPrice = await _cartGetterService.GetTotalCostOfAllCartItems(user.Id.ToString());
+            checkoutViewModel.CartItems = await _cartGetterService.GetAllCartItems(cart.Id);
+            int itemsPrice = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
             checkoutViewModel.ItemsPrice = itemsPrice;
             if(shippingCost == 0m || itemsPrice >= 300m)
             {
