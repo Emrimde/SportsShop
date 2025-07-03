@@ -1,89 +1,80 @@
 ﻿using AutoFixture;
-using Entities.DatabaseContext;
 using Entities.Models;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+using Moq;
+using RepositoryContracts;
 using ServiceContracts.DTO.GymnasticRingDto;
 using ServiceContracts.Interfaces.IGymnasticRing;
-
+using Services;
 
 namespace SportShopTests.GymnasticRingTests
 {
     public class GymnasticRingGetterServiceTest
     {
         private readonly IFixture _fixture;
-        private readonly SportsShopDbContext _context;
+        private readonly Mock<IGymnasticRingRepository> _gymnasticRingRepositoryMock;
+        private readonly IGymnasticRingRepository _gymnasticRingRepository;
         private readonly IGymnasticRingGetterService _gymnasticRingGetterService;
 
         public GymnasticRingGetterServiceTest()
         {
             _fixture = new Fixture();
-            DbContextOptions<SportsShopDbContext> options = new DbContextOptionsBuilder<SportsShopDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-
-            _context = new SportsShopDbContext(options);
-            
+            _gymnasticRingRepositoryMock = new Mock<IGymnasticRingRepository>();
+            _gymnasticRingRepository = _gymnasticRingRepositoryMock.Object;
+            _gymnasticRingGetterService = new GymnasticRingGetterService(_gymnasticRingRepository);
         }
 
         #region GetAllGymnasticRings
 
         [Fact]
-        public async Task GetAllGymnasticRings_ReturnsEmptyList()
+        public void GetAllGymnasticRings_ReturnsEmptyList()
         {
+            //Arrange
+            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).Returns(new List<GymnasticRing>().AsQueryable());
+
             //Act
-            List<GymnasticRingResponse> gymnasticRings = await _gymnasticRingGetterService.GetAllGymnasticRings();
+            List<GymnasticRingResponse> gymnasticRings = _gymnasticRingGetterService.GetAllGymnasticRings();
 
             //Assert
             gymnasticRings.Should().BeEmpty();
-            gymnasticRings.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task GetAllGymnasticRings_ReturnAll()
+        public void GetAllGymnasticRings_ReturnAll()
         {
             //Arrange
-            List<Product> products = _fixture.Build<Product>()
-                .With(p => p.IsActive, true)
-                .CreateMany(5)
-                .ToList();
+            List<GymnasticRing> gymnasticRings = new List<GymnasticRing>()
+           {
+               _fixture.Create<GymnasticRing>(),
+               _fixture.Create<GymnasticRing>(),
+               _fixture.Create<GymnasticRing>()
+           };
 
-            _context.Products.AddRange(products);
-            await _context.SaveChangesAsync();
-
-            List<GymnasticRing> gymnasticRings = _fixture.Build<GymnasticRing>()
-           .Without(c => c.Product)
-           .CreateMany(5)
-           .ToList();
-
-            int idx = 0;
-            gymnasticRings.ForEach(item => item.ProductId = products[idx++].Id);
-
-            _context.GymnasticRings.AddRange(gymnasticRings);
-            await _context.SaveChangesAsync();
+            List<GymnasticRingResponse> expected = gymnasticRings.Select(item => item.ToGymnasticResponse()).ToList();
+            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).Returns(gymnasticRings.AsQueryable());
 
             //Act
-            List<GymnasticRingResponse> result = await _gymnasticRingGetterService.GetAllGymnasticRings();
+            List<GymnasticRingResponse> result = _gymnasticRingGetterService.GetAllGymnasticRings();
 
-            result.Should().HaveCount(5);
+            result.Should().HaveCount(3);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task GetAllGymnasticRings_ReturnsExactlyOneRecord()
+        public void GetAllGymnasticRings_ReturnsExactlyOneRecord()
         {
             //Arrange 
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            GymnasticRing gymnasticRing = _fixture.Create<GymnasticRing>();
+            GymnasticRingResponse expected = gymnasticRing.ToGymnasticResponse();
 
-            GymnasticRing gymnasticRing = _fixture.Build<GymnasticRing>().Without(c => c.Product).With(item => item.ProductId, product.Id).Create();
-            _context.GymnasticRings.Add(gymnasticRing);
-            await _context.SaveChangesAsync();
+            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).Returns(new List<GymnasticRing>() {gymnasticRing}.AsQueryable());
 
             //Act
-            List<GymnasticRingResponse> result = await _gymnasticRingGetterService.GetAllGymnasticRings();
+            List<GymnasticRingResponse> result = _gymnasticRingGetterService.GetAllGymnasticRings();
 
             //Assert
             result.Should().HaveCount(1);
+            result.Single().Should().BeEquivalentTo(expected);
         }
 
         #endregion
@@ -94,26 +85,23 @@ namespace SportShopTests.GymnasticRingTests
         public async Task GetGymnasticRingById_ReturnProperGymnasticRing()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            GymnasticRing gymnasticRing = _fixture.Create<GymnasticRing>();
+            GymnasticRingResponse expected = gymnasticRing.ToGymnasticResponse();
 
-            GymnasticRing gymnasticRing = _fixture.Build<GymnasticRing>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.GymnasticRings.Add(gymnasticRing);
-            await _context.SaveChangesAsync();
+            _gymnasticRingRepositoryMock.Setup(item => item.GetGymnasticRingById(gymnasticRing.ProductId)).ReturnsAsync(gymnasticRing);
 
             //Act
             GymnasticRingResponse? result = await _gymnasticRingGetterService.GetGymnasticRingById(gymnasticRing.ProductId);
 
             //Assert
-            result.Should().NotBeNull();
-            result.ProductId.Should().Be(gymnasticRing.ProductId);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetGymnasticRingById_GymnasticRingIsNull()
         {
             int missingId = 123456;
+            _gymnasticRingRepositoryMock.Setup(item => item.GetGymnasticRingById(missingId)).ReturnsAsync(null as GymnasticRing);
 
             // Act
             GymnasticRingResponse? result = await _gymnasticRingGetterService.GetGymnasticRingById(missingId);
@@ -126,13 +114,9 @@ namespace SportShopTests.GymnasticRingTests
         public async Task GetGymnasticRingById_IsActiveProperty_IsNull()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, false).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            GymnasticRing gymnasticRing = _fixture.Build<GymnasticRing>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.GymnasticRings.Add(gymnasticRing);
-            await _context.SaveChangesAsync();
+            GymnasticRing gymnasticRing = _fixture.Create<GymnasticRing>();
+            gymnasticRing.Product.IsActive = false;
+            _gymnasticRingRepositoryMock.Setup(item => item.GetGymnasticRingById(gymnasticRing.ProductId)).ReturnsAsync(null as GymnasticRing);
 
             //Act
             GymnasticRingResponse? result = await _gymnasticRingGetterService.GetGymnasticRingById(gymnasticRing.ProductId);

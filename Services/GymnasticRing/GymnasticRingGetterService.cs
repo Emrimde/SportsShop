@@ -15,9 +15,9 @@ namespace Services
             _gymnasticRingRepository = gymnasticRingRepository;
         }
 
-        public async Task<List<GymnasticRingResponse>> GetAllGymnasticRings()
+        public List<GymnasticRingResponse> GetAllGymnasticRings()
         {
-            return await _gymnasticRingRepository.GetAllGymnasticRings().Select(item => item.ToGymnasticResponse()).ToListAsync();
+            return _gymnasticRingRepository.GetAllGymnasticRings().Select(item => item.ToGymnasticResponse()).ToList();
         }
 
         public async Task<GymnasticRingResponse?> GetGymnasticRingById(int id)
