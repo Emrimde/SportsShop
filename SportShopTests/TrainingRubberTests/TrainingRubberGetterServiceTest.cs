@@ -5,7 +5,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTO.TrainingRubberDto;
 using ServiceContracts.Interfaces.ITrainingRubber;
-using Services.TrainingRubber;
 
 namespace SportShopTests.TrainingRubberTests
 {
@@ -21,7 +20,7 @@ namespace SportShopTests.TrainingRubberTests
             DbContextOptions<SportsShopDbContext> options = new DbContextOptionsBuilder<SportsShopDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
             _context = new SportsShopDbContext(options);
-            _trainingRubberGetterService = new TrainingRubberGetterService(_context);
+           
         }
 
         #region GetAllTrainingRubbers

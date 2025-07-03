@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTO.GymnasticRingDto;
 using ServiceContracts.Interfaces.IGymnasticRing;
-using Services.GymnasticRing;
+
 
 namespace SportShopTests.GymnasticRingTests
 {
@@ -22,7 +22,7 @@ namespace SportShopTests.GymnasticRingTests
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
             _context = new SportsShopDbContext(options);
-            _gymnasticRingGetterService = new GymnasticRingGetterService(_context);
+            
         }
 
         #region GetAllGymnasticRings

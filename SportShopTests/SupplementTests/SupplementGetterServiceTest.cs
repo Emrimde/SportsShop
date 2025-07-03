@@ -22,7 +22,7 @@ namespace SportShopTests.SupplementTests
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
             _context = new SportsShopDbContext(options);
-            _supplementGetterService = new SupplementGetterService(_context);
+           
         }
 
         #region GetAllSupplements

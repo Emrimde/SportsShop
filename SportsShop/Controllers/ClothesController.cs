@@ -15,9 +15,9 @@ namespace SportsShop.Controllers
         {
             _clothGetterService = clothesService;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<ClothResponse> clothes = await _clothGetterService.GetAllClothes();
+            List<ClothResponse> clothes = _clothGetterService.GetAllClothes();
             return View(clothes);
         }
         public async Task<IActionResult> ShowCloth(int id)

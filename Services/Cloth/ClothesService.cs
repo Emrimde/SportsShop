@@ -36,14 +36,16 @@ namespace Services
             return clothResponses;
         }
 
-        public async Task<List<ClothResponse>> GetAllClothes()
+        public List<ClothResponse> GetAllClothes()
         {
-            return await _clothRepository.GetAllClothes().Select(item => item.ToClothResponse()).ToListAsync();
+            return _clothRepository.GetAllClothes().Select(item => item.ToClothResponse()).ToList();
         }
 
         public async Task<ClothResponse?> GetClothById(int id)
         {
             Cloth? cloth = await _clothRepository.GetClothById(id);
+            if (cloth == null)
+                return null;
             return cloth.ToClothResponse();
         }
     }

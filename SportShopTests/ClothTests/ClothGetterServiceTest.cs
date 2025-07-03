@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
-using Entities.DatabaseContext;
 using Entities.Models;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+using Moq;
+using RepositoryContracts;
 using ServiceContracts.DTO.ClothDto;
 using ServiceContracts.Interfaces.ICloth;
 using Services;
@@ -13,27 +13,26 @@ namespace SportShopTests.ClothTests
     {
         private readonly IClothGetterService _clothGetterService;
         private readonly IFixture _fixture;
-        private readonly SportsShopDbContext _context;
+        private readonly IClothRepository _clothRepository;
+        private readonly Mock<IClothRepository> _clothRepositoryMock;
 
         public ClothGetterServiceTest()
         {
             _fixture = new Fixture();
-
-            DbContextOptions<SportsShopDbContext> options = new DbContextOptionsBuilder<SportsShopDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) 
-                .Options;
-
-            _context = new SportsShopDbContext(options);
-            _clothGetterService = new ClothGetterService(null);
+            _clothRepositoryMock = new Mock<IClothRepository>();
+            _clothRepository = _clothRepositoryMock.Object;
+            _clothGetterService = new ClothGetterService(_clothRepository);         
         }
 
         #region GetAllClothes
 
         [Fact]
-        public async Task GetAllClothes_ReturnsEmptyList()
+        public void GetAllClothes_ReturnsEmptyList_ToBeSuccessfull()
         {
-            //Act
-            List<ClothResponse> clothes = await _clothGetterService.GetAllClothes();
+            //Arrange
+            _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(new List<Cloth>().AsQueryable());
+
+            List<ClothResponse> clothes =  _clothGetterService.GetAllClothes();
 
             //Assert
             clothes.Should().BeEmpty();
@@ -41,51 +40,40 @@ namespace SportShopTests.ClothTests
         }
 
         [Fact]
-        public async Task GetAllClothes_ReturnAllClothes()
+        public void GetAllClothes_ReturnAllClothes_ToBeSuccessfull()
         {
-            //Arrange, creating products, cloths
-            List<Product> products = _fixture.Build<Product>()
-                .With(p => p.IsActive, true)
-                .CreateMany(5)
-                .ToList();
+            List<Cloth> clothes = new List<Cloth>()
+            {
+                _fixture.Build<Cloth>().Create(),
+                _fixture.Build<Cloth>().Create(),
+                _fixture.Build<Cloth>().Create()
+            };
 
-            _context.Products.AddRange(products);
-            await _context.SaveChangesAsync();
+            List<ClothResponse> expected = clothes.Select(c => c.ToClothResponse()).ToList();
 
-            List<Cloth> clothes = _fixture.Build<Cloth>()
-           .Without(c => c.Product)
-           .CreateMany(5)
-           .ToList();
+            _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(clothes.AsQueryable());
 
-            int idx = 0;
-            clothes.ForEach(cloth => cloth.ProductId = products[idx++].Id);
+            List<ClothResponse> result =  _clothGetterService.GetAllClothes();
 
-            _context.Clothes.AddRange(clothes);
-            await _context.SaveChangesAsync();
-
-            //Act
-            List<ClothResponse> result = await _clothGetterService.GetAllClothes();
-
-            result.Should().HaveCount(5);
+            result.Should().HaveCount(3);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task GetAllClothes_ReturnsExactlyOneRecord()
+        public void GetAllClothes_ReturnsExactlyOneRecord_ToBeSuccessfull()
         {
-            //Arrange 
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            //Arrange
+            Cloth cloth = _fixture.Build<Cloth>().Create();
+            ClothResponse expected = cloth.ToClothResponse();
 
-            Cloth cloth = _fixture.Build<Cloth>().Without(c => c.Product).With(item => item.ProductId, product.Id).Create();
-            _context.Clothes.Add(cloth);
-            await _context.SaveChangesAsync();
+            _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(new List<Cloth> { cloth }.AsQueryable());
 
             //Act
-            List<ClothResponse> result = await _clothGetterService.GetAllClothes();
-
+            List<ClothResponse> result = _clothGetterService.GetAllClothes();
+            
             //Assert
             result.Should().HaveCount(1);
+            result.Single().Should().BeEquivalentTo(expected);
         }
 
         #endregion
@@ -93,30 +81,28 @@ namespace SportShopTests.ClothTests
         #region GetClothById
 
         [Fact]
-        public async Task GetClothById_ReturnProperCloth()
+        public async Task GetClothById_FullClothDetails_ToBeSuccessfull()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            Cloth cloth = _fixture.Build<Cloth>().Create();
+            ClothResponse expected = cloth.ToClothResponse();
 
-            Cloth cloth = _fixture.Build<Cloth>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.Clothes.Add(cloth);
-            await _context.SaveChangesAsync();
+            _clothRepositoryMock.Setup(item => item.GetClothById(cloth.ProductId)).ReturnsAsync(cloth);
 
             //Act
             ClothResponse? result = await _clothGetterService.GetClothById(cloth.ProductId);
 
             //Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(cloth.ProductId);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task GetClothById_ClothIsNull()
+        public async Task GetClothById_ClothIsNull_ToBeNull()
         {
             int missingId = 123456; 
 
+            _clothRepositoryMock.Setup(item => item.GetClothById(missingId)).ReturnsAsync((Cloth?)null);
             // Act
             ClothResponse? result = await _clothGetterService.GetClothById(missingId);
 
@@ -125,16 +111,13 @@ namespace SportShopTests.ClothTests
         }
 
         [Fact]
-        public async Task GetClothById_ClothIsActive_IsNull()
+        public async Task GetClothById_IsActiveEqualToFalse_ToBeNull()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, false).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            Cloth cloth = _fixture.Build<Cloth>().Create();
+            cloth.Product.IsActive = false;
 
-            Cloth cloth = _fixture.Build<Cloth>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.Clothes.Add(cloth);
-            await _context.SaveChangesAsync();
+            _clothRepositoryMock.Setup(item => item.GetClothById(cloth.ProductId)).ReturnsAsync(null as Cloth);
 
             //Act
             ClothResponse? result = await _clothGetterService.GetClothById(cloth.ProductId);

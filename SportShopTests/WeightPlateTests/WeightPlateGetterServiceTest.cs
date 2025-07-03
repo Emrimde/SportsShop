@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTO.WeightPlateDto;
 using ServiceContracts.Interfaces.IWeightPlate;
-using Services.WeightPlate;
+
 
 namespace SportShopTests.WeightPlateTests
 {
@@ -22,7 +22,7 @@ namespace SportShopTests.WeightPlateTests
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
             _context = new SportsShopDbContext(options);
-            _weightPlateGetterService = new WeightPlateGetterService(_context);
+           
         }
 
         #region GetAllWeightPlates
