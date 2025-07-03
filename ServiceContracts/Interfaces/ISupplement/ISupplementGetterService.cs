@@ -4,7 +4,7 @@ namespace ServiceContracts.Interfaces.ISupplement
 {
     public interface ISupplementGetterService
     {
-        Task<List<SupplementResponse>> GetAllSupplements();
+        List<SupplementResponse> GetAllSupplements();
         Task<SupplementResponse> GetSupplementById(int id);
         Task<List<SupplementResponse>> FilterSupplements(string type, string flavor);
     }

@@ -16,9 +16,9 @@ namespace Services
             _supplementRepository = supplementRepository;
         }
 
-        public async Task<List<SupplementResponse>> GetAllSupplements()
+        public List<SupplementResponse> GetAllSupplements()
         {
-            return await _supplementRepository.GetAllSupplements().Select(item => item.ToSupplementResponse()).ToListAsync();
+            return _supplementRepository.GetAllSupplements().Select(item => item.ToSupplementResponse()).ToList();
         }
 
         public async Task<SupplementResponse> GetSupplementById(int id)
