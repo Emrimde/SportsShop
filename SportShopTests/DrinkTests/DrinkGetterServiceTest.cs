@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
-using Entities.DatabaseContext;
 using Entities.Models;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+using Moq;
+using RepositoryContracts;
 using ServiceContracts.DTO.DrinkDto;
 using ServiceContracts.Interfaces.IDrink;
 using Services;
@@ -13,68 +13,68 @@ namespace SportShopTests.DrinkTests
     {
         private readonly IFixture _fixture;
         private readonly IDrinkGetterService _drinkGetterService;
-        private readonly SportsShopDbContext _context;
+        private readonly IDrinkRepository _drinkRepository;
+        private readonly Mock<IDrinkRepository> _drinkRepositoryMock;
         public DrinkGetterServiceTest()
         {
             _fixture = new Fixture();
-
-            DbContextOptions<SportsShopDbContext> options = new DbContextOptionsBuilder<SportsShopDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-
-            _context = new SportsShopDbContext(options);
-            _drinkGetterService = new DrinkGetterService(null);
+            _drinkRepositoryMock = new Mock<IDrinkRepository>();
+            _drinkRepository = _drinkRepositoryMock.Object;
+            _drinkGetterService = new DrinkGetterService(_drinkRepository);
         }
 
         #region GetAllDrinks
 
         [Fact]
-        public async Task GetAllDrinks_ReturnsEmptyList()
+        public void GetAllDrinks_ReturnsEmptyList_ToBeSuccessfull()
         {
+            //Arrange
+             _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).Returns(new List<Drink>().AsQueryable());
+
             //Act
-            List<DrinkResponse> result = await _drinkGetterService.GetAllDrinks();
+            List<DrinkResponse> result = _drinkGetterService.GetAllDrinks();
 
             //Assert
             result.Should().BeEmpty();
         }
 
         [Fact]
-        public async Task GetAllDrinks_ReturnsAllDrinks()
+        public void GetAllDrinks_ShouldReturnAllDrinks()
         {
             //Arrange
-            List<Product> products = _fixture.Build<Product>().With(item => item.IsActive, true).CreateMany(5).ToList();
-            _context.Products.AddRange(products);
-            await _context.SaveChangesAsync();
+            List<Drink> drinks = new List<Drink>() {
+                _fixture.Create<Drink>(),
+                _fixture.Create<Drink>(),
+                _fixture.Create<Drink>(),
+            };
 
-            List<Drink> drinks = _fixture.Build<Drink>().Without(item => item.Product).CreateMany(5).ToList();
-            _context.Drinks.AddRange(drinks);
-            int index = 0;
-            drinks.ForEach(item => item.ProductId = products[index++].Id);
-            await _context.SaveChangesAsync();
+            List<DrinkResponse> expected = drinks.Select(item => item.ToDrinkResponse()).ToList();
+
+            _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).Returns(drinks.AsQueryable());
 
             //Act
-            List<DrinkResponse> result = await _drinkGetterService.GetAllDrinks();
+            List<DrinkResponse> result = _drinkGetterService.GetAllDrinks();
 
             //Assert
-            result.Should().HaveCount(5);
+            result.Should().HaveCount(3);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task GetAllDrinks_ReturnsExactlyOneDrink()
+        public void GetAllDrinks_ReturnsExactlyOneDrink()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            Drink drink = _fixture.Create<Drink>();
+            DrinkResponse expected = drink.ToDrinkResponse();
 
-            Drink drink = _fixture.Build<Drink>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.Drinks.Add(drink);
-            await _context.SaveChangesAsync();
+            _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).Returns(new List<Drink>() {drink}.AsQueryable());
 
             //Act
-            List<DrinkResponse> result = await _drinkGetterService.GetAllDrinks();
+            List<DrinkResponse> result = _drinkGetterService.GetAllDrinks();
 
             //Assert
             result.Should().HaveCount(1);
+            result.Single().Should().BeEquivalentTo(expected);
         }
 
         #endregion
@@ -85,26 +85,25 @@ namespace SportShopTests.DrinkTests
         public async Task GetDrinkById_ReturnProperDrink()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            Drink drink = _fixture.Create<Drink>();
+            DrinkResponse expected = drink.ToDrinkResponse();
 
-            Drink drink = _fixture.Build<Drink>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.Drinks.Add(drink);
-            await _context.SaveChangesAsync();
+            _drinkRepositoryMock.Setup(item => item.GetDrinkById(drink.ProductId)).ReturnsAsync(drink);
 
             //Act
             DrinkResponse result = await _drinkGetterService.GetDrinkById(drink.ProductId);
 
             //Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(drink.ProductId);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetDrinkById_ReturnNull()
         {
             int fakeId = 123456;
+            _drinkRepositoryMock.Setup(item => item.GetDrinkById(fakeId)).ReturnsAsync(null as  Drink);
+
             //Act
             DrinkResponse result = await _drinkGetterService.GetDrinkById(fakeId);
 
@@ -116,13 +115,11 @@ namespace SportShopTests.DrinkTests
         public async Task GetDrinkById_PropertyIsActiveFalse_ReturnNull()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, false).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            Drink drink = _fixture.Build<Drink>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.Drinks.Add(drink);
-            await _context.SaveChangesAsync();
+          
+            Drink drink = _fixture.Create<Drink>();
+            drink.Product.IsActive = false;
+            
+            _drinkRepositoryMock.Setup(item => item.GetDrinkById(drink.ProductId)).ReturnsAsync(null as Drink);
 
             //Act
             DrinkResponse result = await _drinkGetterService.GetDrinkById(drink.ProductId);

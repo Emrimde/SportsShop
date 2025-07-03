@@ -4,7 +4,7 @@ namespace ServiceContracts.Interfaces.IDrink
 {
     public interface IDrinkGetterService
     {
-        Task<List<DrinkResponse>> GetAllDrinks();
+        List<DrinkResponse> GetAllDrinks();
         Task<DrinkResponse> GetDrinkById(int id);
         Task<List<DrinkResponse>> FilterDrinks(string flavor);
     }

@@ -1,9 +1,6 @@
-﻿using Entities.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO.DrinkDto;
-using ServiceContracts.Interfaces;
 using ServiceContracts.Interfaces.IDrink;
-using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
@@ -14,9 +11,9 @@ namespace SportsShop.Controllers
         {
             _drinkGetterService = drinkGetterService;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<DrinkResponse> drinks = await _drinkGetterService.GetAllDrinks();
+            List<DrinkResponse> drinks = _drinkGetterService.GetAllDrinks();
             return View(drinks);
         }
         public async Task<IActionResult> ShowDrink(int id)
