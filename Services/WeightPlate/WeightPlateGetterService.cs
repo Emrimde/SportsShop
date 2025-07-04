@@ -15,11 +15,11 @@ namespace Services
             _weightPlateRepository = weightPlateRepository;
         }
 
-        public async Task<List<WeightPlateResponse>> GetAllWeightPlates()
+        public List<WeightPlateResponse> GetAllWeightPlates()
         {
-            return await _weightPlateRepository.GetAllWeightPlates()
+            return _weightPlateRepository.GetAllWeightPlates()
                 .Select(item => item.ToWeightPlateResponse())
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<WeightPlateResponse?> GetWeightPlateById(int id)

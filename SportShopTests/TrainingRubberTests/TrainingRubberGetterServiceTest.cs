@@ -1,14 +1,11 @@
 ﻿using AutoFixture;
-using Entities.DatabaseContext;
 using Entities.Models;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using RepositoryContracts;
 using ServiceContracts.DTO.TrainingRubberDto;
 using ServiceContracts.Interfaces.ITrainingRubber;
 using Services;
-using System.Reflection;
 
 namespace SportShopTests.TrainingRubberTests
 {
@@ -17,7 +14,6 @@ namespace SportShopTests.TrainingRubberTests
         private readonly IFixture _fixture;
         private readonly Mock<ITrainingRubberRepository> _trainingRubberRepositoryMock;
         private readonly ITrainingRubberRepository _trainingRubberRepository;
-        private readonly SportsShopDbContext _context;
         private readonly ITrainingRubberGetterService _trainingRubberGetterService;
 
         public TrainingRubberGetterServiceTest()
