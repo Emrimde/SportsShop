@@ -3,85 +3,82 @@ using Entities.DatabaseContext;
 using Entities.Models;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using RepositoryContracts;
 using ServiceContracts.DTO.TrainingRubberDto;
 using ServiceContracts.Interfaces.ITrainingRubber;
+using Services;
+using System.Reflection;
 
 namespace SportShopTests.TrainingRubberTests
 {
     public class TrainingRubberGetterServiceTest
     {
         private readonly IFixture _fixture;
+        private readonly Mock<ITrainingRubberRepository> _trainingRubberRepositoryMock;
+        private readonly ITrainingRubberRepository _trainingRubberRepository;
         private readonly SportsShopDbContext _context;
         private readonly ITrainingRubberGetterService _trainingRubberGetterService;
 
         public TrainingRubberGetterServiceTest()
         {
+            _trainingRubberRepositoryMock = new Mock<ITrainingRubberRepository>();
+            _trainingRubberRepository = _trainingRubberRepositoryMock.Object;
+            _trainingRubberGetterService = new TrainingRubberGetterService(_trainingRubberRepository);
             _fixture = new Fixture();
-            DbContextOptions<SportsShopDbContext> options = new DbContextOptionsBuilder<SportsShopDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-
-            _context = new SportsShopDbContext(options);
-           
         }
 
         #region GetAllTrainingRubbers
 
         [Fact]
-        public async Task GetAllTrainingRubbers_ReturnsEmptyList()
+        public void GetAllTrainingRubbers_ReturnsEmptyList()
         {
+            //Arrange
+            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).Returns(new List<TrainingRubber>().AsQueryable());
+
             //Act
-            List<TrainingRubberResponse> trainingRubbers = await _trainingRubberGetterService.GetAllTrainingRubbers();
+            List<TrainingRubberResponse> trainingRubbers =  _trainingRubberGetterService.GetAllTrainingRubbers();
 
             //Assert
             trainingRubbers.Should().BeEmpty();
-            trainingRubbers.Should().NotBeNull();
         }
 
         [Fact]
         public async Task GetAllTrainingRubbers_ReturnAllTrainingRubbers()
         {
             //Arrange
-            List<Product> products = _fixture.Build<Product>()
-                .With(p => p.IsActive, true)
-                .CreateMany(5)
-                .ToList();
+            List<TrainingRubber> trainingRubbers = new List<TrainingRubber>()
+            {
+                _fixture.Create<TrainingRubber>(),
+                _fixture.Create<TrainingRubber>(),
+                _fixture.Create<TrainingRubber>()
+            };
 
-            _context.Products.AddRange(products);
-            await _context.SaveChangesAsync();
+            List<TrainingRubberResponse> expected = trainingRubbers.Select(item => item.ToTrainingRubberResponse()).ToList();
 
-            List<TrainingRubber> trainingRubbers = _fixture.Build<TrainingRubber>()
-                .Without(c => c.Product)
-                .CreateMany(5)
-                .ToList();
-
-            int idx = 0;
-            trainingRubbers.ForEach(item => item.ProductId = products[idx++].Id);
-
-            _context.TrainingRubbers.AddRange(trainingRubbers);
-            await _context.SaveChangesAsync();
+            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).Returns(trainingRubbers.AsQueryable());
 
             //Act
-            List<TrainingRubberResponse> result = await _trainingRubberGetterService.GetAllTrainingRubbers();
+            List<TrainingRubberResponse> result =  _trainingRubberGetterService.GetAllTrainingRubbers();
 
-            result.Should().HaveCount(5);
+            result.Should().HaveCount(3);
+            expected.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetAllTrainingRubbers_ReturnsExactlyOneRecord()
         {
             //Arrange 
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            TrainingRubber trainingRubber = _fixture.Build<TrainingRubber>().Without(c => c.Product).With(item => item.ProductId, product.Id).Create();
-            _context.TrainingRubbers.Add(trainingRubber);
-            await _context.SaveChangesAsync();
+            TrainingRubber trainingRubber = _fixture.Create<TrainingRubber>();
+            TrainingRubberResponse expected = trainingRubber.ToTrainingRubberResponse();
+            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).Returns(new List<TrainingRubber>(){ trainingRubber}.AsQueryable());
 
             //Act
-            List<TrainingRubberResponse> result = await _trainingRubberGetterService.GetAllTrainingRubbers();
+            List<TrainingRubberResponse> result =  _trainingRubberGetterService.GetAllTrainingRubbers();
 
             //Assert
             result.Should().HaveCount(1);
+            result.Single().Should().BeEquivalentTo(expected);
         }
 
         #endregion
@@ -92,26 +89,24 @@ namespace SportShopTests.TrainingRubberTests
         public async Task GetTrainingRubberById_ReturnProperTrainingRubber()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, true).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            TrainingRubber trainingRubber = _fixture.Create<TrainingRubber>();
+            TrainingRubberResponse expected = trainingRubber.ToTrainingRubberResponse();
 
-            TrainingRubber trainingRubber = _fixture.Build<TrainingRubber>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.TrainingRubbers.Add(trainingRubber);
-            await _context.SaveChangesAsync();
+            _trainingRubberRepositoryMock.Setup(item => item.GetTrainingRubberById(trainingRubber.ProductId)).ReturnsAsync(trainingRubber);
 
             //Act
             TrainingRubberResponse? result = await _trainingRubberGetterService.GetTrainingRubberById(trainingRubber.ProductId);
 
             //Assert
             result.Should().NotBeNull();
-            result.ProductId.Should().Be(trainingRubber.ProductId);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetTrainingRubberById_TrainingRubberIsNull()
         {
             int missingId = 123456;
+            _trainingRubberRepositoryMock.Setup(item => item.GetTrainingRubberById(missingId)).ReturnsAsync(null as TrainingRubber);
 
             // Act
             TrainingRubberResponse? result = await _trainingRubberGetterService.GetTrainingRubberById(missingId);
@@ -124,13 +119,12 @@ namespace SportShopTests.TrainingRubberTests
         public async Task GetTrainingRubberById_IsActiveProperty_Null()
         {
             //Arrange
-            Product product = _fixture.Build<Product>().With(item => item.IsActive, false).Create();
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
 
-            TrainingRubber trainingRubber = _fixture.Build<TrainingRubber>().Without(item => item.Product).With(item => item.ProductId, product.Id).Create();
-            _context.TrainingRubbers.Add(trainingRubber);
-            await _context.SaveChangesAsync();
+
+            TrainingRubber trainingRubber = _fixture.Create<TrainingRubber>();
+            trainingRubber.Product.IsActive = false;
+
+            _trainingRubberRepositoryMock.Setup(item => item.GetTrainingRubberById(trainingRubber.ProductId)).ReturnsAsync(null as TrainingRubber);
 
             //Act
             TrainingRubberResponse? result = await _trainingRubberGetterService.GetTrainingRubberById(trainingRubber.ProductId);

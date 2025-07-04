@@ -4,7 +4,7 @@ namespace ServiceContracts.Interfaces.ITrainingRubber
 {
     public interface ITrainingRubberGetterService
     {
-        Task<List<TrainingRubberResponse>> GetAllTrainingRubbers();
+        List<TrainingRubberResponse> GetAllTrainingRubbers();
         Task<TrainingRubberResponse?> GetTrainingRubberById(int id);
     }
 }

@@ -15,10 +15,10 @@ namespace Services
             _trainingRubberRepository = trainingRubberRepository;
         }
 
-        public async Task<List<TrainingRubberResponse>> GetAllTrainingRubbers()
+        public List<TrainingRubberResponse> GetAllTrainingRubbers()
         {
-            return await _trainingRubberRepository.GetAllTrainingRubbers().Select(item => item.ToTrainingRubberResponse())
-                .ToListAsync();
+            return  _trainingRubberRepository.GetAllTrainingRubbers().Select(item => item.ToTrainingRubberResponse())
+                .ToList();
         }
 
         public async Task<TrainingRubberResponse?> GetTrainingRubberById(int id)
