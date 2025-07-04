@@ -24,9 +24,9 @@ namespace Services
         /// <returns>Address with Id</returns>
         public async Task<AddressResponse?> AddAddress(AddressAddRequest model, Guid userId)
         {
-            if (model == null)
+            if (model == null || userId == Guid.Empty)
             {
-                return null;
+                throw new ArgumentNullException(nameof(model));
             }
 
             Address address = model.ToAddress(userId);

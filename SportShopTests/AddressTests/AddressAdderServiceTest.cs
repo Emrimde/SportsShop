@@ -46,17 +46,29 @@ namespace SportShopTests.AddressTests
         }
 
         [Fact]
-        public async Task AddAddress_AddressIsNull_ShouldReturnNull()
+        public async Task AddAddress_AddressIsNull_ShouldThrowArgumentNullException()
         {
             //Arrange
             Guid userId = Guid.NewGuid();
             AddressAddRequest addressAddRequest = null!;
- 
-            //Act
-            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, userId);
-            
+
+            Func <Task> action = async () => await _addressAdderService.AddAddress(addressAddRequest, userId);
+
             //Assert
-            result.Should().BeNull();
+            await action.Should().ThrowAsync<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task AddAddress_UserIdIsEmpty_ShouldThrowArgumentNullException()
+        {
+            //Arrange
+            Guid emptyUserId = Guid.Empty;
+            AddressAddRequest addressAddRequest = _fixture.Create<AddressAddRequest>();
+
+            Func<Task> action = async () => await _addressAdderService.AddAddress(addressAddRequest, emptyUserId);
+
+            //Assert
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
         #endregion
     }
