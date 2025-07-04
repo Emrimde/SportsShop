@@ -4,7 +4,7 @@ namespace ServiceContracts.Interfaces.ISupplier
 {
     public interface ISupplierGetterService
     {
-        Task<List<SupplierResponse>> GetAllSuppliers();
+        List<SupplierResponse> GetAllSuppliers();
         Task<decimal> GetSupplierPriceById(int id);
     }
 }

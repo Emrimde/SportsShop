@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RepositoryContracts;
+﻿using RepositoryContracts;
 using ServiceContracts.DTO.SupplierDto;
 using ServiceContracts.Interfaces.ISupplier;
 
@@ -19,9 +18,9 @@ namespace Services
             return await _supplierRepository.GetSupplierPriceById(id);
         }
 
-        public async Task<List<SupplierResponse>> GetAllSuppliers()
+        public List<SupplierResponse> GetAllSuppliers()
         {
-            return await _supplierRepository.GetAllSuppliers().Select(item => item.ToSupplierResponse()).ToListAsync();
+            return _supplierRepository.GetAllSuppliers().Select(item => item.ToSupplierResponse()).ToList();
         }
     }
 }
