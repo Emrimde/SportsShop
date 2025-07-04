@@ -30,7 +30,7 @@ namespace SportsShop.Controllers
                 return Unauthorized();
             }
 
-            List<AddressResponse> addresses = await _addressGetterService.GetAllAddresses(user.Id);
+            List<AddressResponse> addresses = _addressGetterService.GetAllAddresses(user.Id);
             return View(addresses);
         }
 

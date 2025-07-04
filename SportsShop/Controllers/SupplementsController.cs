@@ -13,9 +13,9 @@ namespace SportsShop.Controllers
             _supplementGetterService = supplementGetterService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<SupplementResponse> supplements = await _supplementGetterService.GetAllSupplements();
+            List<SupplementResponse> supplements =  _supplementGetterService.GetAllSupplements();
             return View(supplements);
         }
 

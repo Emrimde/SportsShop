@@ -17,10 +17,10 @@ namespace Services
             _addressRepository = addressRepository;
         }
    
-        public async Task UpdateAddress(AddressUpdateRequest model)
+        public async Task<AddressResponse> UpdateAddress(AddressUpdateRequest model)
         {
-            Address address = model.ToAddress();
-            await _addressRepository.UpdateAddress(address);
+            Address updatedAddress = await _addressRepository.UpdateAddress(model.ToAddress());
+            return updatedAddress.ToAddressResponse();
         }
     }
 }

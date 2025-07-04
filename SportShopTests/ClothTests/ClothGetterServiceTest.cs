@@ -32,6 +32,7 @@ namespace SportShopTests.ClothTests
             //Arrange
             _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(new List<Cloth>().AsQueryable());
 
+            //Act
             List<ClothResponse> clothes =  _clothGetterService.GetAllClothes();
 
             //Assert
@@ -42,6 +43,7 @@ namespace SportShopTests.ClothTests
         [Fact]
         public void GetAllClothes_ReturnAllClothes_ToBeSuccessfull()
         {
+            //Arrange
             List<Cloth> clothes = new List<Cloth>()
             {
                 _fixture.Build<Cloth>().Create(),
@@ -49,12 +51,14 @@ namespace SportShopTests.ClothTests
                 _fixture.Build<Cloth>().Create()
             };
 
-            List<ClothResponse> expected = clothes.Select(c => c.ToClothResponse()).ToList();
+            List<ClothResponse> expected = clothes.Select(item => item.ToClothResponse()).ToList();
 
             _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(clothes.AsQueryable());
 
+            //Act
             List<ClothResponse> result =  _clothGetterService.GetAllClothes();
 
+            //Assert
             result.Should().HaveCount(3);
             result.Should().BeEquivalentTo(expected);
         }
@@ -100,6 +104,7 @@ namespace SportShopTests.ClothTests
         [Fact]
         public async Task GetClothById_ClothIsNull_ToBeNull()
         {
+            //Arrange
             int missingId = 123456; 
 
             _clothRepositoryMock.Setup(item => item.GetClothById(missingId)).ReturnsAsync((Cloth?)null);

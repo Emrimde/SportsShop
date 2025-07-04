@@ -99,7 +99,7 @@ namespace SportsShop.Controllers
             Cart? cart = await _cartGetterService.GetCartByUserId(user.Id.ToString());
 
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
-            checkoutViewModel.Addresses = await _addressGetterService.GetAllAddresses(user.Id);
+            checkoutViewModel.Addresses = _addressGetterService.GetAllAddresses(user.Id);
             checkoutViewModel.Suppliers = await _supplierGetterService.GetAllSuppliers();
             checkoutViewModel.CartItems = await _cartGetterService.GetAllCartItems(cart.Id);
             int itemsPrice = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);

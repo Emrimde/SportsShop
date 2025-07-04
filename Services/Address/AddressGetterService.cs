@@ -1,5 +1,4 @@
 ﻿using Entities.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 using ServiceContracts.DTO.AddressDto;
@@ -14,7 +13,7 @@ namespace Services.IAddress
     {
         private readonly IAddressRepository _addressRepository;
         
-        public AddressGetterService(IAddressRepository addressRepository, SignInManager<User> signInManager)
+        public AddressGetterService(IAddressRepository addressRepository)
         {
             _addressRepository = addressRepository;
         }
@@ -36,14 +35,9 @@ namespace Services.IAddress
             return address.ToAddressResponse();
         }
 
-        public async Task<int> GetAddressId(int id)
+        public List<AddressResponse> GetAllAddresses(Guid userId)
         {
-            return await _addressRepository.GetAddressId(id);
-        }
-
-        public async Task<List<AddressResponse>> GetAllAddresses(Guid userId)
-        {
-            return await _addressRepository.GetAllAddresses(userId).Select(item => item.ToAddressResponse()).ToListAsync();
+            return _addressRepository.GetAllAddresses(userId).Select(item => item.ToAddressResponse()).ToList();
         }
 
         public bool IsAddressProvided(AddressAddRequest request)

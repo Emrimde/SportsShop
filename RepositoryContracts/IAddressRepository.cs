@@ -9,6 +9,6 @@ namespace RepositoryContracts
         Task<Address?> GetAddressById(int? id);
         IQueryable<Address> GetAllAddresses(Guid userId);
         Task<int> GetAddressId(int id);
-        Task UpdateAddress(Address model);
+        Task<Address> UpdateAddress(Address model);
     }
 }

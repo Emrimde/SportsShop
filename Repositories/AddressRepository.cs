@@ -51,13 +51,13 @@ namespace Repositories
             return _context.Addresses.Where(address => address.UserId == userId && address.IsActive).AsQueryable();
         }
 
-        public async Task UpdateAddress(Address model)
+        public async Task<Address> UpdateAddress(Address model)
         {
             Address? address = await _context.Addresses.FindAsync(model.Id);
 
             if (address == null)
             {
-                return;
+                return null!;
             }
 
             address.Country = model.Country;
@@ -65,6 +65,7 @@ namespace Repositories
             address.Street = model.Street;
             address.ZipCode = model.ZipCode;
             await _context.SaveChangesAsync();
+            return address;
         }
     }
 }

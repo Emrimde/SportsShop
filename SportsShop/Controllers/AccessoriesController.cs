@@ -25,13 +25,13 @@ namespace SportsShop.Controllers
             _gymnasticRingGetterService = gymnasticRingGetterService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             AccessoriesViewModel accessories = new AccessoriesViewModel()
             {
-                WeightPlates = await _weightPlateGetterService.GetAllWeightPlates(),
-                GymnasticRings = await _gymnasticRingGetterService.GetAllGymnasticRings(),
-                TrainingRubbers = await _trainingRubberGetterService.GetAllTrainingRubbers()
+                WeightPlates =  _weightPlateGetterService.GetAllWeightPlates(),
+                GymnasticRings =  _gymnasticRingGetterService.GetAllGymnasticRings(),
+                TrainingRubbers =  _trainingRubberGetterService.GetAllTrainingRubbers()
             };
             return View(accessories);
         }

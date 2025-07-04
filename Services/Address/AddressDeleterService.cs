@@ -1,4 +1,6 @@
-﻿using RepositoryContracts;
+﻿using Entities.Models;
+using RepositoryContracts;
+using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 
 namespace Services

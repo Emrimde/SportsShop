@@ -1,5 +1,4 @@
 ﻿using Entities.Models;
-using Microsoft.AspNetCore.Identity;
 using RepositoryContracts;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
@@ -12,14 +11,11 @@ namespace Services
     public class AddressAdderService : IAddressAdderService
     {
         private readonly IAddressRepository _addressRepository;
-        private readonly UserManager<User> _userManager;
-
-        public AddressAdderService(IAddressRepository addressRepository, UserManager<User> userManager)
+        public AddressAdderService(IAddressRepository addressRepository)
         {
             _addressRepository = addressRepository;
-            _userManager = userManager;
         }
-       
+
         /// <summary>
         /// Add to the database a new address for the specific user.
         /// </summary>
@@ -28,14 +24,12 @@ namespace Services
         /// <returns>Address with Id</returns>
         public async Task<AddressResponse?> AddAddress(AddressAddRequest model, Guid userId)
         {
-            User? user = await _userManager.FindByIdAsync(userId.ToString());
-
-            if (user == null || model == null)
+            if (model == null)
             {
                 return null;
             }
 
-            Address address = model.ToAddress(user.Id);
+            Address address = model.ToAddress(userId);
 
             await _addressRepository.AddAddress(address);
 

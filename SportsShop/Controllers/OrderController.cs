@@ -57,15 +57,18 @@ namespace SportsShop.Controllers
                 Price = item.Price,
                 Type = item.Type,
             }).ToList();
+
             orderRequest.ShippingCost = await _supplierGetterService.GetSupplierPriceById(orderRequest.SupplierId);
             orderRequest.TotalCost = totalCost;
             orderRequest.UserId = user.Id;
 
             if(_addressGetterService.IsAddressProvided(addressRequest))
             {
-                AddressResponse? adressResponse = await _addressAdderService.AddAddress(addressRequest, user.Id);
-                int addressId = await _addressGetterService.GetAddressId(adressResponse!.Id);
-                orderRequest.AddressId = addressId;
+                AddressResponse? addressResponse = await _addressAdderService.AddAddress(addressRequest, user.Id);
+                if (addressResponse != null) 
+                { 
+                    orderRequest.AddressId = addressResponse.Id;
+                }
             }
           
             await _orderAdderService.AddOrder(orderRequest);
