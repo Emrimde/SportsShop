@@ -15,7 +15,7 @@
             <p class="mb-4">
                 @Model.Description
             </p>
-            <form asp-controller="Cart" asp-action="AddToCart" asp-route-id=@Model.ProductId asp-route-type="TrainingRubber" method="post">
+            <form asp-controller="Cart" asp-action="AddToCart" asp-route-ProductId=@Model.ProductId asp-route-type="TrainingRubber" method="post">
                 <div class="row">
                     <div class="col-6 mb-3">
                         <h5>Choose Quantity</h5>

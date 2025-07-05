@@ -10,6 +10,12 @@ namespace Services
         {
             _cartRepository = cartRepository; 
         }
+
+        public async Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity)
+        {
+            await _cartRepository.UpdateCartItemQuantityIfInTheCart(cartItemId, quantity);
+        }
+
         public async Task UpdateCartItemQuantity(int cartItemId, int quantity)
         {
             await _cartRepository.UpdateCartItemQuantity(cartItemId, quantity);

@@ -62,7 +62,6 @@ namespace SportsShop
             builder.Services.AddScoped<ITrainingRubberRepository, TrainingRubberRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IAccessoryRepository, AccessoryRepository>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ICartRepository, CartRepository>();
 
             builder.Services.AddIdentity<User, UserRole>(options =>

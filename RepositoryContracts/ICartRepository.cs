@@ -10,5 +10,7 @@ namespace RepositoryContracts
         IQueryable<CartItem> GetAllCartItems(int cartId);
         Task<Cart?> GetCartByUserId(string userId);
         Task UpdateCartItemQuantity(int cartItem, int quantity);
+        Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity);
+        Task<CartItem?> GetCartItemByProductAndCartId(int productId, int cartId);
     }
 }

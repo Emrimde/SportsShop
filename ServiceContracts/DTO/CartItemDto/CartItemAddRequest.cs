@@ -17,9 +17,6 @@ namespace ServiceContracts.DTO.CartItemDto
                 Price = Price,
                 ProductId = ProductId,
                 Type = Type,
-                IsActive = true,
-                CreatedDate = DateTime.UtcNow,
-                
             };
         }
     }

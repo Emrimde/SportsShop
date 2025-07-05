@@ -1,7 +1,9 @@
-﻿namespace ServiceContracts.Interfaces.ICart
+﻿using ServiceContracts.DTO.CartItemDto;
+
+namespace ServiceContracts.Interfaces.ICart
 {
     public interface ICartAdderService
     {
-        Task<bool> AddToCart(int productId, string userId,int quantity,string type);
+        Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, string userId);
     }
 }

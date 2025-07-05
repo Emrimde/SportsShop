@@ -1,51 +1,40 @@
 ﻿using Entities.Models;
 using RepositoryContracts;
+using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.ICart;
 
 namespace Services
 {
     public class CartAdderService : ICartAdderService
     {
-        private readonly IProductRepository _productRepository;
         private readonly ICartRepository _cartRepository;
 
-        public CartAdderService( IProductRepository productRepository, ICartRepository cartRepository)
+        public CartAdderService(ICartRepository cartRepository)
         {
-            _productRepository = productRepository;
             _cartRepository = cartRepository;
         }
-        public async Task<bool> AddToCart(int productId, string userId, int quantity, string type)
+        public async Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, string userId)
         {
-            Product? product = await _productRepository.GetProductById(productId);
             Cart? cart = await _cartRepository.GetCartByUserId(userId);
 
-            if (product == null || cart == null)
+            if (cart == null)
             {
-                return false;
+                throw new InvalidOperationException(); 
             }
 
-            CartItem? existingCartItem = cart.CartItems.FirstOrDefault(item => item.ProductId == productId && item.Type == type && item.IsActive);
+            CartItem? existingCartItem = await _cartRepository.GetCartItemByProductAndCartId(cartItemAddRequest.ProductId, cart.Id);
 
-
-            // it executes if the cart item is existing in the cart and we want to increase quantity of the item.
-            if(existingCartItem != null)
+            // it executes if the cart item is existing in the cart and we want to update quantity of the item
+            if (existingCartItem != null)
             {
-                existingCartItem.Quantity += quantity;
+                await _cartRepository.UpdateCartItemQuantityIfInTheCart(existingCartItem.Id, cartItemAddRequest.Quantity);
             }
 
-            //it executes if we add a new cart item which wasn't present in the cart.
+            //it executes if we add a new cart item which wasn't present in the cart
             else
             {
-                var cartItem = new CartItem
-                {
-                    ProductId = productId,
-                    CartId = cart.Id,
-                    CreatedDate = DateTime.Now,
-                    IsActive = true,
-                    Quantity = quantity,
-                    Price = product.Price,
-                    Type = type,
-                };
+                CartItem cartItem = cartItemAddRequest.ToCartItem();
+                cartItem.CartId = cart.Id;
                 await _cartRepository.AddCartItem(cartItem);
             }
 

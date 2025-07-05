@@ -15,9 +15,16 @@ namespace Repositories
 
         public async Task<CartItem> AddCartItem(CartItem cartItem)
         {
+            cartItem.IsActive = true;
+            cartItem.CreatedDate = DateTime.Now;
             _context.CartItems.Add(cartItem);
             await _context.SaveChangesAsync();
             return cartItem;
+        }
+
+        public Task<CartItem> AddCartItem(Entities.Migrations.CartItem cartItem)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task ClearCart(string userId)
@@ -38,6 +45,7 @@ namespace Repositories
             return await _context.Carts.Include(item => item.CartItems).FirstOrDefaultAsync(item => item.UserId.ToString() == userId && item.IsActive);
         }
 
+
         public async Task<bool> RemoveFromCart(int productId, int cartId)
         {
             CartItem? cartItem = await _context.CartItems.Include(item => item.Cart).FirstOrDefaultAsync(item => item.Id == productId && item.CartId == cartId);
@@ -51,11 +59,23 @@ namespace Repositories
             return deletedCount > 0;
         }
 
+        public async Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity)
+        {
+            CartItem? item = await _context.CartItems.FindAsync(cartItemId);
+            item!.Quantity += quantity;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateCartItemQuantity(int cartItem, int quantity)
         {
             CartItem? item = await _context.CartItems.FindAsync(cartItem);
             item!.Quantity = quantity;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<CartItem?> GetCartItemByProductAndCartId(int productId, int cartId)
+        {
+            return await _context.CartItems.FirstOrDefaultAsync(item => item.ProductId == productId && item.CartId == cartId && item.IsActive);
         }
     }
 }

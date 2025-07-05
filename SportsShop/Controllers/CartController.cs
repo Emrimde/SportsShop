@@ -47,13 +47,13 @@ namespace SportsShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToCart(int id, int quantity, string type)
+        public async Task<IActionResult> AddToCart(CartItemAddRequest cartItemAddRequest)
         {
             string? user = _userManager.GetUserId(User);
             if (user == null)
                 return RedirectToAction("SignIn", "Account");
 
-            bool result = await _cartAdderService.AddToCart(id, user, quantity, type);
+            bool result = await _cartAdderService.AddToCart(cartItemAddRequest, user);
 
             if (!result)
                 return NotFound("Product not found");
@@ -100,7 +100,7 @@ namespace SportsShop.Controllers
 
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
             checkoutViewModel.Addresses = _addressGetterService.GetAllAddresses(user.Id);
-            checkoutViewModel.Suppliers = await _supplierGetterService.GetAllSuppliers();
+            checkoutViewModel.Suppliers =  _supplierGetterService.GetAllSuppliers();
             checkoutViewModel.CartItems = await _cartGetterService.GetAllCartItems(cart.Id);
             int itemsPrice = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
             checkoutViewModel.ItemsPrice = itemsPrice;
