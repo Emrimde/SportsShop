@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RepositoryContracts;
+﻿using RepositoryContracts;
 using ServiceContracts.DTO.OrderDto;
 using ServiceContracts.Interfaces.IOrder;
 
@@ -14,9 +13,9 @@ namespace Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<List<OrderResponse>> GetAllOrders(string id)
+        public List<OrderResponse> GetAllOrders(string id)
         {
-            return await _orderRepository.GetAllOrders(id).Select(item => item.ToOrderResponse()).ToListAsync();
+            return _orderRepository.GetAllOrders(id).Select(item => item.ToOrderResponse()).ToList();
         }
     }
 }
