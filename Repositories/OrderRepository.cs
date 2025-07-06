@@ -16,6 +16,8 @@ namespace Repositories
 
         public async Task<Order> AddOrder(Order model)
         {
+            model.IsActive = true;
+            model.CreatedDate = DateTime.Now;
             _context.Orders.Add(model);
             await _context.SaveChangesAsync();
             return model;

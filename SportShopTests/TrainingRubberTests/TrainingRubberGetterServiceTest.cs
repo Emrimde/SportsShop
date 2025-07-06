@@ -40,7 +40,7 @@ namespace SportShopTests.TrainingRubberTests
         }
 
         [Fact]
-        public async Task GetAllTrainingRubbers_ReturnAllTrainingRubbers()
+        public void GetAllTrainingRubbers_ReturnAllTrainingRubbers()
         {
             //Arrange
             List<TrainingRubber> trainingRubbers = new List<TrainingRubber>()
@@ -62,7 +62,7 @@ namespace SportShopTests.TrainingRubberTests
         }
 
         [Fact]
-        public async Task GetAllTrainingRubbers_ReturnsExactlyOneRecord()
+        public void GetAllTrainingRubbers_ReturnsExactlyOneRecord()
         {
             //Arrange 
             TrainingRubber trainingRubber = _fixture.Create<TrainingRubber>();

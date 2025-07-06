@@ -47,6 +47,7 @@ namespace SportsShop.Controllers
             {
                 return BadRequest();
             }
+
             Cart? cart = await _cartGetterService.GetCartByUserId(user.Id.ToString());
             List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cart.Id);
             int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);

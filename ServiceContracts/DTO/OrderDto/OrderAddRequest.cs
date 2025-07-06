@@ -28,8 +28,6 @@ namespace ServiceContracts.DTO.OrderDto
                 SupplierId = SupplierId,
                 UserId = UserId,
                 IsPaid = IsPaid,
-                IsActive = true,
-                CreatedDate = DateTime.Now,
             };
         }
     }
