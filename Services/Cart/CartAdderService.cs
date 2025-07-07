@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.ICart;
@@ -8,17 +9,23 @@ namespace Services
     public class CartAdderService : ICartAdderService
     {
         private readonly ICartRepository _cartRepository;
+        private readonly ILogger<CartAdderService> _logger;
 
-        public CartAdderService(ICartRepository cartRepository)
+        public CartAdderService(ICartRepository cartRepository, ILogger<CartAdderService> logger)
         {
             _cartRepository = cartRepository;
+            _logger = logger;
         }
+
         public async Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, string userId)
         {
+            _logger.LogDebug("AddToCart service method. Parameters: cartItemAddRequest: {cartItemAddRequest}, userId: {userId}", cartItemAddRequest.ToString(), userId);
+
             Cart? cart = await _cartRepository.GetCartByUserId(userId);
 
             if (cart == null)
             {
+                _logger.LogError("Cart not found. AddToCart service method");
                 throw new InvalidOperationException(); 
             }
 

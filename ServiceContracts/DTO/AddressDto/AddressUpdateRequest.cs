@@ -21,5 +21,10 @@ namespace ServiceContracts.DTO.AddressDto
                 ZipCode = ZipCode
             };
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Id)}={Id.ToString()}, {nameof(Country)}={Country}, {nameof(City)}={City}, {nameof(Street)}={Street}, {nameof(ZipCode)}={ZipCode}}}";
+        }
     }
 }

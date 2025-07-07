@@ -19,5 +19,10 @@ namespace ServiceContracts.DTO.CartItemDto
                 Type = Type,
             };
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Quantity)}={Quantity.ToString()}, {nameof(Price)}={Price.ToString()}, {nameof(ProductId)}={ProductId.ToString()}, {nameof(Type)}={Type}}}";
+        }
     }
 }

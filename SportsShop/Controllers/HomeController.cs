@@ -15,10 +15,13 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        _logger.LogDebug("Index action method");
         return View();
     }
+
     public IActionResult AboutUs()
     {
+        _logger.LogDebug("About us action method");
         return View();
     }
  

@@ -5,6 +5,7 @@ namespace ServiceContracts.DTO.OrderDto
 {
     public class OrderResponse
     {
+        public int Id { get; set; } 
         public List<CartItemResponse> CartItems { get; set; } = new List<CartItemResponse>();
         public decimal TotalCost { get; set; }
         public decimal ShippingCost { get; set; }
@@ -18,6 +19,7 @@ namespace ServiceContracts.DTO.OrderDto
         {
             return new OrderResponse
             {
+                Id = order.Id,
                 CartItems = order.CartItems.Select(item => item.ToCartItemResponse()).ToList(),
                 TotalCost = order.TotalCost,
                 ShippingCost = order.ShippingCost,

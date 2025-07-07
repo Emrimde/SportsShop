@@ -11,5 +11,10 @@ namespace ServiceContracts.DTO.AccountDto
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         public string Password { get; set; } = default!;
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Email)}={Email}, {nameof(Password)}={Password}}}";
+        }
     }
 }

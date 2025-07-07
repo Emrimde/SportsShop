@@ -1,6 +1,7 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.IAddress;
 using ServiceContracts.Interfaces.ICart;
@@ -18,8 +19,9 @@ namespace SportsShop.Controllers
         private readonly ICartUpdaterService _cartUpdaterService;
         private readonly IAddressGetterService _addressGetterService;
         private readonly ISupplierGetterService _supplierGetterService;
+        private readonly ILogger<CartController> _logger;
         
-        public CartController(UserManager<User> userManager, ICartAdderService cartAdderService,ICartGetterService cartGetterService, ICartUpdaterService cartUpdaterService , ICartDeleterService cartDeleterService, IAddressGetterService addressGetterService, ISupplierGetterService supplierGetterService)
+        public CartController(UserManager<User> userManager, ICartAdderService cartAdderService,ICartGetterService cartGetterService, ICartUpdaterService cartUpdaterService , ICartDeleterService cartDeleterService, IAddressGetterService addressGetterService, ISupplierGetterService supplierGetterService, ILogger<CartController> logger)
         {
             _userManager = userManager;
             _cartGetterService = cartGetterService;
@@ -28,14 +30,22 @@ namespace SportsShop.Controllers
             _cartDeleterService = cartDeleterService;
             _addressGetterService = addressGetterService;
             _supplierGetterService = supplierGetterService;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            _logger.LogDebug("Index action method displays all cart items.");
+
             string? user = _userManager.GetUserId(User);
+
             if (user == null)
+            {
+                _logger.LogWarning("User not found. Redirecting to SingIn view");
                 return RedirectToAction("SignIn", "Account");
+            }
+
             Cart? cart = await _cartGetterService.GetCartByUserId(user);
 
             List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cart!.Id);
@@ -49,19 +59,30 @@ namespace SportsShop.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCart(CartItemAddRequest cartItemAddRequest)
         {
+            _logger.LogDebug("[HttpPost]AddToCart action method. Parameter: cartItemAddRequest: {dto}", cartItemAddRequest.ToString());
+
             string? user = _userManager.GetUserId(User);
+
             if (user == null)
+            {
+                _logger.LogWarning("User not found. Redirecting to SingIn view");
                 return RedirectToAction("SignIn", "Account");
+            }
 
             bool result = await _cartAdderService.AddToCart(cartItemAddRequest, user);
 
             if (!result)
-                return NotFound("Product not found");
+            {
+                _logger.LogWarning("Adding failed - AddToCart action");
+                return NotFound("Adding failed");
+            }
 
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> RemoveFromCart(int id)
         {
+            _logger.LogDebug("RemoveFromCart action method. Parameter: id: {id}", id);
+
             string userId = _userManager.GetUserId(User)!;
             if (userId == null)
             {
@@ -78,6 +99,7 @@ namespace SportsShop.Controllers
             }
             else
             {
+                _logger.LogError("Removing from cart failed");
                 throw new InvalidOperationException();
             }
         }
@@ -85,6 +107,8 @@ namespace SportsShop.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateQuantity(int id, int quantity)
         {
+            _logger.LogDebug("UpdateQuantity action method. Parameters: id: {id}, quantity: {quantity}", id, quantity);
+
             await _cartUpdaterService.UpdateCartItemQuantity(id, quantity);
             return RedirectToAction("Index");
         }
@@ -92,10 +116,15 @@ namespace SportsShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Checkout(string? coupon,decimal shippingCost, int? supplierId)
         {
-            
+            _logger.LogDebug("Checkout action method. Parameters: coupon: {coupon}, shippingCost: {shippingCost}, supplierId: {supplierId}", coupon, shippingCost, supplierId);
+
             User? user = await _userManager.GetUserAsync(User);
             if (user == null)
+            {
+                _logger.LogWarning("User not found. Redirecting to SingIn view of AccountController");
                 return RedirectToAction("SignIn", "Account");
+
+            }
             Cart? cart = await _cartGetterService.GetCartByUserId(user.Id.ToString());
 
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
@@ -116,6 +145,8 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> GetShippingCost(int supplierId)
         {
+            _logger.LogDebug("GetShippingCost action method. Parameter: supplierId: {supplierId}", supplierId);
+            
             decimal shippingCost = await _supplierGetterService.GetSupplierPriceById(supplierId);
             return RedirectToAction("Checkout", new {shippingCost = shippingCost, supplierId = supplierId });
         }

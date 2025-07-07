@@ -4,9 +4,18 @@ namespace SportsShop.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly ILogger<ProductController> _logger;
+
+        public ProductController(ILogger<ProductController> logger)
+        {
+            _logger = logger;
+        }
+
         public IActionResult Index(string type, int id)
         {
-            if(type == "Cloth")
+            _logger.LogDebug("Index action method. Parameters: type: {type}, id: {id}", type, id);
+
+            if (type == "Cloth")
                 return RedirectToAction("ShowCloth", "Clothes", new { id = id });
             else if(type == "Drink")
                 return RedirectToAction("ShowDrink", "Drinks", new {id=id});

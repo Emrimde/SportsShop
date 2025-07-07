@@ -16,17 +16,21 @@ namespace SportsShop.Controllers
         private readonly IWeightPlateGetterService _weightPlateGetterService;
         private readonly ITrainingRubberGetterService _trainingRubberGetterService;
         private readonly IGymnasticRingGetterService _gymnasticRingGetterService;
+        private readonly ILogger<AccessoriesController> _logger;
 
-        public AccessoriesController(IAccessoryGetterService accessoriesService, IWeightPlateGetterService weightPlateGetterService, ITrainingRubberGetterService trainingRubberGetterService, IGymnasticRingGetterService gymnasticRingGetterService)
+        public AccessoriesController(IAccessoryGetterService accessoriesService, IWeightPlateGetterService weightPlateGetterService, ITrainingRubberGetterService trainingRubberGetterService, IGymnasticRingGetterService gymnasticRingGetterService, ILogger<AccessoriesController> logger)
         {
             _accesoriesService = accessoriesService;
             _weightPlateGetterService = weightPlateGetterService;
             _trainingRubberGetterService = trainingRubberGetterService;
             _gymnasticRingGetterService = gymnasticRingGetterService;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
+            _logger.LogDebug("Index action method started");
+
             AccessoriesViewModel accessories = new AccessoriesViewModel()
             {
                 WeightPlates =  _weightPlateGetterService.GetAllWeightPlates(),
@@ -38,6 +42,8 @@ namespace SportsShop.Controllers
 
         public async Task<IActionResult> ShowAccessory(int id, string type)
         {
+            _logger.LogDebug("ShowAccessory action method started. Parameters id: {id}, type: {type}", id , type);
+           
             if (type == "GymnasticRing")
             {
                 GymnasticRingResponse? gymnasticRing = await _gymnasticRingGetterService.GetGymnasticRingById(id);
@@ -53,11 +59,15 @@ namespace SportsShop.Controllers
                 WeightPlateResponse? weightPlate = await _weightPlateGetterService.GetWeightPlateById(id);
                 return View("ShowWeightPlate", weightPlate);
             }
+
+            _logger.LogWarning("Unknown accessory type");
             return NotFound();
         }
 
         public async Task<IActionResult> FilterAccessory(string type)
         {
+            _logger.LogDebug("FilterAccessory action method started. Parameters type: {type}", type);
+
             List<dynamic> accessories = await _accesoriesService.FilterAccessory(type);
             if (accessories.Count == 0)
             {

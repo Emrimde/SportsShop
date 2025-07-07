@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 using ServiceContracts.DTO.GymnasticRingDto;
 using ServiceContracts.DTO.TrainingRubberDto;
@@ -10,13 +11,17 @@ namespace Services.Accessory
     public class AccessoryGetterService : IAccessoryGetterService
     {
         private readonly IAccessoryRepository _accessoryRepository;
-        public AccessoryGetterService(IAccessoryRepository accessoryRepository)
+        private readonly ILogger<AccessoryGetterService> _logger;
+        public AccessoryGetterService(IAccessoryRepository accessoryRepository, ILogger<AccessoryGetterService> logger)
         {
             _accessoryRepository = accessoryRepository;
+            _logger = logger;
         }
 
         public async Task<List<dynamic>> FilterAccessory(string type)
         {
+            _logger.LogDebug("FilterAccessory method. Parameter: type: {type}", type);
+           
             List<dynamic> accessories = await _accessoryRepository.FilterAccessory(type);
             if (type == "GymnasticRings")
             {

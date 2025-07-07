@@ -35,6 +35,7 @@ namespace SportShopTests.OrderTests
 
             //Act
             OrderResponse result = await _orderAdderService.AddOrder(orderAddRequest);
+            expectedOrderResponse.Id = result.Id;
 
             //Assert
             result.Should().BeEquivalentTo(expectedOrderResponse);

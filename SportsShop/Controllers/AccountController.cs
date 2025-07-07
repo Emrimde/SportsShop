@@ -10,30 +10,36 @@ namespace SportsShop.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IAccountService accountService)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IAccountService accountService, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _accountService = accountService;
+            _logger = logger;
         }
 
         public IActionResult SignIn()
         {
+            _logger.LogDebug("SignIn action method returns SignIn view");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn(SignInDto model)
+        public async Task<IActionResult> SignIn(SignInDto signInDto)
         {
+            _logger.LogDebug("[HttpPost]SignIn action method started. Parameters signInDto: {signInDto}", signInDto.ToString());
+            
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return View(model);
+                return View(signInDto);
             }
 
-            var result = await _accountService.SignInAsync(model);
+            var result = await _accountService.SignInAsync(signInDto);
 
             if (result.Succeeded)
             {
@@ -41,23 +47,26 @@ namespace SportsShop.Controllers
             }
 
             ModelState.AddModelError("Login", "Invalid email or password");
-            return View(model);
+            return View(signInDto);
         }
         public IActionResult CreateUser()
         {
+            _logger.LogDebug("CreateUser action method returns CreateUser view");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(RegisterDto model)
+        public async Task<IActionResult> CreateUser(RegisterDto registerDto)
         {
+            _logger.LogDebug("[HttpPost]CreateUser action method started. Parameter: registerDto: {dto}", registerDto.ToString());
+
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(registerDto);
             }
 
-            IdentityResult result = await _accountService.RegisterAsync(model);
+            IdentityResult result = await _accountService.RegisterAsync(registerDto);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
@@ -68,18 +77,21 @@ namespace SportsShop.Controllers
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-                return View(model);
+                return View(registerDto);
             }
         }
 
         public async Task<IActionResult> Logout()
         {
+            _logger.LogDebug("Logout action method logging out user");
+
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Settings()
         {
+            _logger.LogDebug("Settings action method returns SettingsView");
             return View();
         }
     }

@@ -20,6 +20,7 @@ using ServiceContracts.Interfaces.IGymnasticRing;
 using ServiceContracts.Interfaces.ITrainingRubber;
 using RepositoryContracts;
 using Repositories;
+using Serilog;
 
 namespace SportsShop
 {
@@ -28,6 +29,16 @@ namespace SportsShop
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Host.UseSerilog((hostingContext, services, loggerConfiguration) =>
+            {
+                loggerConfiguration
+                    .ReadFrom.Configuration(hostingContext.Configuration)
+                    .ReadFrom.Services(services)
+                    .WriteTo.Console();
+            });
+
+
             builder.Services.AddDbContext<SportsShopDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("Entities")));
 
@@ -79,6 +90,8 @@ namespace SportsShop
                 .AddDefaultTokenProviders();
 
             var app = builder.Build();
+
+            
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

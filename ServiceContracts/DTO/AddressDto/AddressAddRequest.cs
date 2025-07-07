@@ -30,5 +30,10 @@ namespace ServiceContracts.DTO.AddressDto
                 IsActive = true
             };
         }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Country)}={Country}, {nameof(City)}={City}, {nameof(Street)}={Street}, {nameof(ZipCode)}={ZipCode}}}";
+        }
     }
 }

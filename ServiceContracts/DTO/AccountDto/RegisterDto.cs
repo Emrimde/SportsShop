@@ -23,7 +23,12 @@ namespace ServiceContracts.DTO.AccountDto
             [Compare("Password", ErrorMessage = "Passwords are't the same")]
             [DataType(DataType.Password)]
             public string ConfirmPassword { get; set; } = default!;
+
+        public override string ToString()
+        {
+            return $"{{{nameof(Email)}={Email}, {nameof(Password)}={Password}, {nameof(FirstName)}={FirstName}, {nameof(LastName)}={LastName}, {nameof(ConfirmPassword)}={ConfirmPassword}}}";
         }
+    }
     }
 
 

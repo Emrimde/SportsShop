@@ -1,6 +1,7 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using ServiceContracts.DTO.AccountDto;
 using ServiceContracts.Interfaces.Account;
 
@@ -11,27 +12,31 @@ namespace Services.Account
         private readonly SportsShopDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ILogger<AccountService> _logger;
 
-        public AccountService(SportsShopDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountService(SportsShopDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountService> logger)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
-        public async Task<IdentityResult> RegisterAsync(RegisterDto model)
+        public async Task<IdentityResult> RegisterAsync(RegisterDto registerDto)
         {
+            _logger.LogDebug("RegisterAsync method. Parameter: registerDto: {registerDto}", registerDto.ToString());
+            
             var user = new User
             {
-                UserName = model.FirstName,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
+                UserName = registerDto.FirstName,
+                Email = registerDto.Email,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
                 CreatedDate = DateTime.Now,
                 IsActive = true
             };
 
-            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
             {
                 return result;
@@ -49,9 +54,11 @@ namespace Services.Account
             return result;
         }
 
-        public async Task<SignInResult> SignInAsync(SignInDto model)
+        public async Task<SignInResult> SignInAsync(SignInDto signInDto)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+            _logger.LogDebug("SignInAsync method. Parameter: signInDto: {signInDto}", signInDto.ToString());
+           
+            var result = await _signInManager.PasswordSignInAsync(signInDto.Email, signInDto.Password, isPersistent: false, lockoutOnFailure: true);
             return result;
         }
     }

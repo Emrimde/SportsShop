@@ -1,31 +1,34 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO.ClothDto;
-using ServiceContracts.Interfaces;
 using ServiceContracts.Interfaces.ICloth;
-using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
 {
     public class ClothesController : Controller
     {
         private readonly IClothGetterService _clothGetterService;
-        public ClothesController(SportsShopDbContext databaseContext,IClothGetterService clothesService)
+        private readonly ILogger<ClothesController> _logger;
+        public ClothesController(IClothGetterService clothesService, ILogger<ClothesController> logger)
         {
             _clothGetterService = clothesService;
+            _logger = logger;
         }
         public IActionResult Index()
         {
+            _logger.LogDebug("Index action method of ClothController");
+
             List<ClothResponse> clothes = _clothGetterService.GetAllClothes();
             return View(clothes);
         }
         public async Task<IActionResult> ShowCloth(int id)
         {
+            _logger.LogDebug("ShowCloth action method.Parameter id: {id}", id);
+            
             ClothResponse? cloth = await _clothGetterService.GetClothById(id);
 
             if (cloth == null)
             {
+                _logger.LogError("Cloth not found");
                 return NotFound();
             }
 
@@ -34,6 +37,8 @@ namespace SportsShop.Controllers
         [HttpPost]
         public async Task<IActionResult> FilterCloth(string size, string gender, string type)
         {
+            _logger.LogDebug("FilterCloth action method. Parameters: size: {size}, gender: {gender}, type: {type}", size, gender,type);
+           
             List<ClothResponse> clothes = await _clothGetterService.FilterClothes(size,gender,type);
             return View("Index",clothes);
         }

@@ -19,7 +19,7 @@ namespace ServiceContracts.DTO.OrderDto
         {
             return new Order()
             {
-                CartItems = CartItems.Select(item => item.ToCartItem()).ToList(),
+                //CartItems = CartItems.Select(item => item.ToCartItem()).ToList(),
                 TotalCost = TotalCost,
                 ShippingCost = ShippingCost,
                 OrderDate = OrderDate,
@@ -29,6 +29,11 @@ namespace ServiceContracts.DTO.OrderDto
                 UserId = UserId,
                 IsPaid = IsPaid,
             };
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(CartItems)}={CartItems}, {nameof(TotalCost)}={TotalCost.ToString()}, {nameof(ShippingCost)}={ShippingCost.ToString()}, {nameof(OrderDate)}={OrderDate.ToString()}, {nameof(AddressId)}={AddressId.ToString()}, {nameof(SupplierId)}={SupplierId.ToString()}, {nameof(UserId)}={UserId.ToString()}, {nameof(Coupon)}={Coupon}, {nameof(IsPaid)}={IsPaid.ToString()}}}";
         }
     }
 }
