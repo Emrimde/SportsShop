@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SportsShop.Models;
+using SportsShop.ViewModels;
 using System.Diagnostics;
 
 namespace SportsShop.Controllers;
@@ -7,7 +7,6 @@ namespace SportsShop.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;

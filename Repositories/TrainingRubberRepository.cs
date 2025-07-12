@@ -14,9 +14,9 @@ namespace Repositories
             _context = context;
         }
 
-        public IQueryable<TrainingRubber> GetAllTrainingRubbers()
+        public async Task<IEnumerable<TrainingRubber>> GetAllTrainingRubbers()
         {
-            return _context.TrainingRubbers.Include(item => item.Product).Where(item => item.Product.IsActive);
+            return await _context.TrainingRubbers.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
         }
 
         public async Task<TrainingRubber?> GetTrainingRubberById(int id)

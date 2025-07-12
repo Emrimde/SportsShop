@@ -14,9 +14,9 @@ namespace Repositories
             _context = context;
         }
 
-        public IQueryable<WeightPlate> GetAllWeightPlates()
+        public async Task<IEnumerable<WeightPlate>> GetAllWeightPlates()
         {
-            return _context.WeightPlates.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
+            return await _context.WeightPlates.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
         }
 
         public async Task<WeightPlate?> GetWeightPlateById(int id)

@@ -2,6 +2,7 @@
 using ServiceContracts.DTO.GymnasticRingDto;
 using ServiceContracts.DTO.TrainingRubberDto;
 using ServiceContracts.DTO.WeightPlateDto;
+using ServiceContracts.Enums;
 using ServiceContracts.Interfaces.IAccessory;
 using ServiceContracts.Interfaces.IGymnasticRing;
 using ServiceContracts.Interfaces.ITrainingRubber;
@@ -27,36 +28,65 @@ namespace SportsShop.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             _logger.LogDebug("Index action method started");
 
             AccessoriesViewModel accessories = new AccessoriesViewModel()
             {
-                WeightPlates =  _weightPlateGetterService.GetAllWeightPlates(),
-                GymnasticRings =  _gymnasticRingGetterService.GetAllGymnasticRings(),
-                TrainingRubbers =  _trainingRubberGetterService.GetAllTrainingRubbers()
+                WeightPlates =  await _weightPlateGetterService.GetAllWeightPlates(),
+                GymnasticRings = await  _gymnasticRingGetterService.GetAllGymnasticRings(),
+                TrainingRubbers = await _trainingRubberGetterService.GetAllTrainingRubbers()
             };
             return View(accessories);
         }
 
-        public async Task<IActionResult> ShowAccessory(int id, string type)
+        public async Task<IActionResult> ShowAccessory(int id, AccessoryTypeEnum? type)
         {
             _logger.LogDebug("ShowAccessory action method started. Parameters id: {id}, type: {type}", id , type);
-           
-            if (type == "GymnasticRing")
+
+            if (!type.HasValue || !Enum.IsDefined(typeof(AccessoryTypeEnum), type.Value))
+            {
+                _logger.LogWarning("Invalid Accessory type");
+                return NotFound();
+            }
+
+            if (id <= 0)
+            {
+                _logger.LogWarning("Invalid accessory id: {id}", id);
+                return NotFound();
+            }
+
+            if (type == AccessoryTypeEnum.GymnasticRing)
             {
                 GymnasticRingResponse? gymnasticRing = await _gymnasticRingGetterService.GetGymnasticRingById(id);
+
+                if (gymnasticRing == null) {
+                    return NotFound();
+                }
+
                 return View("ShowGymnasticRing", gymnasticRing);
             }
-            else if (type == "TrainingRubber")
+            else if (type == AccessoryTypeEnum.TrainingRubber)
             {
                 TrainingRubberResponse? trainingRubber = await _trainingRubberGetterService.GetTrainingRubberById(id);
+
+                if (trainingRubber == null)
+                {
+                    return NotFound();
+                }
+
                 return View("ShowTrainingRubber", trainingRubber);
             }
-            else if (type == "WeightPlate")
+            else if (type == AccessoryTypeEnum.WeightPlate)
             {
                 WeightPlateResponse? weightPlate = await _weightPlateGetterService.GetWeightPlateById(id);
+
+                if (weightPlate == null)
+                {
+                    return NotFound();
+                }
+
                 return View("ShowWeightPlate", weightPlate);
             }
 
@@ -69,6 +99,7 @@ namespace SportsShop.Controllers
             _logger.LogDebug("FilterAccessory action method started. Parameters type: {type}", type);
 
             List<dynamic> accessories = await _accesoriesService.FilterAccessory(type);
+
             if (accessories.Count == 0)
             {
                 return RedirectToAction("Index");
@@ -77,7 +108,7 @@ namespace SportsShop.Controllers
             {
                 SpecificAccessories = accessories
             };
-            
+            ViewBag.Type = type;
             return View("Index",accessoriesViewModels);
         }
     }

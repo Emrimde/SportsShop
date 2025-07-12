@@ -1,5 +1,4 @@
-﻿@using SportsShop.ViewModels;
-@model AccessoriesViewModel
+﻿@model AccessoriesViewModel
 @{
     ViewData["Title"] = "Accessories";
 }
@@ -10,9 +9,9 @@
                 <h5><label class="fw-bold" for="options">Type</label></h5>
                 <select class="form-select" name="type">
                     <option value="select">Select type</option>
-                    <option value="Weights">Weights</option>
-                    <option value="RubberBand">Rubber Bands</option>
-                    <option value="GymnasticRings">Gymnastic rings</option>
+                    <option value="WeightPlate">Weights</option>
+                    <option value="TrainingRubber">Rubber Bands</option>
+                    <option value="GymnasticRing">Gymnastic rings</option>
                 </select>
                 <button type="submit" class="btn btn-primary">Filter</button>
             </form>
@@ -40,7 +39,7 @@
                     {
                         <div class="col-12 col-sm-6 col-lg-4">
                             <div class="card h-100">
-                                <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.ProductId" asp-route-type="@accessory.GetType().Name">
+                                <a style="text-decoration:none; display:block; color:black;" asp-controller="Accessories" asp-action="ShowAccessory" asp-route-id="@accessory.ProductId" asp-route-type="@ViewBag.Type">
                                     <img class="card-img-top" src="@Url.Content(accessory.ImagePath)" alt="@accessory.Name" />
                                     <div class="card-body">
                                         <h5 class="card-title">@accessory.Name</h5>

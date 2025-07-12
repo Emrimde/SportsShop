@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RepositoryContracts;
+﻿using RepositoryContracts;
 using ServiceContracts.Interfaces.IAddress;
 
 namespace Services
@@ -10,18 +9,13 @@ namespace Services
     public class AddressDeleterService : IAddressDeleterService
     {
         private readonly IAddressRepository _addressRepository;
-        private readonly ILogger<AddressDeleterService> _logger;
-
-        public AddressDeleterService(IAddressRepository addressRepository, ILogger<AddressDeleterService> logger)
+        public AddressDeleterService(IAddressRepository addressRepository)
         {
             _addressRepository = addressRepository;
-            _logger = logger;
         }
 
         public async Task<bool> DeleteAddress(int id)
         {
-            _logger.LogDebug("DeleteAddress method. Parameter: id: {id}", id);
-            
             return await _addressRepository.DeleteAddress(id);
         }
     }

@@ -4,7 +4,7 @@ namespace ServiceContracts.Interfaces.IWeightPlate
 {
     public interface IWeightPlateGetterService
     {
-        List<WeightPlateResponse> GetAllWeightPlates();
+        Task<IReadOnlyList<WeightPlateResponse>> GetAllWeightPlates();
         Task<WeightPlateResponse?> GetWeightPlateById(int id);
     }
 }

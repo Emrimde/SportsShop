@@ -15,32 +15,29 @@ namespace Repositories
 
         public async Task<List<dynamic>> FilterAccessory(string type)
         {
-            if (type == "GymnasticRings")
+            if (type == "GymnasticRing")
             {
 
                 var rings = await _context.GymnasticRings
                     .Include(item => item.Product)
                     .Where(item => item.Product.IsActive)
-                    //.Select(item => item.ToGymnasticResponse())
                     .ToListAsync();
 
                 return rings.Cast<dynamic>().ToList();
             }
-            if (type == "RubberBand")
+            if (type == "TrainingRubber")
             {
                 var rubbers = await _context.TrainingRubbers
                     .Include(item => item.Product)
                     .Where(item => item.Product.IsActive)
-                    //.Select(item => item.ToTrainingRubberResponse())
                     .ToListAsync();
                 return rubbers.Cast<dynamic>().ToList();
             }
-            if (type == "Weights")
+            if (type == "WeightPlate")
             {
                 var plates = await _context.WeightPlates
                     .Include(item => item.Product)
                     .Where(item => item.Product.IsActive)
-                    //.Select(item => item.ToWeightPlateResponse())
                     .ToListAsync();
                 return plates.Cast<dynamic>().ToList();
             }

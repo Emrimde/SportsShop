@@ -19,8 +19,6 @@ namespace Services
 
         public async Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, string userId)
         {
-            _logger.LogDebug("AddToCart service method. Parameters: cartItemAddRequest: {cartItemAddRequest}, userId: {userId}", cartItemAddRequest.ToString(), userId);
-
             Cart? cart = await _cartRepository.GetCartByUserId(userId);
 
             if (cart == null)

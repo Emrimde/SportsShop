@@ -14,9 +14,9 @@ namespace Repositories
             _context = context;
         }
 
-        public IQueryable<GymnasticRing> GetAllGymnasticRings()
+        public async Task<IEnumerable<GymnasticRing>> GetAllGymnasticRings()
         {
-            return _context.GymnasticRings.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
+            return await _context.GymnasticRings.Include(item => item.Product).Where(item => item.Product.IsActive).ToListAsync();
         }
 
         public async Task<GymnasticRing?> GetGymnasticRingById(int id)

@@ -1,4 +1,4 @@
-namespace SportsShop.Models
+namespace SportsShop.ViewModels
 {
     public class ErrorViewModel
     {

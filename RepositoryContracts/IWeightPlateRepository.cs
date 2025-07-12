@@ -4,7 +4,7 @@ namespace RepositoryContracts
 {
     public interface IWeightPlateRepository
     {
-        IQueryable<WeightPlate> GetAllWeightPlates();
+        Task<IEnumerable<WeightPlate>> GetAllWeightPlates();
         Task<WeightPlate?> GetWeightPlateById(int id);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Entities.DatabaseContext;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using ServiceContracts.DTO.AccountDto;
 using ServiceContracts.Interfaces.Account;
 
@@ -12,20 +11,16 @@ namespace Services.Account
         private readonly SportsShopDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<AccountService> _logger;
-
-        public AccountService(SportsShopDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountService> logger)
+        
+        public AccountService(SportsShopDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterDto registerDto)
         {
-            _logger.LogDebug("RegisterAsync method. Parameter: registerDto: {registerDto}", registerDto.ToString());
-            
             var user = new User
             {
                 UserName = registerDto.FirstName,
@@ -56,8 +51,6 @@ namespace Services.Account
 
         public async Task<SignInResult> SignInAsync(SignInDto signInDto)
         {
-            _logger.LogDebug("SignInAsync method. Parameter: signInDto: {signInDto}", signInDto.ToString());
-           
             var result = await _signInManager.PasswordSignInAsync(signInDto.Email, signInDto.Password, isPersistent: false, lockoutOnFailure: true);
             return result;
         }

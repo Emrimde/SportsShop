@@ -4,7 +4,7 @@ namespace RepositoryContracts
 {
     public interface IGymnasticRingRepository
     {
-        IQueryable<GymnasticRing> GetAllGymnasticRings();
+        Task<IEnumerable<GymnasticRing>> GetAllGymnasticRings();
         Task<GymnasticRing?> GetGymnasticRingById(int id);
     }
 }
