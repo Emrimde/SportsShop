@@ -5,7 +5,7 @@ namespace ServiceContracts.Interfaces.IAddress
     public interface IAddressGetterService
     {
         Task<AddressResponse?> GetAddressById(int? id);
-        List<AddressResponse> GetAllAddresses(Guid userId);
+        Task<IReadOnlyList<AddressResponse>> GetAllAddresses(string userId);
         bool IsAddressProvided(AddressAddRequest request);
     }
 }

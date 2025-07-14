@@ -8,14 +8,12 @@ namespace SportsShop.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IAccountService accountService, ILogger<AccountController> logger)
+        public AccountController(SignInManager<User> signInManager, IAccountService accountService, ILogger<AccountController> logger)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
             _accountService = accountService;
             _logger = logger;
@@ -28,14 +26,13 @@ namespace SportsShop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignIn(SignInDto signInDto)
         {
             _logger.LogDebug("[HttpPost]SignIn action method started. Parameters signInDto: {signInDto}", signInDto.ToString());
             
-
             if (!ModelState.IsValid)
             {
-                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                 return View(signInDto);
             }
 
@@ -46,7 +43,7 @@ namespace SportsShop.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError("Login", "Invalid email or password");
+            ModelState.AddModelError("Password", "Invalid Password");
             return View(signInDto);
         }
         public IActionResult CreateUser()
@@ -81,6 +78,7 @@ namespace SportsShop.Controllers
             }
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             _logger.LogDebug("Logout action method logging out user");

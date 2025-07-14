@@ -5,6 +5,6 @@ namespace RepositoryContracts
     public interface IOrderRepository
     {
         Task<Order> AddOrder(Order model);
-        IQueryable<Order> GetAllOrders(string id);
+        Task<IEnumerable<Order>> GetAllOrders(string id);
     }
 }

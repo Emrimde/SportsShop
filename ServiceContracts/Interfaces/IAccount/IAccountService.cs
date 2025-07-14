@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ServiceContracts.DTO.AccountDto;
+using System.Security.Claims;
 
 namespace ServiceContracts.Interfaces.Account
 {
@@ -7,5 +8,6 @@ namespace ServiceContracts.Interfaces.Account
     {
         Task<SignInResult> SignInAsync(SignInDto model);
         Task<IdentityResult> RegisterAsync(RegisterDto model);
+        string? GetUserId(ClaimsPrincipal user);
     }
 }

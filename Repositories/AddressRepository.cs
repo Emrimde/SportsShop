@@ -46,9 +46,9 @@ namespace Repositories
             return await _context.Addresses.Where(item => item.Id == id).Select(address => address.Id).FirstOrDefaultAsync();
         }
 
-        public IQueryable<Address> GetAllAddresses(Guid userId)
+        public async Task<IEnumerable<Address>> GetAllAddresses(Guid userId)
         {
-            return _context.Addresses.Where(address => address.UserId == userId && address.IsActive).AsQueryable();
+            return await _context.Addresses.Where(address => address.UserId == userId && address.IsActive).ToListAsync();
         }
 
         public async Task<Address> UpdateAddress(Address model)

@@ -1,7 +1,7 @@
-﻿using Entities.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO.AddressDto;
+using ServiceContracts.Interfaces.Account;
 using ServiceContracts.Interfaces.IAddress;
 
 namespace SportsShop.Controllers
@@ -13,64 +13,55 @@ namespace SportsShop.Controllers
         private readonly IAddressUpdaterService _addressUpdaterService;
         private readonly IAddressDeleterService _addressDeleterService;
         private readonly ILogger<AddressController> _logger;
-        private readonly UserManager<User> _userManager;
-        public AddressController(IAddressGetterService addressGetterService,IAddressDeleterService addressDeleterService, IAddressUpdaterService addressUpdaterService,IAddressAdderService addressAdderService, UserManager<User> userManager, ILogger<AddressController> logger)
+        private readonly IAccountService _accountService;
+        public AddressController(IAddressGetterService addressGetterService,IAddressDeleterService addressDeleterService, IAddressUpdaterService addressUpdaterService,IAddressAdderService addressAdderService, ILogger<AddressController> logger, IAccountService accountService)
         {
             _addressAdderService = addressAdderService;
             _addressUpdaterService = addressUpdaterService;
             _addressGetterService = addressGetterService;
             _addressDeleterService = addressDeleterService;
-            _userManager = userManager;
+            _accountService = accountService;
             _logger = logger;
         }
+
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             _logger.LogDebug("Index action method displays all user's addresses");
+  
+            string? userId = _accountService.GetUserId(User);
+            IEnumerable<AddressResponse> addresses = await _addressGetterService.GetAllAddresses(userId!);
 
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                _logger.LogError("User not found - Index action method");
-                return Unauthorized();
-            }
-
-            List<AddressResponse> addresses = _addressGetterService.GetAllAddresses(user.Id);
-            
             return View(addresses);
         }
 
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> AddAddress(AddressAddRequest addressAddRequest)
         {
             _logger.LogDebug("AddAddress action method adds address for specific user. Parameters: addressAddRequest: {dto}" , addressAddRequest.ToString());
 
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
+            if (!ModelState.IsValid)
             {
-                return Unauthorized();
+                return View(addressAddRequest);
             }
 
-            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, user.Id);
-
+            string? user2 = _accountService.GetUserId(User);
+            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, user2!);
             if (result != null)
-            {
-                return RedirectToAction("Index");
-            }
-
+                {
+                    return RedirectToAction("Index");
+                }
+            
             return BadRequest();
         }
 
+        [Authorize]
         public async Task<IActionResult> DeleteAddress(int id)
         {
             _logger.LogDebug("DeleteAddress action method deletes address for specific user. Parameter: id: {id}", id);
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                _logger.LogError("User not found - DeleteAddress action method");
-                return Unauthorized();
-            }
             bool result = await _addressDeleterService.DeleteAddress(id);
             if (!result)
             {
@@ -82,6 +73,7 @@ namespace SportsShop.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> EditAddress(int id)
         {
             _logger.LogDebug("EditAddress action returns edit view with address to edition. Parameter: id: {id}", id);
@@ -97,17 +89,10 @@ namespace SportsShop.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EditAddress(AddressUpdateRequest addressUpdateRequest)
         {
             _logger.LogDebug("[HttpPost]EditAddress action method edits address for specific user. Parameter: addressUpdateRequest: {addressUpdateRequest}", addressUpdateRequest.ToString());
-
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                _logger.LogError("Address edition failed. User is not authorized");
-                return Unauthorized();
-            }
 
             if (addressUpdateRequest == null)
             {

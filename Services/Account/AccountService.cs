@@ -1,35 +1,33 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
+using RepositoryContracts;
 using ServiceContracts.DTO.AccountDto;
 using ServiceContracts.Interfaces.Account;
+using System.Security.Claims;
 
 namespace Services.Account
 {
     public class AccountService : IAccountService
     {
-        private readonly SportsShopDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ICartRepository _cartRepository;
         
-        public AccountService(SportsShopDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountService( UserManager<User> userManager, SignInManager<User> signInManager, ICartRepository cartRepository)
         {
-            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _cartRepository = cartRepository;
+        }
+
+        public string? GetUserId(ClaimsPrincipal user)
+        {
+            return _userManager.GetUserId(user);
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterDto registerDto)
         {
-            var user = new User
-            {
-                UserName = registerDto.FirstName,
-                Email = registerDto.Email,
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                CreatedDate = DateTime.Now,
-                IsActive = true
-            };
+            User user = registerDto.ToUser();
 
             IdentityResult result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
@@ -41,11 +39,9 @@ namespace Services.Account
             var cart = new Cart
             {
                 UserId = user.Id,
-                IsActive = true,
-                CreatedDate = DateTime.UtcNow
             };
-            _context.Carts.Add(cart);
-            await _context.SaveChangesAsync();
+
+            await _cartRepository.AddCartToTheUser(cart);
             return result;
         }
 

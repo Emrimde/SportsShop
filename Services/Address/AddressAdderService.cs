@@ -22,15 +22,15 @@ namespace Services
         /// <param name="addressAddRequest">Address</param>
         /// <param name="userId"></param>
         /// <returns>Address with Id</returns>
-        public async Task<AddressResponse?> AddAddress(AddressAddRequest addressAddRequest, Guid userId)
+        public async Task<AddressResponse?> AddAddress(AddressAddRequest addressAddRequest, string userId)
         {
-            if (addressAddRequest == null || userId == Guid.Empty)
+            if (addressAddRequest == null || string.IsNullOrEmpty(userId))
             {
-                throw new ArgumentNullException(nameof(addressAddRequest));
+                throw new ArgumentNullException();
             }
 
-            Address address = addressAddRequest.ToAddress(userId);
-
+            Guid userIdGuid = Guid.Parse(userId);
+            Address address = addressAddRequest.ToAddress(userIdGuid);
             await _addressRepository.AddAddress(address);
 
             return address.ToAddressResponse();

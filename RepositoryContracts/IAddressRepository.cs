@@ -7,7 +7,7 @@ namespace RepositoryContracts
         Task<Address> AddAddress(Address model);
         Task<bool> DeleteAddress(int id);
         Task<Address?> GetAddressById(int? id);
-        IQueryable<Address> GetAllAddresses(Guid userId);
+        Task<IEnumerable<Address>> GetAllAddresses(Guid userId);
         Task<int> GetAddressId(int id);
         Task<Address> UpdateAddress(Address model);
     }

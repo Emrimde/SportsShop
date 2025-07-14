@@ -9,9 +9,9 @@ namespace SportsShop.ViewModels
     {
         [Required (ErrorMessage = "Select supplier!")]
         public int? SupplierId { get; set; }
-        public List<CartItemResponse> CartItems { get; set; } = new List<CartItemResponse>();
-        public List<SupplierResponse> Suppliers { get; set; } = new List<SupplierResponse>();
-        public List<AddressResponse> Addresses { get; set; } = new List<AddressResponse>();
+        public IEnumerable<CartItemResponse> CartItems { get; set; } = new List<CartItemResponse>();
+        public IEnumerable<SupplierResponse> Suppliers { get; set; } = new List<SupplierResponse>();
+        public IReadOnlyList<AddressResponse> Addresses { get; set; } = new List<AddressResponse>();
         public AddressAddRequest Address { get; set; } = new AddressAddRequest();
         public int? AddressId { get; set; }
         public int ItemsPrice { get; set; }

@@ -22,11 +22,6 @@ namespace Repositories
             return cartItem;
         }
 
-        public Task<CartItem> AddCartItem(Entities.Migrations.CartItem cartItem)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task ClearCart(string userId)
         {
             Cart? cart = await GetCartByUserId(userId);
@@ -44,7 +39,6 @@ namespace Repositories
         {
             return await _context.Carts.Include(item => item.CartItems).FirstOrDefaultAsync(item => item.UserId.ToString() == userId && item.IsActive);
         }
-
 
         public async Task<bool> RemoveFromCart(int productId, int cartId)
         {
@@ -76,6 +70,15 @@ namespace Repositories
         public async Task<CartItem?> GetCartItemByProductAndCartId(int productId, int cartId)
         {
             return await _context.CartItems.FirstOrDefaultAsync(item => item.ProductId == productId && item.CartId == cartId && item.IsActive);
+        }
+
+        public async Task<Cart> AddCartToTheUser(Cart cart)
+        {
+            cart.CreatedDate = DateTime.Now;
+            cart.IsActive = true;
+            _context.Carts.Add(cart);
+            await _context.SaveChangesAsync();
+            return cart;
         }
     }
 }

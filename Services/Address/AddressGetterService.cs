@@ -35,9 +35,16 @@ namespace Services.IAddress
             return address.ToAddressResponse();
         }
 
-        public List<AddressResponse> GetAllAddresses(Guid userId)
+        public async Task<IReadOnlyList<AddressResponse>> GetAllAddresses(string userId)
         {
-            return _addressRepository.GetAllAddresses(userId).Select(item => item.ToAddressResponse()).ToList();
+            if (userId == null)
+            { 
+                throw new ArgumentNullException(nameof(userId), "User ID cannot be null.");
+            }
+
+            Guid userGuid = Guid.Parse(userId);
+            IEnumerable<Address> addresses = await _addressRepository.GetAllAddresses(userGuid);
+            return addresses.Select(item => item.ToAddressResponse()).ToList();
         }
 
         public bool IsAddressProvided(AddressAddRequest addressAddRequest)

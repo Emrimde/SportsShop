@@ -10,9 +10,8 @@
             <form asp-action="CreateUser" method="POST">
                 <div class="mb-3">
                     <label asp-for="Email" class="form-label">Email</label>
-                    <input type="email" id="email" asp-for="Email" class="form-control">
+                    <input asp-for="Email" class="form-control">
                     <span asp-validation-for="Email" class="text-danger"></span>
-
                 </div>
                 <div class="mb-3">
                     <label asp-for="Password" class="form-label">Password</label>
@@ -35,16 +34,6 @@
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-dark text-white w-100">Register</button>
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    foreach (var modelState in ViewData.ModelState.Values)  
-                    {
-                        foreach (var error in modelState.Errors)
-                        {
-                            <div><span class="text-danger">@error.ErrorMessage</span></div>
-                        }
-                    }
-                }
             </form>
             </div>
         </div>

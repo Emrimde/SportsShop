@@ -6,6 +6,7 @@ namespace ServiceContracts.DTO.AccountDto
     {
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid Email")]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = default!;
 
         [Required(ErrorMessage = "Password is required")]

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Entities.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ServiceContracts.DTO.AccountDto
 {
@@ -23,6 +24,20 @@ namespace ServiceContracts.DTO.AccountDto
             [Compare("Password", ErrorMessage = "Passwords are't the same")]
             [DataType(DataType.Password)]
             public string ConfirmPassword { get; set; } = default!;
+
+        public User ToUser()
+        {
+            return new User()
+            {
+                UserName = FirstName,
+                Email = Email,
+                FirstName = FirstName,
+                LastName = LastName,
+                CreatedDate = DateTime.Now,
+                IsActive = true
+            };
+
+        }
 
         public override string ToString()
         {

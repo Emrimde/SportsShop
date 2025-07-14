@@ -12,5 +12,6 @@ namespace RepositoryContracts
         Task UpdateCartItemQuantity(int cartItem, int quantity);
         Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity);
         Task<CartItem?> GetCartItemByProductAndCartId(int productId, int cartId);
+        Task<Cart> AddCartToTheUser(Cart cart);
     }
 }

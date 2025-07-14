@@ -9,27 +9,18 @@
             <form asp-action="SignIn" method="POST">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" asp-for="Email" required class="form-control">
+                    <input asp-for="Email" class="form-control">
                     <span asp-validation-for="Email" class="text-danger"></span>
                     
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" asp-for="Password" required class="form-control">
+                    <input asp-for="Password" class="form-control">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-dark text-white w-100">Sign in</button>
-               
-                <div asp-validation-summary="All" class="text-danger"></div>
-                @if (ViewBag.Errors != null)
-                {
-                    <div class="text-danger">
-                        @foreach (var error in ViewBag.Errors)
-                        {
-                            <div>@error</div>
-                        }
-                    </div>
-                }
+
+                <span asp-validation-summary="Password" class="text-danger"></span>
             </form>
             <div><a class="text-muted" asp-action="CreateUser">Don't have account? Register!!</a> </div>
         </div>

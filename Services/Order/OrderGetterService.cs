@@ -1,4 +1,5 @@
-﻿using RepositoryContracts;
+﻿using Entities.Models;
+using RepositoryContracts;
 using ServiceContracts.DTO.OrderDto;
 using ServiceContracts.Interfaces.IOrder;
 
@@ -12,9 +13,15 @@ namespace Services
             _orderRepository = orderRepository;
         }
 
-        public List<OrderResponse> GetAllOrders(string id)
+        public async Task<IEnumerable<OrderResponse>> GetAllOrders(string id)
         {
-            return _orderRepository.GetAllOrders(id).Select(item => item.ToOrderResponse()).ToList();
+            if(id == null)
+            {
+                throw new ArgumentNullException(nameof(id), "Id is null");
+            }
+            IEnumerable<Order> orders = await _orderRepository.GetAllOrders(id);
+   
+            return orders.Select(item => item.ToOrderResponse()).ToList();
         }
     }
 }

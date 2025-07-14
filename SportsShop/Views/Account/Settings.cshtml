@@ -24,22 +24,22 @@
                 <form asp-controller="Address" asp-action="AddAddress" method="POST">
                     <div class="mb-3">
                         <label for="country" class="form-label">Country</label>
-                        <input type="text" id="country" asp-for="Country" class="form-control">
+                        <input asp-for="Country" class="form-control">
                         <span asp-validation-for="Country" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label for="city" class="form-label">City</label>
-                        <input type="text" id="city" asp-for="City" class="form-control">
+                        <input asp-for="City" class="form-control">
                         <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label for="street" class="form-label">Street</label>
-                        <input type="text" id="street" asp-for="Street" class="form-control">
+                        <input asp-for="Street" class="form-control">
                         <span asp-validation-for="Street" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label for="zipcode" class="form-label">Zip Code</label>
-                        <input type="text" id="zipcode" asp-for="ZipCode" class="form-control">
+                        <input asp-for="ZipCode" class="form-control">
                         <span asp-validation-for="ZipCode" class="text-danger"></span>
                     </div>
                     <button type="submit" class="btn btn-dark text-white w-100">Add address</button>

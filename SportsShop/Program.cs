@@ -89,6 +89,11 @@ namespace SportsShop
                 .AddEntityFrameworkStores<SportsShopDbContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/SignIn";
+            });
+
             var app = builder.Build();
 
             

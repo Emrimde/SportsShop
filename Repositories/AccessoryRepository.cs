@@ -17,7 +17,6 @@ namespace Repositories
         {
             if (type == "GymnasticRing")
             {
-
                 var rings = await _context.GymnasticRings
                     .Include(item => item.Product)
                     .Where(item => item.Product.IsActive)
