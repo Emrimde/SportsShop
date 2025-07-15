@@ -4,6 +4,6 @@ namespace ServiceContracts.Interfaces.IAddress
 {
     public interface IAddressUpdaterService
     {
-        Task<AddressResponse> UpdateAddress(AddressUpdateRequest model);
+        Task<AddressResponse?> UpdateAddress(AddressUpdateRequest model, string userId);
     }
 }

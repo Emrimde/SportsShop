@@ -33,7 +33,7 @@ namespace SportShopTests.OrderTests
         #region GetAllOrders
 
         [Fact]
-        public void GetAllOrders_ShouldReturnAllOrder()
+        public async Task GetAllOrders_ShouldReturnAllOrder()
         {
             //Arrange
             List<Order> order = new List<Order>
@@ -44,25 +44,25 @@ namespace SportShopTests.OrderTests
             };
             
             List<OrderResponse> expected = order.Select(item => item.ToOrderResponse()).ToList();
-            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<string>())).Returns(order.AsQueryable());
+            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<string>())).ReturnsAsync(order);
             string goodUserId = "goodUserId";
 
             //Act
-            List<OrderResponse> result = _orderGetterService.GetAllOrders(goodUserId);
+            IEnumerable<OrderResponse> result = await _orderGetterService.GetAllOrders(goodUserId);
 
             //Assert
             result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public void GetAllOrders_ShouldReturnEmpty()
+        public async Task GetAllOrders_ShouldReturnEmpty()
         {
             //Arrange
-            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<string>())).Returns(new List<Order>().AsQueryable());
+            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<string>())).ReturnsAsync(new List<Order>());
             string goodUserId = "goodUserId";
 
             //Act
-            List<OrderResponse> result = _orderGetterService.GetAllOrders(goodUserId);
+            IEnumerable<OrderResponse> result = await _orderGetterService.GetAllOrders(goodUserId); 
 
             //Assert
             result.Should().BeEmpty();

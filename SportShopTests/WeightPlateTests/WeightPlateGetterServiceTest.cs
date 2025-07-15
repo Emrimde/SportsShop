@@ -27,20 +27,20 @@ namespace SportShopTests.WeightPlateTests
         #region GetAllWeightPlates
 
         [Fact]
-        public void GetAllWeightPlates_ReturnsEmptyList()
+        public async Task GetAllWeightPlates_ReturnsEmptyList()
         {
             //Arrange
-            _weightPlateRepositoryMock.Setup(item => item.GetAllWeightPlates()).Returns(new List<WeightPlate>().AsQueryable());
+            _weightPlateRepositoryMock.Setup(item => item.GetAllWeightPlates()).ReturnsAsync(new List<WeightPlate>());
 
             //Act
-            List<WeightPlateResponse> weightPlates =  _weightPlateGetterService.GetAllWeightPlates();
+            IReadOnlyList<WeightPlateResponse> weightPlates = await  _weightPlateGetterService.GetAllWeightPlates();
 
             //Assert
             weightPlates.Should().BeEmpty();
         }
 
         [Fact]
-        public void GetAllWeightPlates_ReturnAll()
+        public async Task GetAllWeightPlates_ReturnAll()
         {
             //Arrange
             List<WeightPlate> weightPlates = new List<WeightPlate>()
@@ -50,27 +50,27 @@ namespace SportShopTests.WeightPlateTests
                 _fixture.Create<WeightPlate>()
             };
 
-            _weightPlateRepositoryMock.Setup(item => item.GetAllWeightPlates()).Returns(weightPlates.AsQueryable());
+            _weightPlateRepositoryMock.Setup(item => item.GetAllWeightPlates()).ReturnsAsync(weightPlates);
 
             List<WeightPlateResponse> expected = weightPlates.Select(item => item.ToWeightPlateResponse()).ToList();
 
             //Act
-            List<WeightPlateResponse> result =  _weightPlateGetterService.GetAllWeightPlates();
+            IReadOnlyList<WeightPlateResponse> result = await  _weightPlateGetterService.GetAllWeightPlates();
 
             result.Should().HaveCount(3);
             result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public void GetAllWeightPlates_ReturnsExactlyOneRecord()
+        public async Task GetAllWeightPlates_ReturnsExactlyOneRecord()
         {
             //Arrange 
             WeightPlate weightPlate = _fixture.Create<WeightPlate>();
             WeightPlateResponse expected = weightPlate.ToWeightPlateResponse();
-            _weightPlateRepositoryMock.Setup(item => item.GetAllWeightPlates()).Returns(new List<WeightPlate>(){weightPlate}.AsQueryable());
+            _weightPlateRepositoryMock.Setup(item => item.GetAllWeightPlates()).ReturnsAsync(new List<WeightPlate>(){weightPlate});
 
             //Act
-            List<WeightPlateResponse> result =  _weightPlateGetterService.GetAllWeightPlates();
+            IReadOnlyList<WeightPlateResponse> result = await _weightPlateGetterService.GetAllWeightPlates();
 
             //Assert
             result.Should().HaveCount(1);

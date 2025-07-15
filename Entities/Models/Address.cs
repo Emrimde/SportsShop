@@ -4,7 +4,8 @@
     {
         public int Id { get; set; }
         public Guid UserId { get; set; }
-        public string Country { get; set; } = default!;
+        public int CountryId { get; set; }
+        public Country Country { get; set; } = default!;
         public string City { get; set; } = default!;
         public string Street { get; set; } = default!;
         public string ZipCode { get; set; } = default!;
@@ -13,7 +14,5 @@
         public DateTime? EditDate { get; set; }
         public DateTime? DeleteDate { get; set; }
         public bool IsActive { get; set; }
-
-
     }
 }

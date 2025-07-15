@@ -21,7 +21,7 @@ namespace Services
             }
             IEnumerable<Order> orders = await _orderRepository.GetAllOrders(id);
    
-            return orders.Select(item => item.ToOrderResponse()).ToList();
+            return orders.Select(item => item.ToOrderResponse());
         }
     }
 }

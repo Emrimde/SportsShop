@@ -24,8 +24,10 @@
                 <form asp-controller="Address" asp-action="AddAddress" method="POST">
                     <div class="mb-3">
                         <label for="country" class="form-label">Country</label>
-                        <input asp-for="Country" class="form-control">
-                        <span asp-validation-for="Country" class="text-danger"></span>
+                        <select asp-for="CountryId" asp-items="ViewBag.Countries" class="form-control">
+                            <option value="">Select Country</option>
+                        </select>
+                        <span asp-validation-for="CountryId" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label for="city" class="form-label">City</label>

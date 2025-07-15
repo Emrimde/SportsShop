@@ -18,16 +18,10 @@ namespace Services.IAddress
             _addressRepository = addressRepository;
         }
         
-        public async Task<AddressResponse?> GetAddressById(int? id)
+        public async Task<AddressResponse?> GetAddressById(int id, string userId)
         {
-            if (id == null)
-            {
-                return null;
-            }
-
             Address? address = await _addressRepository.GetAddressById(id);
-
-            if (address == null)
+            if (address == null || address.UserId != Guid.Parse(userId))
             {
                 return null;
             }
@@ -49,7 +43,7 @@ namespace Services.IAddress
 
         public bool IsAddressProvided(AddressAddRequest addressAddRequest)
         {
-            if (!string.IsNullOrEmpty(addressAddRequest.ZipCode) || !string.IsNullOrEmpty(addressAddRequest.Country) || !string.IsNullOrEmpty(addressAddRequest.Street) || !string.IsNullOrEmpty(addressAddRequest.City))
+            if (!string.IsNullOrEmpty(addressAddRequest.ZipCode) || addressAddRequest.CountryId > 0 || !string.IsNullOrEmpty(addressAddRequest.Street) || !string.IsNullOrEmpty(addressAddRequest.City))
             {
                 return true;
             }

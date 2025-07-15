@@ -6,6 +6,7 @@ using RepositoryContracts;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 using Services.IAddress;
+using System.Threading.Tasks;
 
 namespace SportShopTests.AddressTests
 {
@@ -27,53 +28,56 @@ namespace SportShopTests.AddressTests
         #region GetAllAddresses
 
         [Fact]
-        public void Should_ReturnEmptyList_When_UserHasNoAddresses()
+        public async Task Should_ReturnEmptyList_When_UserHasNoAddresses()
         {
             //Arrange
             Guid userId = Guid.NewGuid();
-            _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).Returns(new List<Address>().AsQueryable());
+            _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).ReturnsAsync(new List<Address>());
 
             //Act
-            List<AddressResponse> result = _addressGetterService.GetAllAddresses(Guid.NewGuid());
+            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId.ToString());
 
             //Assert
             result.Should().BeEmpty();
         }
 
         [Fact]
-        public void GetAllAddresses_ReturnAllUserAddresses()
+        public async Task GetAllAddresses_ReturnAllUserAddresses()
         {
             //Arrange
-            List<Address> addresses = new List<Address>()
+            IEnumerable<Address> addresses = new List<Address>()
             {
                 _fixture.Build<Address>().With(item => item.User, null as User).Create(),
                 _fixture.Build<Address>().With(item => item.User, null as User).Create(),
                 _fixture.Build<Address>().With(item => item.User, null as User).Create()
             };
+
             Guid userId = Guid.NewGuid();
 
-            List<AddressResponse> expected = addresses.Select(item => item.ToAddressResponse()).ToList();
+            IEnumerable<AddressResponse> expected = addresses.Select(item => item.ToAddressResponse());
 
-            _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).Returns(addresses.AsQueryable());
+            _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).ReturnsAsync(addresses);
 
-            List<AddressResponse> result = _addressGetterService.GetAllAddresses(userId);
+            //Act
+            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId.ToString());
 
+            //Assert
             result.Should().HaveCount(3);
             result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public void GetAllAddresses_ReturnsOneAddressForUser()
+        public async Task GetAllAddresses_ReturnsOneAddressForUser()
         {
             //Arrange
             Address address = _fixture.Build<Address>().With(item => item.User, null as User).Create();
             AddressResponse expected = address.ToAddressResponse();
             Guid userId = Guid.NewGuid();
 
-            _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).Returns(new List<Address>{ address }.AsQueryable());
+            _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).ReturnsAsync(new List<Address> { address });
 
             //Act
-            List<AddressResponse> result = _addressGetterService.GetAllAddresses(userId);
+            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId.ToString());
 
             //Assert
             result.Should().HaveCount(1);

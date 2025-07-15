@@ -6,7 +6,7 @@ namespace ServiceContracts.DTO.AddressDto
     public class AddressAddRequest
     {
         [Required(ErrorMessage = "Country is required")]
-        public string Country { get; set; } = default!;
+        public int CountryId { get; set; } = default!;
 
         [Required(ErrorMessage = "City is required")]
         public string City { get; set; } = default!;
@@ -22,18 +22,16 @@ namespace ServiceContracts.DTO.AddressDto
             return new Address()
             {
                 UserId = userId,
-                Country = Country,
+                CountryId = CountryId,
                 City = City,
                 Street = Street,
                 ZipCode = ZipCode,
-                CreatedDate = DateTime.Now,
-                IsActive = true
             };
         }
 
         public override string ToString()
         {
-            return $"{{{nameof(Country)}={Country}, {nameof(City)}={City}, {nameof(Street)}={Street}, {nameof(ZipCode)}={ZipCode}}}";
+            return $"{{{nameof(CountryId)}={CountryId}, {nameof(City)}={City}, {nameof(Street)}={Street}, {nameof(ZipCode)}={ZipCode}}}";
         }
     }
 }

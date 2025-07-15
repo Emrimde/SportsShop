@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts.DTO.AddressDto;
+using ServiceContracts.DTO.CountryDto;
 using ServiceContracts.Interfaces.Account;
 using ServiceContracts.Interfaces.IAddress;
+using ServiceContracts.Interfaces.ICountry;
 
 namespace SportsShop.Controllers
 {
@@ -14,13 +17,15 @@ namespace SportsShop.Controllers
         private readonly IAddressDeleterService _addressDeleterService;
         private readonly ILogger<AddressController> _logger;
         private readonly IAccountService _accountService;
-        public AddressController(IAddressGetterService addressGetterService,IAddressDeleterService addressDeleterService, IAddressUpdaterService addressUpdaterService,IAddressAdderService addressAdderService, ILogger<AddressController> logger, IAccountService accountService)
+        private readonly ICountryGetterService _countryGetterService;
+        public AddressController(IAddressGetterService addressGetterService,IAddressDeleterService addressDeleterService, IAddressUpdaterService addressUpdaterService,IAddressAdderService addressAdderService, ILogger<AddressController> logger, IAccountService accountService, ICountryGetterService countryGetterService)
         {
             _addressAdderService = addressAdderService;
             _addressUpdaterService = addressUpdaterService;
             _addressGetterService = addressGetterService;
             _addressDeleterService = addressDeleterService;
             _accountService = accountService;
+            _countryGetterService = countryGetterService;
             _logger = logger;
         }
 
@@ -47,22 +52,31 @@ namespace SportsShop.Controllers
                 return View(addressAddRequest);
             }
 
-            string? user2 = _accountService.GetUserId(User);
-            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, user2!);
+            string? userId = _accountService.GetUserId(User);
+            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, userId!);
+
             if (result != null)
-                {
-                    return RedirectToAction("Index");
-                }
+            {
+                return RedirectToAction("Index");
+            }
             
             return BadRequest();
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> DeleteAddress(int id)
         {
             _logger.LogDebug("DeleteAddress action method deletes address for specific user. Parameter: id: {id}", id);
 
-            bool result = await _addressDeleterService.DeleteAddress(id);
+            if(id <= 0)
+            {
+                return BadRequest();
+            }
+
+            string? userId = _accountService.GetUserId(User);
+            bool result = await _addressDeleterService.DeleteAddress(id, userId!);
+
             if (!result)
             {
                 _logger.LogError("Invalid deletion in DeleteAddress action: id: {id}", id);
@@ -72,34 +86,56 @@ namespace SportsShop.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> EditAddress(int id)
         {
             _logger.LogDebug("EditAddress action returns edit view with address to edition. Parameter: id: {id}", id);
 
-            AddressResponse? address = await _addressGetterService.GetAddressById(id);
-            if (address == null)
-            {
-                _logger.LogError("Address not found in EditAddress action.");
-                return NotFound();
-            }
-            
-            return View(address);
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> EditAddress(AddressUpdateRequest addressUpdateRequest)
-        {
-            _logger.LogDebug("[HttpPost]EditAddress action method edits address for specific user. Parameter: addressUpdateRequest: {addressUpdateRequest}", addressUpdateRequest.ToString());
-
-            if (addressUpdateRequest == null)
-            {
+            if (id <= 0) {
                 return BadRequest();
             }
 
-            await _addressUpdaterService.UpdateAddress(addressUpdateRequest);
+            string? userId = _accountService.GetUserId(User);
+            AddressResponse? address = await _addressGetterService.GetAddressById(id, userId!);
+            if (address == null)
+            {
+                _logger.LogWarning("Address not found in EditAddress action.");
+                return NotFound();
+            }
+
+            IEnumerable<CountryResponse> countries = await _countryGetterService.GetAllCountries();
+            ViewBag.Countries = new SelectList(countries,nameof(CountryResponse.Id),nameof(CountryResponse.Name), address.CountryId);
+
+            return View(address.ToUpdateRequest());
+        }
+
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> EditAddress(AddressUpdateRequest addressUpdateRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                IEnumerable<CountryResponse> countries = await _countryGetterService.GetAllCountries();
+              
+                ViewBag.Countries = new SelectList(countries,nameof(CountryResponse.Id)
+                ,nameof(CountryResponse.Name),
+                addressUpdateRequest.CountryId);
+
+                return View(addressUpdateRequest);
+            }
+
+            _logger.LogDebug("[HttpPost]EditAddress action method edits address for specific user. Parameter: addressUpdateRequest: {addressUpdateRequest}", addressUpdateRequest.ToString());
+
+            string? userId = _accountService.GetUserId(User);
+            AddressResponse? response = await _addressUpdaterService.UpdateAddress(addressUpdateRequest, userId!);
+
+            if (response == null) 
+            {
+                return Forbid();
+            }
+
             return RedirectToAction("Index");
         }
     }

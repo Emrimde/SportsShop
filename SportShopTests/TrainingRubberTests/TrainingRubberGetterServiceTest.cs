@@ -27,20 +27,20 @@ namespace SportShopTests.TrainingRubberTests
         #region GetAllTrainingRubbers
 
         [Fact]
-        public void GetAllTrainingRubbers_ReturnsEmptyList()
+        public async Task GetAllTrainingRubbers_ReturnsEmptyList()
         {
             //Arrange
-            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).Returns(new List<TrainingRubber>().AsQueryable());
+            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).ReturnsAsync(new List<TrainingRubber>());
 
             //Act
-            List<TrainingRubberResponse> trainingRubbers =  _trainingRubberGetterService.GetAllTrainingRubbers();
+            IReadOnlyList<TrainingRubberResponse> trainingRubbers = await  _trainingRubberGetterService.GetAllTrainingRubbers();
 
             //Assert
             trainingRubbers.Should().BeEmpty();
         }
 
         [Fact]
-        public void GetAllTrainingRubbers_ReturnAllTrainingRubbers()
+        public async Task GetAllTrainingRubbers_ReturnAllTrainingRubbers()
         {
             //Arrange
             List<TrainingRubber> trainingRubbers = new List<TrainingRubber>()
@@ -52,25 +52,25 @@ namespace SportShopTests.TrainingRubberTests
 
             List<TrainingRubberResponse> expected = trainingRubbers.Select(item => item.ToTrainingRubberResponse()).ToList();
 
-            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).Returns(trainingRubbers.AsQueryable());
+            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).ReturnsAsync(trainingRubbers);
 
             //Act
-            List<TrainingRubberResponse> result =  _trainingRubberGetterService.GetAllTrainingRubbers();
+            IReadOnlyList<TrainingRubberResponse> result = await _trainingRubberGetterService.GetAllTrainingRubbers();
 
             result.Should().HaveCount(3);
             expected.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public void GetAllTrainingRubbers_ReturnsExactlyOneRecord()
+        public async Task GetAllTrainingRubbers_ReturnsExactlyOneRecord()
         {
             //Arrange 
             TrainingRubber trainingRubber = _fixture.Create<TrainingRubber>();
             TrainingRubberResponse expected = trainingRubber.ToTrainingRubberResponse();
-            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).Returns(new List<TrainingRubber>(){ trainingRubber}.AsQueryable());
+            _trainingRubberRepositoryMock.Setup(item => item.GetAllTrainingRubbers()).ReturnsAsync(new List<TrainingRubber>() {trainingRubber});
 
             //Act
-            List<TrainingRubberResponse> result =  _trainingRubberGetterService.GetAllTrainingRubbers();
+            IReadOnlyList<TrainingRubberResponse> result = await _trainingRubberGetterService.GetAllTrainingRubbers();
 
             //Assert
             result.Should().HaveCount(1);

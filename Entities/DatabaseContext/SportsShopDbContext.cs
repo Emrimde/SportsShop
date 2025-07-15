@@ -18,6 +18,7 @@ namespace Entities.DatabaseContext
         public virtual DbSet<Drink> Drinks { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -21,6 +21,7 @@ using ServiceContracts.Interfaces.ITrainingRubber;
 using RepositoryContracts;
 using Repositories;
 using Serilog;
+using ServiceContracts.Interfaces.ICountry;
 
 namespace SportsShop
 {
@@ -58,6 +59,8 @@ namespace SportsShop
             builder.Services.AddScoped<ICartUpdaterService, CartUpdaterService>();
             builder.Services.AddScoped<ICartDeleterService, CartDeleterService>();
             builder.Services.AddScoped<ISupplierGetterService, SupplierGetterService>();
+            builder.Services.AddScoped<ICountryGetterService, CountryGetterService>();
+            builder.Services.AddScoped<ICountryRepository, CountryRepository>();
             builder.Services.AddScoped<IOrderAdderService, OrderAdderService>();
             builder.Services.AddScoped<IOrderGetterService, OrderGetterService>();
             builder.Services.AddScoped<IWeightPlateGetterService, WeightPlateGetterService>();

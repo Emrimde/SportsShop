@@ -27,23 +27,23 @@ namespace SportShopTests.GymnasticRingTests
         #region GetAllGymnasticRings
 
         [Fact]
-        public void GetAllGymnasticRings_ReturnsEmptyList()
+        public async Task GetAllGymnasticRings_ReturnsEmptyList()
         {
             //Arrange
-            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).Returns(new List<GymnasticRing>().AsQueryable());
+            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).ReturnsAsync(new List<GymnasticRing>());
 
             //Act
-            List<GymnasticRingResponse> gymnasticRings = _gymnasticRingGetterService.GetAllGymnasticRings();
+            IReadOnlyList<GymnasticRingResponse> gymnasticRings = await _gymnasticRingGetterService.GetAllGymnasticRings();
 
             //Assert
             gymnasticRings.Should().BeEmpty();
         }
 
         [Fact]
-        public void GetAllGymnasticRings_ReturnAll()
+        public async Task GetAllGymnasticRings_ReturnAll()
         {
             //Arrange
-            List<GymnasticRing> gymnasticRings = new List<GymnasticRing>()
+            IEnumerable<GymnasticRing> gymnasticRings = new List<GymnasticRing>()
            {
                _fixture.Create<GymnasticRing>(),
                _fixture.Create<GymnasticRing>(),
@@ -51,26 +51,26 @@ namespace SportShopTests.GymnasticRingTests
            };
 
             List<GymnasticRingResponse> expected = gymnasticRings.Select(item => item.ToGymnasticResponse()).ToList();
-            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).Returns(gymnasticRings.AsQueryable());
+            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).ReturnsAsync(gymnasticRings);
 
             //Act
-            List<GymnasticRingResponse> result = _gymnasticRingGetterService.GetAllGymnasticRings();
+            IReadOnlyList<GymnasticRingResponse> result = await _gymnasticRingGetterService.GetAllGymnasticRings();
 
             result.Should().HaveCount(3);
             result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public void GetAllGymnasticRings_ReturnsExactlyOneRecord()
+        public async Task GetAllGymnasticRings_ReturnsExactlyOneRecord()
         {
             //Arrange 
             GymnasticRing gymnasticRing = _fixture.Create<GymnasticRing>();
             GymnasticRingResponse expected = gymnasticRing.ToGymnasticResponse();
 
-            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).Returns(new List<GymnasticRing>() {gymnasticRing}.AsQueryable());
+            _gymnasticRingRepositoryMock.Setup(item => item.GetAllGymnasticRings()).ReturnsAsync(new List<GymnasticRing>() {gymnasticRing});
 
             //Act
-            List<GymnasticRingResponse> result = _gymnasticRingGetterService.GetAllGymnasticRings();
+            IReadOnlyList<GymnasticRingResponse> result = await _gymnasticRingGetterService.GetAllGymnasticRings();
 
             //Assert
             result.Should().HaveCount(1);

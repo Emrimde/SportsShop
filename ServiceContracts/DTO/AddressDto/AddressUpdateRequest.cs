@@ -1,13 +1,19 @@
 ﻿using Entities.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ServiceContracts.DTO.AddressDto
 {
     public class AddressUpdateRequest
     {
+        [Required]
         public int Id { get; set; }
-        public string Country { get; set; } = default!;
+        [Required]
+        public int CountryId { get; set; } = default!;
+        [Required]
         public string City { get; set; } = default!;
+        [Required]
         public string Street { get; set; } = default!;
+        [Required]
         public string ZipCode { get; set; } = default!;
 
         public Address ToAddress()
@@ -15,7 +21,7 @@ namespace ServiceContracts.DTO.AddressDto
             return new Address
             {
                 Id = Id,
-                Country = Country,
+                CountryId = CountryId,
                 City = City,
                 Street = Street,
                 ZipCode = ZipCode
@@ -24,7 +30,8 @@ namespace ServiceContracts.DTO.AddressDto
 
         public override string ToString()
         {
-            return $"{{{nameof(Id)}={Id.ToString()}, {nameof(Country)}={Country}, {nameof(City)}={City}, {nameof(Street)}={Street}, {nameof(ZipCode)}={ZipCode}}}";
+            return $"{{{nameof(Id)}={Id.ToString()}, {nameof(CountryId)}={CountryId}, {nameof(City)}={City}, {nameof(Street)}={Street}, {nameof(ZipCode)}={ZipCode}}}";
         }
     }
+    
 }

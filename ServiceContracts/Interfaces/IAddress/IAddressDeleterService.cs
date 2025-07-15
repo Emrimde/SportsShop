@@ -2,6 +2,6 @@
 {
     public interface IAddressDeleterService
     {
-        Task<bool> DeleteAddress(int id);  
+        Task<bool> DeleteAddress(int id, string userId);  
     }
 }

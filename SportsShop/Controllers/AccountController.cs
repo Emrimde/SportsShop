@@ -1,8 +1,11 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts.DTO.AccountDto;
+using ServiceContracts.DTO.CountryDto;
 using ServiceContracts.Interfaces.Account;
+using ServiceContracts.Interfaces.ICountry;
 
 namespace SportsShop.Controllers
 {
@@ -11,11 +14,13 @@ namespace SportsShop.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
+        private readonly ICountryGetterService _countryGetterService;
 
-        public AccountController(SignInManager<User> signInManager, IAccountService accountService, ILogger<AccountController> logger)
+        public AccountController(SignInManager<User> signInManager, IAccountService accountService, ILogger<AccountController> logger, ICountryGetterService countryGetterService)
         {
             _signInManager = signInManager;
             _accountService = accountService;
+            _countryGetterService = countryGetterService;
             _logger = logger;
         }
 
@@ -78,7 +83,6 @@ namespace SportsShop.Controllers
             }
         }
 
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             _logger.LogDebug("Logout action method logging out user");
@@ -87,9 +91,11 @@ namespace SportsShop.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Settings()
+        public async Task<IActionResult> Settings()
         {
             _logger.LogDebug("Settings action method returns SettingsView");
+            IEnumerable<CountryResponse> countries = await _countryGetterService.GetAllCountries();
+            ViewBag.Countries = new SelectList(countries, "Id", "Name");
             return View();
         }
     }
