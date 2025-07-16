@@ -19,7 +19,7 @@ namespace Services
             return await _cartRepository.GetAllCartItems(cartId).Select(item => item.ToCartItemResponse()).ToListAsync();
         }
 
-        public async Task<Cart?> GetCartByUserId(string userId)
+        public async Task<Cart?> GetCartByUserId(Guid userId)
         {
             Cart? cart = await _cartRepository.GetCartByUserId(userId);
             if (cart != null)

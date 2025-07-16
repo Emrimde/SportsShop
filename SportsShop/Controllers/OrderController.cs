@@ -50,9 +50,9 @@ namespace SportsShop.Controllers
         {
             _logger.LogDebug("PlaceOrder action method. Parameters: orderAddRequest: {orderAddRequest}, addressAddRequest: {addressAddRequest}", orderAddRequest.ToString(), addressAddRequest.ToString());
             
-            string? userId =  _accountService.GetUserId(User);
+            Guid userId =  _accountService.GetUserId(User);
 
-            Cart? cart = await _cartGetterService.GetCartByUserId(userId!);
+            Cart? cart = await _cartGetterService.GetCartByUserId(userId);
             List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cart!.Id);
             int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
             
@@ -65,7 +65,7 @@ namespace SportsShop.Controllers
 
             orderAddRequest.ShippingCost = await _supplierGetterService.GetSupplierPriceById(orderAddRequest.SupplierId);
             orderAddRequest.TotalCost = totalCost;
-            orderAddRequest.UserId = Guid.Parse(userId!);
+            orderAddRequest.UserId = userId;
 
             if(_addressGetterService.IsAddressProvided(addressAddRequest))
             {
@@ -77,7 +77,7 @@ namespace SportsShop.Controllers
             }
           
             await _orderAdderService.AddOrder(orderAddRequest);
-            await _cartDeleterService.ClearCart(userId!);
+            await _cartDeleterService.ClearCart(userId);
             
             return View();
         }
@@ -86,8 +86,8 @@ namespace SportsShop.Controllers
         public async Task<IActionResult> History()
         {
             _logger.LogDebug("History action method shows user's all orders");
-            string? userId = _accountService.GetUserId(User);
-            IEnumerable<OrderResponse> orders = await _orderGetterService.GetAllOrders(userId!);
+            Guid userId = _accountService.GetUserId(User);
+            IEnumerable<OrderResponse> orders = await _orderGetterService.GetAllOrders(userId);
             
             return View(orders);
         }

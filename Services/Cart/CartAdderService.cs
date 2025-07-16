@@ -17,7 +17,7 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, string userId)
+        public async Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, Guid userId)
         {
             Cart? cart = await _cartRepository.GetCartByUserId(userId);
 

@@ -16,14 +16,15 @@ namespace Services
             _addressRepository = addressRepository;
         }
    
-        public async Task<AddressResponse?> UpdateAddress(AddressUpdateRequest model, string userId)
+        public async Task<AddressResponse?> UpdateAddress(AddressUpdateRequest model, Guid userId)
         {
             Address? address = await _addressRepository.GetAddressById(model.Id);
-            if(address == null || address.UserId != Guid.Parse(userId))
+            if(address == null || address.UserId != userId)
             {
                 return null;
             }
             Address? updatedAddress = await _addressRepository.UpdateAddress(model.ToAddress());
+
             return updatedAddress!.ToAddressResponse();
         }
     }

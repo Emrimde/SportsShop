@@ -6,9 +6,9 @@ namespace RepositoryContracts
     {
         Task<bool> RemoveFromCart(int productId, int cartId);
         Task<CartItem> AddCartItem(CartItem cartItem);
-        Task ClearCart(string userId);
+        Task ClearCart(Guid userId);
         IQueryable<CartItem> GetAllCartItems(int cartId);
-        Task<Cart?> GetCartByUserId(string userId);
+        Task<Cart?> GetCartByUserId(Guid userId);
         Task UpdateCartItemQuantity(int cartItem, int quantity);
         Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity);
         Task<CartItem?> GetCartItemByProductAndCartId(int productId, int cartId);

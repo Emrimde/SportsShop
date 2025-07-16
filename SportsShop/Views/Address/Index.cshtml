@@ -19,8 +19,11 @@
                         </p>
                     </div>
                     <div class="card-footer text-center">
-                        <a asp-controller="Address" asp-action="EditAddress" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
-                        <a asp-controller="Address" asp-action="DeleteAddress" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                        <form asp-controller="Address" asp-action="DeleteAddress" asp-route-addressId="@item.Id">
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        <a asp-controller="Address" asp-action="EditAddress" asp-route-addressId="@item.Id" class="btn btn-primary btn-sm">Edit</a>
+                        
                     </div>
             </div>
               

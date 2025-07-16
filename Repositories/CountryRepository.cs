@@ -13,6 +13,11 @@ namespace Repositories
             _context = context;
         }
 
+        public async Task<bool> CountryExists(int countryId)
+        {
+            return await _context.Countries.AnyAsync(item => item.Id == countryId);
+        }
+
         public async Task<IEnumerable<Country>> GetAllCountries()
         {
             return await _context.Countries.AsNoTracking().ToListAsync();

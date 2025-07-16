@@ -16,13 +16,14 @@ namespace Services
             _addressRepository = addressRepository;
         }
 
-        public async Task<bool> DeleteAddress(int id, string userId)
+        public async Task<bool> DeleteAddress(int id, Guid userId)
         {
             Address? address = await _addressRepository.GetAddressById(id);
-            if (address == null || address.UserId != Guid.Parse(userId))
+            if (address == null || address.UserId != userId)
             {
                 return false;
             }
+
             return await _addressRepository.DeleteAddress(address);
         }
     }

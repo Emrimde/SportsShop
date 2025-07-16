@@ -18,10 +18,10 @@ namespace Services.IAddress
             _addressRepository = addressRepository;
         }
         
-        public async Task<AddressResponse?> GetAddressById(int id, string userId)
+        public async Task<AddressResponse?> GetAddressById(int id, Guid userId)
         {
             Address? address = await _addressRepository.GetAddressById(id);
-            if (address == null || address.UserId != Guid.Parse(userId))
+            if (address == null || address.UserId != userId)
             {
                 return null;
             }
@@ -29,15 +29,9 @@ namespace Services.IAddress
             return address.ToAddressResponse();
         }
 
-        public async Task<IReadOnlyList<AddressResponse>> GetAllAddresses(string userId)
+        public async Task<IReadOnlyList<AddressResponse>> GetAllAddresses(Guid userId)
         {
-            if (userId == null)
-            { 
-                throw new ArgumentNullException(nameof(userId), "User ID cannot be null.");
-            }
-
-            Guid userGuid = Guid.Parse(userId);
-            IEnumerable<Address> addresses = await _addressRepository.GetAllAddresses(userGuid);
+            IEnumerable<Address> addresses = await _addressRepository.GetAllAddresses(userId);
             return addresses.Select(item => item.ToAddressResponse()).ToList();
         }
 

@@ -4,6 +4,6 @@ namespace ServiceContracts.Interfaces.IOrder
 {
     public interface IOrderGetterService
     {
-        Task<IEnumerable<OrderResponse>> GetAllOrders(string id);
+        Task<IEnumerable<OrderResponse>> GetAllOrders(Guid userId);
     }
 }

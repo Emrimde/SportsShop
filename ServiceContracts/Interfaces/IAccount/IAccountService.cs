@@ -8,6 +8,6 @@ namespace ServiceContracts.Interfaces.Account
     {
         Task<SignInResult> SignInAsync(SignInDto model);
         Task<IdentityResult> RegisterAsync(RegisterDto model);
-        string? GetUserId(ClaimsPrincipal user);
+        Guid GetUserId(ClaimsPrincipal user);
     }
 }

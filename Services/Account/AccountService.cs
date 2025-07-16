@@ -20,9 +20,16 @@ namespace Services.Account
             _cartRepository = cartRepository;
         }
 
-        public string? GetUserId(ClaimsPrincipal user)
+        public Guid GetUserId(ClaimsPrincipal user)
         {
-            return _userManager.GetUserId(user);
+            string? id = _userManager.GetUserId(user);
+            Guid guid;
+            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out guid))
+            {
+                throw new UnauthorizedAccessException("Unable to get a valid user id");
+            }
+
+            return Guid.Parse(id);
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterDto registerDto)

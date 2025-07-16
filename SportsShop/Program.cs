@@ -59,6 +59,8 @@ namespace SportsShop
             builder.Services.AddScoped<ICartUpdaterService, CartUpdaterService>();
             builder.Services.AddScoped<ICartDeleterService, CartDeleterService>();
             builder.Services.AddScoped<ISupplierGetterService, SupplierGetterService>();
+            builder.Services.AddScoped<ICountryValidationService, CountryValidationService>();
+            builder.Services.AddScoped<IAddressValidationService, AddressValidationService>();
             builder.Services.AddScoped<ICountryGetterService, CountryGetterService>();
             builder.Services.AddScoped<ICountryRepository, CountryRepository>();
             builder.Services.AddScoped<IOrderAdderService, OrderAdderService>();

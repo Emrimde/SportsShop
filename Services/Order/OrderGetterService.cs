@@ -13,14 +13,9 @@ namespace Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<IEnumerable<OrderResponse>> GetAllOrders(string id)
+        public async Task<IEnumerable<OrderResponse>> GetAllOrders(Guid userId)
         {
-            if(id == null)
-            {
-                throw new ArgumentNullException(nameof(id), "Id is null");
-            }
-            IEnumerable<Order> orders = await _orderRepository.GetAllOrders(id);
-   
+            IEnumerable<Order> orders = await _orderRepository.GetAllOrders(userId);
             return orders.Select(item => item.ToOrderResponse());
         }
     }

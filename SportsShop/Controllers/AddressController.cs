@@ -34,8 +34,8 @@ namespace SportsShop.Controllers
         {
             _logger.LogDebug("Index action method displays all user's addresses");
   
-            string? userId = _accountService.GetUserId(User);
-            IEnumerable<AddressResponse> addresses = await _addressGetterService.GetAllAddresses(userId!);
+            Guid userId = _accountService.GetUserId(User);
+            IEnumerable<AddressResponse> addresses = await _addressGetterService.GetAllAddresses(userId);
 
             return View(addresses);
         }
@@ -52,34 +52,36 @@ namespace SportsShop.Controllers
                 return View(addressAddRequest);
             }
 
-            string? userId = _accountService.GetUserId(User);
-            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, userId!);
+            Guid userId = _accountService.GetUserId(User);
+            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, userId);
 
             if (result != null)
             {
                 return RedirectToAction("Index");
             }
-            
-            return BadRequest();
+
+            return RedirectToAction("Settings", "Account");
+
         }
 
         [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> DeleteAddress(int id)
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> DeleteAddress(int addressId)
         {
-            _logger.LogDebug("DeleteAddress action method deletes address for specific user. Parameter: id: {id}", id);
+            _logger.LogDebug("DeleteAddress action method deletes address for specific user. Parameter: id: {id}", addressId);
 
-            if(id <= 0)
+            if(addressId <= 0)
             {
                 return BadRequest();
             }
 
-            string? userId = _accountService.GetUserId(User);
-            bool result = await _addressDeleterService.DeleteAddress(id, userId!);
+            Guid userId = _accountService.GetUserId(User);
+            bool result = await _addressDeleterService.DeleteAddress(addressId, userId);
 
             if (!result)
             {
-                _logger.LogError("Invalid deletion in DeleteAddress action: id: {id}", id);
+                _logger.LogError("Invalid deletion in DeleteAddress action: id: {id}", addressId);
                 return NotFound();
             }
 
@@ -88,16 +90,16 @@ namespace SportsShop.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> EditAddress(int id)
+        public async Task<IActionResult> EditAddress(int addressId)
         {
-            _logger.LogDebug("EditAddress action returns edit view with address to edition. Parameter: id: {id}", id);
+            _logger.LogDebug("EditAddress action returns edit view with address to edition. Parameter: id: {id}", addressId);
 
-            if (id <= 0) {
+            if (addressId <= 0) {
                 return BadRequest();
             }
 
-            string? userId = _accountService.GetUserId(User);
-            AddressResponse? address = await _addressGetterService.GetAddressById(id, userId!);
+            Guid userId = _accountService.GetUserId(User);
+            AddressResponse? address = await _addressGetterService.GetAddressById(addressId, userId);
             if (address == null)
             {
                 _logger.LogWarning("Address not found in EditAddress action.");
@@ -128,9 +130,8 @@ namespace SportsShop.Controllers
 
             _logger.LogDebug("[HttpPost]EditAddress action method edits address for specific user. Parameter: addressUpdateRequest: {addressUpdateRequest}", addressUpdateRequest.ToString());
 
-            string? userId = _accountService.GetUserId(User);
-            AddressResponse? response = await _addressUpdaterService.UpdateAddress(addressUpdateRequest, userId!);
-
+            Guid userId = _accountService.GetUserId(User);
+            AddressResponse? response = await _addressUpdaterService.UpdateAddress(addressUpdateRequest, userId);
             if (response == null) 
             {
                 return Forbid();

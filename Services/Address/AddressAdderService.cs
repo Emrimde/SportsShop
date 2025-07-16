@@ -11,9 +11,11 @@ namespace Services
     public class AddressAdderService : IAddressAdderService
     {
         private readonly IAddressRepository _addressRepository;
-        public AddressAdderService(IAddressRepository addressRepository)
+        private readonly IAddressValidationService _addressValidationService;
+        public AddressAdderService(IAddressRepository addressRepository, IAddressValidationService addressValidationService)
         {
             _addressRepository = addressRepository;
+            _addressValidationService = addressValidationService;
         }
 
         /// <summary>
@@ -22,18 +24,20 @@ namespace Services
         /// <param name="addressAddRequest">Address</param>
         /// <param name="userId"></param>
         /// <returns>Address with Id</returns>
-        public async Task<AddressResponse?> AddAddress(AddressAddRequest addressAddRequest, string userId)
+        public async Task<AddressResponse?> AddAddress(AddressAddRequest addressAddRequest, Guid userId)
         {
-            if (addressAddRequest == null || string.IsNullOrEmpty(userId))
+            if (addressAddRequest == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(addressAddRequest));
             }
+            if (await _addressValidationService.IsAddressValid(addressAddRequest))
+            {
+                Address address = addressAddRequest.ToAddress(userId);
+                await _addressRepository.AddAddress(address);
 
-            Guid userIdGuid = Guid.Parse(userId);
-            Address address = addressAddRequest.ToAddress(userIdGuid);
-            await _addressRepository.AddAddress(address);
-
-            return address.ToAddressResponse();
+                return address.ToAddressResponse();
+            }
+            return null;
         }
     }
 }

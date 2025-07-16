@@ -11,7 +11,7 @@ namespace Services
             _cartRepository = cartRepository;
         }
 
-        public async Task ClearCart(string userId)
+        public async Task ClearCart(Guid userId)
         {
             await _cartRepository.ClearCart(userId);
         }

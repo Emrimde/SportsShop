@@ -23,10 +23,10 @@ namespace Repositories
             return model;
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrders(string id)
+        public async Task<IEnumerable<Order>> GetAllOrders(Guid userId)
         {
             return await _context.Orders.Include(item => item.User).Include(o => o.CartItems)
-               .ThenInclude(ci => ci.Product).Where(item => item.UserId.ToString() == id && item.IsActive).ToListAsync();
+               .ThenInclude(ci => ci.Product).Where(item => item.UserId == userId && item.IsActive).ToListAsync();
         }
     }
 }

@@ -4,6 +4,6 @@ namespace ServiceContracts.Interfaces.IAddress
 {
     public interface IAddressAdderService
     {
-        Task<AddressResponse?> AddAddress(AddressAddRequest model, string userId);
+        Task<AddressResponse?> AddAddress(AddressAddRequest model, Guid userId);
     }
 }

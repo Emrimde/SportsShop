@@ -38,7 +38,7 @@ namespace SportsShop.Controllers
         {
             _logger.LogDebug("Index action method displays all cart items.");
 
-            string? user = _accountService.GetUserId(User);
+            Guid user = _accountService.GetUserId(User);
 
             if (user == null)
             {
@@ -61,15 +61,8 @@ namespace SportsShop.Controllers
         {
             _logger.LogDebug("[HttpPost]AddToCart action method. Parameter: cartItemAddRequest: {dto}", cartItemAddRequest.ToString());
 
-            string? user = _accountService.GetUserId(User);
-
-            if (user == null)
-            {
-                _logger.LogWarning("User not found. Redirecting to SingIn view");
-                return RedirectToAction("SignIn", "Account");
-            }
-
-            bool result = await _cartAdderService.AddToCart(cartItemAddRequest, user);
+            Guid userId = _accountService.GetUserId(User);
+            bool result = await _cartAdderService.AddToCart(cartItemAddRequest, userId);
 
             if (!result)
             {
@@ -86,7 +79,7 @@ namespace SportsShop.Controllers
         {
             _logger.LogDebug("RemoveFromCart action method. Parameter: id: {id}", id);
 
-            string userId = _accountService.GetUserId(User)!;
+            Guid userId = _accountService.GetUserId(User);
             Cart? cart = await _cartGetterService.GetCartByUserId(userId);
             bool ok = await _cartDeleterService.RemoveFromCart(id, cart!.Id);
 
@@ -117,11 +110,11 @@ namespace SportsShop.Controllers
         {
             _logger.LogDebug("Checkout action method. Parameters: coupon: {coupon}, shippingCost: {shippingCost}, supplierId: {supplierId}", coupon, shippingCost, supplierId);
 
-            string? userId = _accountService.GetUserId(User);
-            Cart? cart = await _cartGetterService.GetCartByUserId(userId!);
+            Guid userId = _accountService.GetUserId(User);
+            Cart? cart = await _cartGetterService.GetCartByUserId(userId);
 
             CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
-            checkoutViewModel.Addresses = await _addressGetterService.GetAllAddresses(userId!);
+            checkoutViewModel.Addresses = await _addressGetterService.GetAllAddresses(userId);
             checkoutViewModel.Suppliers =  _supplierGetterService.GetAllSuppliers();
             checkoutViewModel.CartItems = await _cartGetterService.GetAllCartItems(cart!.Id);
             int itemsPrice = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);

@@ -4,6 +4,6 @@ namespace ServiceContracts.Interfaces.ICart
 {
     public interface ICartAdderService
     {
-        Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, string userId);
+        Task<bool> AddToCart(CartItemAddRequest cartItemAddRequest, Guid userId);
     }
 }

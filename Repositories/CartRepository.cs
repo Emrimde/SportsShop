@@ -22,7 +22,7 @@ namespace Repositories
             return cartItem;
         }
 
-        public async Task ClearCart(string userId)
+        public async Task ClearCart(Guid userId)
         {
             Cart? cart = await GetCartByUserId(userId);
             cart.CartItems.Clear();
@@ -35,9 +35,9 @@ namespace Repositories
                 .Where(item => item.CartId == cartId && item.IsActive);
         }
 
-        public async Task<Cart?> GetCartByUserId(string userId)
+        public async Task<Cart?> GetCartByUserId(Guid userId)
         {
-            return await _context.Carts.Include(item => item.CartItems).FirstOrDefaultAsync(item => item.UserId.ToString() == userId && item.IsActive);
+            return await _context.Carts.Include(item => item.CartItems).FirstOrDefaultAsync(item => item.UserId == userId && item.IsActive);
         }
 
         public async Task<bool> RemoveFromCart(int productId, int cartId)
