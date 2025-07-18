@@ -51,10 +51,9 @@ namespace SportsShop.Controllers
             _logger.LogDebug("PlaceOrder action method. Parameters: orderAddRequest: {orderAddRequest}, addressAddRequest: {addressAddRequest}", orderAddRequest.ToString(), addressAddRequest.ToString());
             
             Guid userId =  _accountService.GetUserId(User);
-
-            Cart? cart = await _cartGetterService.GetCartByUserId(userId);
-            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cart!.Id);
-            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
+            int cartId = await _cartGetterService.GetCartIdByUserId(userId);
+            IReadOnlyList<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cartId);
+            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cartId);
             
             orderAddRequest.CartItems = cartItems.Select(item => new CartItemAddRequest() {
                 ProductId = item.ProductId,

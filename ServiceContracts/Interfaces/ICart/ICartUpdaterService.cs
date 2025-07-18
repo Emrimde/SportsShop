@@ -1,8 +1,10 @@
-﻿namespace ServiceContracts.Interfaces.ICart
+﻿using ServiceContracts.Results;
+
+namespace ServiceContracts.Interfaces.ICart
 {
     public interface ICartUpdaterService
     {
-        Task UpdateCartItemQuantity(int cartItem, int quantity);
         Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity);
+        Task<CartItemResult> UpdateQuantity(int cartItemId, int productId, int quantity, Guid userId);
     }
 }

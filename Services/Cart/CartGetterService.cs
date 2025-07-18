@@ -1,5 +1,4 @@
 ﻿using Entities.Models;
-using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.ICart;
@@ -14,17 +13,32 @@ namespace Services
             _cartRepository = cartRepository;
         }
 
-        public async Task<List<CartItemResponse>> GetAllCartItems(int cartId)
+        public async Task<IReadOnlyList<CartItemResponse>> GetAllCartItems(int cartId)
         {
-            return await _cartRepository.GetAllCartItems(cartId).Select(item => item.ToCartItemResponse()).ToListAsync();
+            IEnumerable<CartItem> cartItems = await _cartRepository.GetAllCartItems(cartId);
+            return cartItems.Select(item => item.ToCartItemResponse()).ToList();
         }
 
-        public async Task<Cart?> GetCartByUserId(Guid userId)
+        public async Task<Cart> GetCartByUserId(Guid userId)
         {
             Cart? cart = await _cartRepository.GetCartByUserId(userId);
-            if (cart != null)
-                return cart;
-            return null!;
+            if (cart == null)
+            {
+                throw new InvalidOperationException($"Cart for user with ID {userId} was not found.");
+            }
+
+            return cart;
+        }
+
+        public async Task<int> GetCartIdByUserId(Guid userId)
+        {
+            int? cartId = await _cartRepository.GetCartIdByUserId(userId);
+            if (cartId == null) 
+            {
+                throw new InvalidOperationException($"CartId for user with ID {userId} was not found.");
+            }
+
+            return cartId.Value;
         }
 
         public async Task<int> GetTotalCostOfAllCartItems(int cartId)

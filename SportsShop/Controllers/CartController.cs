@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTO.CartItemDto;
 using ServiceContracts.Interfaces.Account;
-using ServiceContracts.Interfaces.IAddress;
 using ServiceContracts.Interfaces.ICart;
 using ServiceContracts.Interfaces.ISupplier;
+using ServiceContracts.Results;
+using SportsShop.Builders.ICheckoutBuilderService;
 using SportsShop.ViewModels;
 
 namespace SportsShop.Controllers
@@ -16,117 +17,121 @@ namespace SportsShop.Controllers
         private readonly ICartAdderService _cartAdderService;
         private readonly ICartDeleterService _cartDeleterService;
         private readonly ICartUpdaterService _cartUpdaterService;
-        private readonly IAddressGetterService _addressGetterService;
         private readonly ISupplierGetterService _supplierGetterService;
+        private readonly ICheckoutBuilderService _checkoutBuilderService;
         private readonly IAccountService _accountService;
         private readonly ILogger<CartController> _logger;
         
-        public CartController(ICartAdderService cartAdderService,ICartGetterService cartGetterService, ICartUpdaterService cartUpdaterService , ICartDeleterService cartDeleterService, IAddressGetterService addressGetterService, ISupplierGetterService supplierGetterService, ILogger<CartController> logger, IAccountService accountService)
+        public CartController(ICartAdderService cartAdderService,ICartGetterService cartGetterService, ICartUpdaterService cartUpdaterService , ICartDeleterService cartDeleterService, ISupplierGetterService supplierGetterService, ILogger<CartController> logger, IAccountService accountService, ICheckoutBuilderService checkoutBuilderService)
         {
             _cartGetterService = cartGetterService;
             _cartAdderService = cartAdderService;
             _cartUpdaterService = cartUpdaterService;
             _cartDeleterService = cartDeleterService;
-            _addressGetterService = addressGetterService;
             _supplierGetterService = supplierGetterService;
             _accountService = accountService;
+            _checkoutBuilderService = checkoutBuilderService;
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             _logger.LogDebug("Index action method displays all cart items.");
 
-            Guid user = _accountService.GetUserId(User);
-
-            if (user == null)
+            Guid userId = _accountService.GetUserId(User);
+            int cartId = await _cartGetterService.GetCartIdByUserId(userId);
+            IReadOnlyList<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cartId);
+            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cartId);
+            CartViewModel viewModel = new CartViewModel
             {
-                _logger.LogWarning("User not found. Redirecting to SingIn view");
-                return RedirectToAction("SignIn", "Account");
-            }
-
-            Cart? cart = await _cartGetterService.GetCartByUserId(user);
-
-            List<CartItemResponse> cartItems = await _cartGetterService.GetAllCartItems(cart!.Id);
-
-            int totalCost = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
-            ViewBag.TotalCost = totalCost;
-
-            return View(cartItems);
+                CartItems = cartItems,
+                TotalCost = totalCost
+            };
+            
+            return View(viewModel);
         }
 
+        [Authorize]
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> AddToCart(CartItemAddRequest cartItemAddRequest)
+        public async Task<IActionResult> AddToCart(CartItemAddRequest cartItemAddRequest, string? returnUrl)
         {
             _logger.LogDebug("[HttpPost]AddToCart action method. Parameter: cartItemAddRequest: {dto}", cartItemAddRequest.ToString());
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
             Guid userId = _accountService.GetUserId(User);
-            bool result = await _cartAdderService.AddToCart(cartItemAddRequest, userId);
-
-            if (!result)
+            CartItemResult result = await _cartAdderService.AddToCart(cartItemAddRequest, userId);
+ 
+            if (!result.Success)
             {
                 _logger.LogWarning("Adding failed - AddToCart action");
-                return NotFound("Adding failed");
+                return BadRequest(result.ErrorMessage);
+            }
+            else if (!result.EnoughProduct)
+            {
+                _logger.LogWarning("Adding failed - not enough product quantity");
+                TempData["Information"] = result.ErrorMessage;
+                return Redirect(returnUrl!);
+            }
+
+                return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromCart(int productId)
+        {
+            _logger.LogDebug("RemoveFromCart action method. Parameter: id: {id}", productId);
+
+            Guid userId = _accountService.GetUserId(User);
+            CartItemResult result = await _cartDeleterService.RemoveFromCart(productId, userId);
+
+            if(!result.Success)
+            {
+                _logger.LogError("Removing from cart failed");
+                TempData["CartError"] = result.ErrorMessage;
+            }
+            else
+            {
+                TempData["CartSuccess"] = result.Message;
             }
 
             return RedirectToAction("Index");
         }
 
         [Authorize]
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> RemoveFromCart(int id)
+        public async Task<IActionResult> UpdateQuantity(int cartItemId,int productId, int quantity)
         {
-            _logger.LogDebug("RemoveFromCart action method. Parameter: id: {id}", id);
+            _logger.LogDebug("UpdateQuantity called for cartItemId={CartItemId}, productId={ProductId}, quantity={Quantity}",cartItemId, productId, quantity);
 
             Guid userId = _accountService.GetUserId(User);
-            Cart? cart = await _cartGetterService.GetCartByUserId(userId);
-            bool ok = await _cartDeleterService.RemoveFromCart(id, cart!.Id);
-
-            if (ok)
+            CartItemResult result = await _cartUpdaterService.UpdateQuantity(cartItemId, productId, quantity, userId);
+            if (!result.Success)
             {
-                return RedirectToAction("Index");
+                TempData["UpdateError"] = result.ErrorMessage;
             }
-            else
-            {
-                _logger.LogError("Removing from cart failed");
-                throw new InvalidOperationException();
-            }
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> UpdateQuantity(int id, int quantity)
-        {
-            _logger.LogDebug("UpdateQuantity action method. Parameters: id: {id}, quantity: {quantity}", id, quantity);
-            await _cartUpdaterService.UpdateCartItemQuantity(id, quantity);
-
+            
             return RedirectToAction("Index");
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Checkout(string? coupon,decimal shippingCost, int? supplierId)
+        public async Task<IActionResult> Checkout(int totalCost,string? coupon,decimal shippingCost, int? supplierId)
         {
-            _logger.LogDebug("Checkout action method. Parameters: coupon: {coupon}, shippingCost: {shippingCost}, supplierId: {supplierId}", coupon, shippingCost, supplierId);
+            _logger.LogDebug("Checkout action method");
 
             Guid userId = _accountService.GetUserId(User);
             Cart? cart = await _cartGetterService.GetCartByUserId(userId);
-
-            CheckoutViewModel checkoutViewModel = new CheckoutViewModel();
-            checkoutViewModel.Addresses = await _addressGetterService.GetAllAddresses(userId);
-            checkoutViewModel.Suppliers =  _supplierGetterService.GetAllSuppliers();
-            checkoutViewModel.CartItems = await _cartGetterService.GetAllCartItems(cart!.Id);
-            int itemsPrice = await _cartGetterService.GetTotalCostOfAllCartItems(cart.Id);
-            checkoutViewModel.ItemsPrice = itemsPrice;
-            //if(shippingCost == 0m || itemsPrice >= 300m)
-            //{
-            //    checkoutViewModel.ShippingCost = 0m;
-            //}
-            checkoutViewModel.ShippingCost = shippingCost;
-            checkoutViewModel.TotalCost = itemsPrice + shippingCost;
-            checkoutViewModel.SupplierId = supplierId;
-
+            CheckoutViewModel checkoutViewModel = await _checkoutBuilderService.BuildCheckoutViewModel(userId, totalCost, shippingCost, supplierId);
+           
             return View(checkoutViewModel);
         }
 
@@ -135,7 +140,7 @@ namespace SportsShop.Controllers
             _logger.LogDebug("GetShippingCost action method. Parameter: supplierId: {supplierId}", supplierId);
             decimal shippingCost = await _supplierGetterService.GetSupplierPriceById(supplierId);
 
-            return RedirectToAction("Checkout", new {shippingCost = shippingCost, supplierId = supplierId });
+            return Json(new {price = shippingCost});
         }
     }
 }

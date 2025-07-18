@@ -1,9 +1,14 @@
 ﻿@model DrinkResponse
 @{
     ViewBag.Title = "Drink details -" + Model.Name;
+    string? returnUrl = ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString;
 }
 
 <div class="container py-5">
+    @if(TempData["Information"] != null)
+    {
+        <p class="alert alert-danger">@TempData["Information"]</p>
+    }
     <div class="row">
         <div class="col-lg-6 col-md-12 mb-3">
             <img src="@Url.Content(Model.ImagePath)"
@@ -16,10 +21,11 @@
             <p class="mb-4">
                 @Model.Description
             </p>
-            <form asp-controller="Cart" asp-action="AddToCart" asp-route-ProductId=@Model.Id asp-route-type="Drink" method="post">
+            <form asp-controller="Cart" asp-action="AddToCart" asp-route-ProductId=@Model.Id asp-route-type="Drink" asp-route-returnUrl="@returnUrl" method="post">
                 <div class="row">
                     <div class="col-6 mb-3">
                         <h5>Choose Quantity</h5>
+                        
                         <select name="quantity" class="form-control w-50">
                             <option value="1">1</option>
                             <option value="2">2</option>

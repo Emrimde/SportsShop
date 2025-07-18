@@ -1,4 +1,4 @@
-﻿@model List<CartItemResponse>
+﻿@model CartViewModel
 @{
     ViewBag.Title = "Shopping Cart";
 }
@@ -6,8 +6,19 @@
     <div class="row">
         <div class="col-lg-8 mb-4">
             <h2 class="mb-4">@ViewBag.Title</h2>
-
-            @if (!Model.Any())
+            @if(TempData["CartSuccess"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["CartSuccess"]
+                </div>
+            }
+            @if (TempData["UpdateError"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["UpdateError"]
+                </div>
+            }
+            @if (!Model.CartItems.Any())
             {
                 <div class="alert alert-info text-center" role="alert">
                     Your cart is empty
@@ -15,7 +26,7 @@
             }
             else
             {
-                @foreach (var item in Model)
+                @foreach (var item in Model.CartItems)
                 {
                     <div class="row align-items-center py-3 border-bottom">
                         <div class="col-3 col-md-3">
@@ -38,7 +49,8 @@
                             <div class="d-flex align-items-center justify-content-end">
                                 <form asp-action="UpdateQuantity"
                                       asp-controller="Cart"
-                                      asp-route-id="@item.Id"
+                                      asp-route-cartItemId="@item.Id"
+                                      asp-route-productId ="@item.ProductId"
                                       method="post"
                                       class="form-inline">
 
@@ -55,13 +67,12 @@
                         </div>
 
                         <div class="col-12 col-md-2 text-right mt-3 mt-md-0">
-                            <a asp-action="RemoveFromCart"
+                            <form asp-action="RemoveFromCart"
                                asp-controller="Cart"
-                               asp-route-id="@item.Id"
-                               class="btn btn-dark"
+                               asp-route-productId="@item.Id"
                                style="color: #fff;">
-                                Usuń
-                            </a>
+                                <button class="btn btn-dark">Delete product</button>
+                            </form>
                         </div>
                     </div>
                 }
@@ -74,24 +85,28 @@
 
                 <div class="d-flex justify-content-between mb-2">
                     <span>Products:</span>
-                    <strong>
-                        @ViewBag.TotalCost zł
-                    </strong>
+                    <ul>
+                        @foreach(CartItemResponse item in Model.CartItems)
+                        {
+                            <li>@item.ProductName</li>    
+                        }
+                    </ul>
                 </div>
                 <hr />
 
                 <div class="d-flex justify-content-between mb-3">
-                    <span>Cost of products:</span>
-                    <strong>@ViewBag.TotalCost zł</strong>
+                    <span>Cost of products</span>
+                    <strong>@Model.TotalCost zł</strong>
                 </div>
 
-                @if (Model.Count > 0)
+                @if (Model.CartItems.Count > 0)
                 {
                     <a asp-action="Checkout"
                        asp-controller="Cart"
+                       asp-route-totalCost="@Model.TotalCost"
                        class="btn btn-dark btn-block"
                        style="color: #fff;">
-                        Przejdź do kasy
+                        Proceed buyment
                     </a>
                 }
             </div>

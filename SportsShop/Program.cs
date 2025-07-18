@@ -22,6 +22,8 @@ using RepositoryContracts;
 using Repositories;
 using Serilog;
 using ServiceContracts.Interfaces.ICountry;
+using ServiceContracts.Interfaces.IProduct;
+using SportsShop.Builders.ICheckoutBuilderService;
 
 namespace SportsShop
 {
@@ -61,8 +63,11 @@ namespace SportsShop
             builder.Services.AddScoped<ISupplierGetterService, SupplierGetterService>();
             builder.Services.AddScoped<ICountryValidationService, CountryValidationService>();
             builder.Services.AddScoped<IAddressValidationService, AddressValidationService>();
+            builder.Services.AddScoped<IProductValidationService, ProductValidationService>();
             builder.Services.AddScoped<ICountryGetterService, CountryGetterService>();
+            builder.Services.AddScoped<ICheckoutBuilderService, CheckoutBuilderService>();
             builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IOrderAdderService, OrderAdderService>();
             builder.Services.AddScoped<IOrderGetterService, OrderGetterService>();
             builder.Services.AddScoped<IWeightPlateGetterService, WeightPlateGetterService>();

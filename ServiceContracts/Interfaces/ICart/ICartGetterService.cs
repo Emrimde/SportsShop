@@ -5,8 +5,9 @@ namespace ServiceContracts.Interfaces.ICart
 {
     public interface ICartGetterService
     {
-        Task<List<CartItemResponse>> GetAllCartItems(int cartId);
+        Task<IReadOnlyList<CartItemResponse>> GetAllCartItems(int cartId);
         Task<int> GetTotalCostOfAllCartItems(int cartId);
-        Task<Cart?> GetCartByUserId(Guid userId);
+        Task<Cart> GetCartByUserId(Guid userId);
+        Task<int> GetCartIdByUserId(Guid userId);
     }
 }

@@ -29,31 +29,32 @@ namespace Repositories
             await _context.SaveChangesAsync();
         }
 
-        public IQueryable<CartItem> GetAllCartItems(int cartId)
+        public async Task<IEnumerable<CartItem>> GetAllCartItems(int cartId)
         {
-            return _context.CartItems.Include(item => item.Product)
-                .Where(item => item.CartId == cartId && item.IsActive);
+            return await _context.CartItems.Include(item => item.Product)
+                .Where(item => item.CartId == cartId && item.IsActive).ToListAsync();
         }
 
         public async Task<Cart?> GetCartByUserId(Guid userId)
         {
-            return await _context.Carts.Include(item => item.CartItems).FirstOrDefaultAsync(item => item.UserId == userId && item.IsActive);
+            return await _context.Carts.FirstOrDefaultAsync(item => item.UserId == userId && item.IsActive);
         }
 
         public async Task<bool> RemoveFromCart(int productId, int cartId)
         {
-            CartItem? cartItem = await _context.CartItems.Include(item => item.Cart).FirstOrDefaultAsync(item => item.Id == productId && item.CartId == cartId);
+            CartItem? cartItem = await _context.CartItems.FirstOrDefaultAsync(item => item.Id == productId && item.CartId == cartId);
 
             if (cartItem == null)
             {
                 return false;
             }
             cartItem.IsActive = false;
+            cartItem.DeleteDate = DateTime.UtcNow;
             int deletedCount = await _context.SaveChangesAsync();
             return deletedCount > 0;
         }
 
-        public async Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity)
+        public async Task IncreaseCartItemQuantity(int cartItemId, int quantity)
         {
             CartItem? item = await _context.CartItems.FindAsync(cartItemId);
             item!.Quantity += quantity;
@@ -79,6 +80,11 @@ namespace Repositories
             _context.Carts.Add(cart);
             await _context.SaveChangesAsync();
             return cart;
+        }
+
+        public async Task<int?> GetCartIdByUserId(Guid userId)
+        {
+            return await _context.Carts.Where(item => item.UserId == userId).Select(item => item.Id).FirstOrDefaultAsync();
         }
     }
 }
