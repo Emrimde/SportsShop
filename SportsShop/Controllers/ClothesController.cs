@@ -2,8 +2,7 @@
 using ServiceContracts.DTO.ClothDto;
 using ServiceContracts.Interfaces.ICloth;
 
-namespace SportsShop.Controllers
-{
+namespace SportsShop.Controllers;
     public class ClothesController : Controller
     {
         private readonly IClothGetterService _clothGetterService;
@@ -13,13 +12,14 @@ namespace SportsShop.Controllers
             _clothGetterService = clothesService;
             _logger = logger;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             _logger.LogDebug("Index action method of ClothController");
 
-            List<ClothResponse> clothes = _clothGetterService.GetAllClothes();
+            IEnumerable<ClothResponse> clothes = await _clothGetterService.GetAllClothes();
             return View(clothes);
         }
+
         public async Task<IActionResult> ShowCloth(int id)
         {
             _logger.LogDebug("ShowCloth action method.Parameter id: {id}", id);
@@ -34,6 +34,7 @@ namespace SportsShop.Controllers
 
             return View(cloth);
         }
+
         [HttpPost]
         public async Task<IActionResult> FilterCloth(string size, string gender, string type)
         {
@@ -43,4 +44,3 @@ namespace SportsShop.Controllers
             return View("Index",clothes);
         }
     }
-}

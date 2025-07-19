@@ -17,5 +17,10 @@ namespace Repositories;
 
             return product;
         }
+
+    public Task UpdateProductQuantity(List<Product> products)
+    {
+        throw new NotImplementedException();
     }
+}
 

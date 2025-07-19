@@ -36,9 +36,10 @@ namespace Services
             return drink.ToDrinkResponse();
         }
 
-        public List<DrinkResponse> GetAllDrinks()
+        public async Task<IEnumerable<DrinkResponse>> GetAllDrinks()
         {
-            return _drinkRepository.GetAllDrinks().Select(item => item.ToDrinkResponse()).ToList();
+            IEnumerable<Drink> drinks = await _drinkRepository.GetAllDrinks();
+            return drinks.Select(item => item.ToDrinkResponse());
         }
     }
 }

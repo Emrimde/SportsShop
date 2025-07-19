@@ -4,7 +4,7 @@ namespace RepositoryContracts
 {
     public interface IDrinkRepository
     {
-        IQueryable<Drink> GetAllDrinks();
+        Task<IEnumerable<Drink>> GetAllDrinks();
         Task<Drink?> GetDrinkById(int id);
         IQueryable<Drink> FilterDrinks(string flavor);
     }

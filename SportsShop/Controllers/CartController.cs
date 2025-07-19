@@ -127,14 +127,15 @@ namespace SportsShop.Controllers
         public async Task<IActionResult> Checkout(int totalCost,string? coupon,decimal shippingCost, int? supplierId)
         {
             _logger.LogDebug("Checkout action method");
-
             Guid userId = _accountService.GetUserId(User);
             Cart? cart = await _cartGetterService.GetCartByUserId(userId);
             CheckoutViewModel checkoutViewModel = await _checkoutBuilderService.BuildCheckoutViewModel(userId, totalCost, shippingCost, supplierId);
+            
            
             return View(checkoutViewModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> GetShippingCost(int supplierId)
         {
             _logger.LogDebug("GetShippingCost action method. Parameter: supplierId: {supplierId}", supplierId);

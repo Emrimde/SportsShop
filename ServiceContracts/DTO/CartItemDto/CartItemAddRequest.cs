@@ -11,6 +11,7 @@ namespace ServiceContracts.DTO.CartItemDto
         public int ProductId { get; set; }
         public int Price { get; set; }
         public string Type { get; set; } = default!;
+        public int CartId { get; set; } 
         
         public CartItem ToCartItem()
         {
@@ -20,6 +21,7 @@ namespace ServiceContracts.DTO.CartItemDto
                 ProductId = ProductId,
                 Price = Price,
                 Type = Type,
+                CartId = CartId
             };
         }
 

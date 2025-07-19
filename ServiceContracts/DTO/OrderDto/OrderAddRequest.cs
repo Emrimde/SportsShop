@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using ServiceContracts.DTO.CartItemDto;
+using System.ComponentModel.DataAnnotations;
 
 namespace ServiceContracts.DTO.OrderDto
 {
@@ -10,6 +11,7 @@ namespace ServiceContracts.DTO.OrderDto
         public decimal ShippingCost { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public int AddressId { get; set; }
+        [Required (ErrorMessage ="it's required!!")]
         public int SupplierId { get; set; }
         public Guid UserId { get; set; }
         public string? Coupon { get; set; } = "";
@@ -19,7 +21,7 @@ namespace ServiceContracts.DTO.OrderDto
         {
             return new Order()
             {
-                //CartItems = CartItems.Select(item => item.ToCartItem()).ToList(),
+                CartItems = CartItems.Select(item => item.ToCartItem()).ToList(),
                 TotalCost = TotalCost,
                 ShippingCost = ShippingCost,
                 OrderDate = OrderDate,

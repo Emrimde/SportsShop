@@ -23,9 +23,9 @@ namespace ServiceContracts.DTO.AddressDto
             {
                 UserId = userId,
                 CountryId = CountryId,
-                City = City,
-                Street = Street,
-                ZipCode = ZipCode,
+                City = City!,
+                Street = Street!,
+                ZipCode = ZipCode!,
             };
         }
 

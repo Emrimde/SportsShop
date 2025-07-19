@@ -19,11 +19,14 @@ namespace Repositories
             return _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
         }
 
-        public IQueryable<Cloth> GetAllClothes()
+        public async Task<IEnumerable<Cloth>> GetAllClothes()
         {
-           return _context.Clothes.Include(item => item.Product)
+            IEnumerable<Cloth> clothes = await _context.Clothes.AsNoTracking()
+                .Include(item => item.Product)
                 .Where(item => item.Product.IsActive)
-                .AsQueryable(); 
+                .ToListAsync();
+
+            return clothes;
         }
 
         public async Task<Cloth?> GetClothById(int id)

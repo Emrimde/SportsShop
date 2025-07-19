@@ -35,9 +35,10 @@ namespace Services
             return clothResponses;
         }
 
-        public List<ClothResponse> GetAllClothes()
+        public async Task<IEnumerable<ClothResponse>> GetAllClothes()
         {
-            return _clothRepository.GetAllClothes().Select(item => item.ToClothResponse()).ToList();
+            IEnumerable<Cloth> clothes = await _clothRepository.GetAllClothes();  
+            return clothes.Select(item => item.ToClothResponse());
         }
 
         public async Task<ClothResponse?> GetClothById(int id)

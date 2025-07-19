@@ -2,8 +2,7 @@
 using ServiceContracts.DTO.DrinkDto;
 using ServiceContracts.Interfaces.IDrink;
 
-namespace SportsShop.Controllers
-{
+namespace SportsShop.Controllers;
     public class DrinksController : Controller
     {
         private readonly IDrinkGetterService _drinkGetterService;
@@ -13,11 +12,11 @@ namespace SportsShop.Controllers
             _drinkGetterService = drinkGetterService;
             _logger = logger;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             _logger.LogDebug("Index action method. Displays all drinks");
+            IEnumerable<DrinkResponse> drinks = await _drinkGetterService.GetAllDrinks();
 
-            List<DrinkResponse> drinks = _drinkGetterService.GetAllDrinks();
             return View(drinks);
         }
         public async Task<IActionResult> ShowDrink(int id)
@@ -43,4 +42,4 @@ namespace SportsShop.Controllers
             return View("Index", drinks);
         }
     }
-}
+

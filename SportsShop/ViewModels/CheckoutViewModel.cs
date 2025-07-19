@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.DTO.CartItemDto;
-using ServiceContracts.DTO.SupplierDto;
 using System.ComponentModel.DataAnnotations;
 
 namespace SportsShop.ViewModels;
@@ -11,7 +10,7 @@ namespace SportsShop.ViewModels;
         public int? SupplierId { get; set; }
         public IEnumerable<CartItemResponse> CartItems { get; set; } = new List<CartItemResponse>();
         //public IEnumerable<SupplierResponse> Suppliers { get; set; } = new List<SupplierResponse>();
-        public List<SelectListItem> Supplierss { get; set; } 
+        public List<SelectListItem> Supplierss { get; set; } = new List<SelectListItem>();
         public IReadOnlyList<AddressResponse> Addresses { get; set; } = new List<AddressResponse>();
         public AddressAddRequest Address { get; set; } = new AddressAddRequest();
         public int? AddressId { get; set; }

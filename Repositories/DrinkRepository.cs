@@ -19,9 +19,14 @@ namespace Repositories
             return _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
         }
 
-        public IQueryable<Drink> GetAllDrinks()
+        public async Task<IEnumerable<Drink>> GetAllDrinks()
         {
-            return _context.Drinks.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
+            IEnumerable<Drink> drinks = await _context.Drinks.AsNoTracking()
+            .Include(item => item.Product)
+            .Where(item => item.Product.IsActive)
+            .ToListAsync();
+
+            return drinks;
         }
 
         public async Task<Drink?> GetDrinkById(int id)
