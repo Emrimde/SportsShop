@@ -29,6 +29,7 @@ namespace SportShopTests.AddressTests
         {
             // Arrange
             AddressUpdateRequest model = _fixture.Build<AddressUpdateRequest>().Create();
+            Guid guid = Guid.NewGuid();
             Address address = model.ToAddress();
             AddressResponse expectedResponse = address.ToAddressResponse();
 
@@ -37,7 +38,7 @@ namespace SportShopTests.AddressTests
                 .ReturnsAsync(address);
 
             // Act
-            AddressResponse result = await _addressUpdaterService.UpdateAddress(model);
+            AddressResponse? result = await _addressUpdaterService.UpdateAddress(model, guid);
 
             // Assert
             result.Should().BeEquivalentTo(expectedResponse);

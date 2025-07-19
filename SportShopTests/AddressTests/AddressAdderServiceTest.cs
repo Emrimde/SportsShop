@@ -12,16 +12,20 @@ namespace SportShopTests.AddressTests
     public class AddressAdderServiceTest
     {
         private readonly Mock<IAddressRepository> _addressRepositoryMock;
+        private readonly Mock<IAddressValidationService> _addressValidationServiceMock;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressAdderService _addressAdderService;
+        private readonly IAddressValidationService _addressValidationService;
         private readonly IFixture _fixture;
 
         public AddressAdderServiceTest()
         {
             _fixture = new Fixture();
             _addressRepositoryMock = new Mock<IAddressRepository>();
+            _addressValidationServiceMock = new Mock<IAddressValidationService>();
             _addressRepository = _addressRepositoryMock.Object;
-            _addressAdderService = new AddressAdderService(_addressRepository);
+            _addressValidationService = _addressValidationServiceMock.Object;
+            _addressAdderService = new AddressAdderService(_addressRepository, _addressValidationService);
         }
 
         #region AddAddress 
@@ -38,7 +42,7 @@ namespace SportShopTests.AddressTests
             _addressRepositoryMock.Setup(item => item.AddAddress(It.IsAny<Address>())).ReturnsAsync(address);
 
             //Act
-            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, userId.ToString());
+            AddressResponse? result = await _addressAdderService.AddAddress(addressAddRequest, userId);
             expected.Id = result!.Id;
 
             //Assert
@@ -52,7 +56,7 @@ namespace SportShopTests.AddressTests
             Guid userId = Guid.NewGuid();
             AddressAddRequest addressAddRequest = null!;
 
-            Func <Task> action = async () => await _addressAdderService.AddAddress(addressAddRequest, userId.ToString());
+            Func <Task> action = async () => await _addressAdderService.AddAddress(addressAddRequest, userId);
 
             //Assert
             await action.Should().ThrowAsync<ArgumentNullException>();
@@ -65,7 +69,7 @@ namespace SportShopTests.AddressTests
             Guid emptyUserId = Guid.Empty;
             AddressAddRequest addressAddRequest = _fixture.Create<AddressAddRequest>();
 
-            Func<Task> action = async () => await _addressAdderService.AddAddress(addressAddRequest, emptyUserId.ToString());
+            Func<Task> action = async () => await _addressAdderService.AddAddress(addressAddRequest, emptyUserId);
 
             //Assert
             await action.Should().ThrowAsync<ArgumentNullException>();

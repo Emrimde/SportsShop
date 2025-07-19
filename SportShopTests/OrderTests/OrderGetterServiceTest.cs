@@ -44,8 +44,8 @@ namespace SportShopTests.OrderTests
             };
             
             List<OrderResponse> expected = order.Select(item => item.ToOrderResponse()).ToList();
-            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<string>())).ReturnsAsync(order);
-            string goodUserId = "goodUserId";
+            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<Guid>())).ReturnsAsync(order);
+            Guid goodUserId = Guid.NewGuid();
 
             //Act
             IEnumerable<OrderResponse> result = await _orderGetterService.GetAllOrders(goodUserId);
@@ -58,11 +58,11 @@ namespace SportShopTests.OrderTests
         public async Task GetAllOrders_ShouldReturnEmpty()
         {
             //Arrange
-            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<string>())).ReturnsAsync(new List<Order>());
-            string goodUserId = "goodUserId";
+            _orderRepositoryMock.Setup(item => item.GetAllOrders(It.IsAny<Guid>())).ReturnsAsync(new List<Order>());
+            Guid guid = Guid.NewGuid();
 
             //Act
-            IEnumerable<OrderResponse> result = await _orderGetterService.GetAllOrders(goodUserId); 
+            IEnumerable<OrderResponse> result = await _orderGetterService.GetAllOrders(guid); 
 
             //Assert
             result.Should().BeEmpty();
