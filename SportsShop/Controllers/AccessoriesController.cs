@@ -8,7 +8,6 @@ using ServiceContracts.Interfaces.IGymnasticRing;
 using ServiceContracts.Interfaces.ITrainingRubber;
 using ServiceContracts.Interfaces.IWeightPlate;
 using SportsShop.ViewModels;
-
 namespace SportsShop.Controllers
 {
     public class AccessoriesController : Controller

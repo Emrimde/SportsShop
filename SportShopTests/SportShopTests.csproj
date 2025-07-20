@@ -22,9 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Entities\Entities.csproj" />
-    <ProjectReference Include="..\ServiceContracts\ServiceContracts.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\SportsShop.Core\SportsShop.Core.csproj" />
+    <ProjectReference Include="..\SportsShop.Infrastructure\SportsShop.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

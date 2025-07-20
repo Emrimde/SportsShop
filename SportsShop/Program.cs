@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Entities.DatabaseContext;
 using Entities.Models;
 using Services;
 using ServiceContracts.Interfaces.Account;
@@ -20,10 +19,10 @@ using ServiceContracts.Interfaces.IGymnasticRing;
 using ServiceContracts.Interfaces.ITrainingRubber;
 using RepositoryContracts;
 using Repositories;
-using Serilog;
 using ServiceContracts.Interfaces.ICountry;
 using ServiceContracts.Interfaces.IProduct;
 using SportsShop.Builders.ICheckoutBuilderService;
+using Entities.DatabaseContext;
 
 namespace SportsShop
 {
@@ -32,14 +31,6 @@ namespace SportsShop
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            builder.Host.UseSerilog((hostingContext, services, loggerConfiguration) =>
-            {
-                loggerConfiguration
-                    .ReadFrom.Configuration(hostingContext.Configuration)
-                    .ReadFrom.Services(services)
-                    .WriteTo.Console();
-            });
 
 
             builder.Services.AddDbContext<SportsShopDbContext>(options =>
