@@ -26,23 +26,23 @@ namespace SportShopTests.DrinkTests
         #region GetAllDrinks
 
         [Fact]
-        public async void GetAllDrinks_ReturnsEmptyList_ToBeSuccessfull()
+        public void GetAllDrinks_ReturnsEmptyList_ToBeSuccessfull()
         {
             //Arrange
-             _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).ReturnsAsync(new List<Drink>());
+             _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).Returns(new List<Drink>().AsQueryable());
 
             //Act
-            IEnumerable<DrinkResponse> result = await _drinkGetterService.GetAllDrinks();
+            List<DrinkResponse> result = _drinkGetterService.GetAllDrinks();
 
             //Assert
             result.Should().BeEmpty();
         }
 
         [Fact]
-        public async void GetAllDrinks_ShouldReturnAllDrinks()
+        public void GetAllDrinks_ShouldReturnAllDrinks()
         {
             //Arrange
-            IEnumerable<Drink> drinks = new List<Drink>() {
+            List<Drink> drinks = new List<Drink>() {
                 _fixture.Create<Drink>(),
                 _fixture.Create<Drink>(),
                 _fixture.Create<Drink>(),
@@ -50,10 +50,10 @@ namespace SportShopTests.DrinkTests
 
             List<DrinkResponse> expected = drinks.Select(item => item.ToDrinkResponse()).ToList();
 
-            _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).ReturnsAsync(drinks);
+            _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).Returns(drinks.AsQueryable());
 
             //Act
-            IEnumerable<DrinkResponse> result = await _drinkGetterService.GetAllDrinks();
+            List<DrinkResponse> result = _drinkGetterService.GetAllDrinks();
 
             //Assert
             result.Should().HaveCount(3);
@@ -61,16 +61,16 @@ namespace SportShopTests.DrinkTests
         }
 
         [Fact]
-        public async void GetAllDrinks_ReturnsExactlyOneDrink()
+        public void GetAllDrinks_ReturnsExactlyOneDrink()
         {
             //Arrange
             Drink drink = _fixture.Create<Drink>();
             DrinkResponse expected = drink.ToDrinkResponse();
 
-            _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).ReturnsAsync(new List<Drink>(){drink});
+            _drinkRepositoryMock.Setup(item => item.GetAllDrinks()).Returns(new List<Drink>() {drink}.AsQueryable());
 
             //Act
-            IEnumerable<DrinkResponse> result = await _drinkGetterService.GetAllDrinks();
+            List<DrinkResponse> result = _drinkGetterService.GetAllDrinks();
 
             //Assert
             result.Should().HaveCount(1);

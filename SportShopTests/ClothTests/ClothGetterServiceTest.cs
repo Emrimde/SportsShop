@@ -27,13 +27,13 @@ namespace SportShopTests.ClothTests
         #region GetAllClothes
 
         [Fact]
-        public async void GetAllClothes_ReturnsEmptyList_ToBeSuccessfull()
+        public void GetAllClothes_ReturnsEmptyList_ToBeSuccessfull()
         {
             //Arrange
-            _clothRepositoryMock.Setup(item => item.GetAllClothes()).ReturnsAsync(new List<Cloth>());
+            _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(new List<Cloth>().AsQueryable());
 
             //Act
-            IEnumerable<ClothResponse> clothes = await _clothGetterService.GetAllClothes();
+            List<ClothResponse> clothes =  _clothGetterService.GetAllClothes();
 
             //Assert
             clothes.Should().BeEmpty();
@@ -41,7 +41,7 @@ namespace SportShopTests.ClothTests
         }
 
         [Fact]
-        public async void GetAllClothes_ReturnAllClothes_ToBeSuccessfull()
+        public void GetAllClothes_ReturnAllClothes_ToBeSuccessfull()
         {
             //Arrange
             List<Cloth> clothes = new List<Cloth>()
@@ -53,10 +53,10 @@ namespace SportShopTests.ClothTests
 
             List<ClothResponse> expected = clothes.Select(item => item.ToClothResponse()).ToList();
 
-            _clothRepositoryMock.Setup(item => item.GetAllClothes()).ReturnsAsync(clothes);
+            _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(clothes.AsQueryable());
 
             //Act
-            IEnumerable<ClothResponse> result = await _clothGetterService.GetAllClothes();
+            List<ClothResponse> result =  _clothGetterService.GetAllClothes();
 
             //Assert
             result.Should().HaveCount(3);
@@ -64,16 +64,16 @@ namespace SportShopTests.ClothTests
         }
 
         [Fact]
-        public async void GetAllClothes_ReturnsExactlyOneRecord_ToBeSuccessfull()
+        public void GetAllClothes_ReturnsExactlyOneRecord_ToBeSuccessfull()
         {
             //Arrange
             Cloth cloth = _fixture.Build<Cloth>().Create();
             ClothResponse expected = cloth.ToClothResponse();
 
-            _clothRepositoryMock.Setup(item => item.GetAllClothes()).ReturnsAsync(new List<Cloth> { cloth });
+            _clothRepositoryMock.Setup(item => item.GetAllClothes()).Returns(new List<Cloth> { cloth }.AsQueryable());
 
             //Act
-            IEnumerable<ClothResponse> result = await _clothGetterService.GetAllClothes();
+            List<ClothResponse> result = _clothGetterService.GetAllClothes();
             
             //Assert
             result.Should().HaveCount(1);

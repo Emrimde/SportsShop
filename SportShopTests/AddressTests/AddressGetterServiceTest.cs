@@ -6,6 +6,7 @@ using RepositoryContracts;
 using ServiceContracts.DTO.AddressDto;
 using ServiceContracts.Interfaces.IAddress;
 using Services.IAddress;
+using System.Threading.Tasks;
 
 namespace SportShopTests.AddressTests
 {
@@ -34,7 +35,7 @@ namespace SportShopTests.AddressTests
             _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).ReturnsAsync(new List<Address>());
 
             //Act
-            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId);
+            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId.ToString());
 
             //Assert
             result.Should().BeEmpty();
@@ -58,7 +59,7 @@ namespace SportShopTests.AddressTests
             _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).ReturnsAsync(addresses);
 
             //Act
-            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId);
+            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId.ToString());
 
             //Assert
             result.Should().HaveCount(3);
@@ -76,7 +77,7 @@ namespace SportShopTests.AddressTests
             _addressRepositoryMock.Setup(item => item.GetAllAddresses(userId)).ReturnsAsync(new List<Address> { address });
 
             //Act
-            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId);
+            IReadOnlyList<AddressResponse> result = await _addressGetterService.GetAllAddresses(userId.ToString());
 
             //Assert
             result.Should().HaveCount(1);
@@ -97,7 +98,7 @@ namespace SportShopTests.AddressTests
             _addressRepositoryMock.Setup(item => item.GetAddressById(address.Id)).ReturnsAsync(address);
 
             //Act
-            AddressResponse? result = await _addressGetterService.GetAddressById(address.Id, address.UserId);
+            AddressResponse? result = await _addressGetterService.GetAddressById(address.Id);
 
             //Assert
             result.Should().NotBeNull();
@@ -109,11 +110,10 @@ namespace SportShopTests.AddressTests
         {
             //Arrange
             int missingId = 123456;
-            Guid guid = Guid.NewGuid();
 
             _addressRepositoryMock.Setup(item => item.GetAddressById(missingId)).ReturnsAsync(null as Address);
             // Act
-            AddressResponse? result = await _addressGetterService.GetAddressById(missingId, guid);
+            AddressResponse? result = await _addressGetterService.GetAddressById(missingId);
 
             //Assert
             result.Should().BeNull();
@@ -129,7 +129,7 @@ namespace SportShopTests.AddressTests
             _addressRepositoryMock.Setup(item => item.GetAddressById(address.Id)).ReturnsAsync(null as Address);
 
             //Act
-            AddressResponse? result = await _addressGetterService.GetAddressById(address.Id, address.UserId);
+            AddressResponse? result = await _addressGetterService.GetAddressById(address.Id);
 
             //Assert
             result.Should().BeNull();
