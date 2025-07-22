@@ -1,10 +1,8 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 
-namespace RepositoryContracts
+namespace SportsShop.Core.Domain.RepositoryContracts;
+public interface ICountryRepository
 {
-    public interface ICountryRepository
-    {
-        Task<IEnumerable<Country>> GetAllCountries();
-        Task<bool> CountryExists(int countryId);
-    }
+    Task<IEnumerable<Country>> GetAllCountries();
+    Task<bool> CountryExists(int countryId);
 }

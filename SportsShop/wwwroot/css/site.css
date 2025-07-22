@@ -3,7 +3,7 @@
 }
 
 .card {
-    padding: 1rem; /* Oko³o 16px, ale elastyczne */
+    padding: 1rem;
 }
 .company-icon{
     width:80px;
@@ -13,8 +13,6 @@
 .company-icon-big{
     height: 250px;
 }
-
-/*Styles for the select tag*/
 
 select {
     background-color: #f0f0f0; 
@@ -27,11 +25,10 @@ select {
     cursor: pointer;
 }
 
-  
-    select:hover, select:focus {
-        border-color: #999;
-        background-color: #e6e6e6; 
-    }
+select:hover, select:focus {
+    border-color: #999;
+    background-color: #e6e6e6; 
+}
 
 
 option {
@@ -40,21 +37,17 @@ option {
     font-size: 16px;
 }
 
-    
-    option:checked {
+option:checked {
         background-color: #ddd; 
         font-weight: bold;
-    }
+}
 
 /********************************************************************/
 
-
-
-
 .photo-height-small {
-    height: 400px; /* Wysokoœæ */
-    width: 100%; /* Szerokoœæ */
-    object-fit: cover; /* Dopasowanie */
+    height: 400px;
+    width: 100%; 
+    object-fit: cover;
 }
 
 .center-horizontally {
@@ -65,16 +58,14 @@ option {
 .full-image-1 {
     
     background-image: url('../images/braden-collum-9hi8ujmsdza-unsplash.jpg');
-    background-size: cover; /* Obrazek zajmuje pe³ny kontener */
-    background-position: center; /* Obrazek wyœrodkowany */
+    background-size: cover; 
+    background-position: center; 
 
    
 }
 .full-image-2 {
     background-image: url('../images/workout-6783020_1920.jpg');
-    background-size: cover; /* Obrazek zajmuje pe³ny kontener */
-    
-    
+    background-size: cover; 
 }
 
 /* Margines górny (margin-top) */
@@ -98,7 +89,6 @@ option {
     margin-top: 6rem !important; /* ~32px */
 }
 
-/* Margines poziomy (margin-left + margin-right) */
 .mh-1 {
     margin-left: 0.25rem !important;
     margin-right: 0.25rem !important;
@@ -124,7 +114,6 @@ option {
     margin-right: 2rem !important;
 }
 
-/* Margines pionowy (margin-top + margin-bottom) */
 .mv-1 {
     margin-top: 0.25rem !important;
     margin-bottom: 0.25rem !important;
@@ -150,7 +139,6 @@ option {
     margin-bottom: 2rem !important;
 }
 
-/* Padding */
 .p-1 {
     padding: 0.125rem !important; /* ~2px */
 }
@@ -171,7 +159,6 @@ option {
     padding: 2rem !important; /* ~32px */
 }
 
-
 html {
   font-size: 14px;
   margin:0;
@@ -188,24 +175,13 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-/*html {
-  position: relative;
-  min-height: 100%;
-}*/
-
 .footer {
     position: relative !important;
     bottom: 0 !important;
     width: 100% !important;
     line-height:1.2 !important;
     height:auto !important;
-    padding-top:20px;
-    padding-bottom:20px;
+/*    padding-top:20px;
+    padding-bottom:20px;*/
 }
 
-/*.main{
-    padding-bottom:60px !important;
-}*/
-/*body {
-    margin-bottom: 60px;
-}*/

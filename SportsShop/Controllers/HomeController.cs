@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using SportsShop.ViewModels;
+using SportsShop.UI.ViewModels;
 using System.Diagnostics;
 
-namespace SportsShop.Controllers;
-
+namespace SportsShop.UI.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

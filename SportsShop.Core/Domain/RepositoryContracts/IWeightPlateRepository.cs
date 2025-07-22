@@ -1,10 +1,8 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 
-namespace RepositoryContracts
+namespace SportsShop.Core.Domain.RepositoryContracts;
+public interface IWeightPlateRepository
 {
-    public interface IWeightPlateRepository
-    {
-        Task<IEnumerable<WeightPlate>> GetAllWeightPlates();
-        Task<WeightPlate?> GetWeightPlateById(int id);
-    }
+    Task<IEnumerable<WeightPlate>> GetAllWeightPlates();
+    Task<WeightPlate?> GetWeightPlateById(int id);
 }

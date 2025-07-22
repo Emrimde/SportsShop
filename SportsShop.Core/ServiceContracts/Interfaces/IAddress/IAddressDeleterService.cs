@@ -1,7 +1,5 @@
-﻿namespace ServiceContracts.Interfaces.IAddress
+﻿namespace SportsShop.Core.ServiceContracts.Interfaces.IAddress;
+public interface IAddressDeleterService
 {
-    public interface IAddressDeleterService
-    {
-        Task<bool> DeleteAddress(int id, Guid userId);  
-    }
+    Task<bool> DeleteAddress(int id, Guid userId);  
 }

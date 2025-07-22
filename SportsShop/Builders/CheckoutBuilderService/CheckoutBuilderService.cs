@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using ServiceContracts.DTO.AddressDto;
-using ServiceContracts.DTO.CartItemDto;
-using ServiceContracts.DTO.SupplierDto;
-using ServiceContracts.Interfaces.IAddress;
-using ServiceContracts.Interfaces.ICart;
-using ServiceContracts.Interfaces.ISupplier;
-using SportsShop.Builders.ICheckoutBuilderService;
-using SportsShop.ViewModels;
+using SportsShop.Core.ServiceContracts.DTO.AddressDto;
+using SportsShop.Core.ServiceContracts.DTO.CartItemDto;
+using SportsShop.Core.ServiceContracts.DTO.SupplierDto;
+using SportsShop.Core.ServiceContracts.Interfaces.IAddress;
+using SportsShop.Core.ServiceContracts.Interfaces.ICart;
+using SportsShop.Core.ServiceContracts.Interfaces.ISupplier;
+using SportsShop.UI.Builders.CheckoutBuilderService;
+using SportsShop.UI.ViewModels;
 
 public class CheckoutBuilderService : ICheckoutBuilderService
 {

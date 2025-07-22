@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using ServiceContracts.DTO.AddressDto;
-using ServiceContracts.DTO.CartItemDto;
+using SportsShop.Core.ServiceContracts.DTO.AddressDto;
+using SportsShop.Core.ServiceContracts.DTO.CartItemDto;
 using System.ComponentModel.DataAnnotations;
 
-namespace SportsShop.ViewModels;
+namespace SportsShop.UI.ViewModels;
     public class CheckoutViewModel
     {
         [Required (ErrorMessage = "Select supplier!")]

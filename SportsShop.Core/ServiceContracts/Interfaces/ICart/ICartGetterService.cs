@@ -1,13 +1,11 @@
-﻿using Entities.Models;
-using ServiceContracts.DTO.CartItemDto;
+﻿using SportsShop.Core.Domain.Models;
+using SportsShop.Core.ServiceContracts.DTO.CartItemDto;
 
-namespace ServiceContracts.Interfaces.ICart
+namespace SportsShop.Core.ServiceContracts.Interfaces.ICart;
+public interface ICartGetterService
 {
-    public interface ICartGetterService
-    {
-        Task<IReadOnlyList<CartItemResponse>> GetAllCartItems(int cartId);
-        Task<int> GetTotalCostOfAllCartItems(int cartId);
-        Task<Cart> GetCartByUserId(Guid userId);
-        Task<int> GetCartIdByUserId(Guid userId);
-    }
+    Task<IReadOnlyList<CartItemResponse>> GetAllCartItems(int cartId);
+    Task<int> GetTotalCostOfAllCartItems(int cartId);
+    Task<Cart> GetCartByUserId(Guid userId);
+    Task<int> GetCartIdByUserId(Guid userId);
 }

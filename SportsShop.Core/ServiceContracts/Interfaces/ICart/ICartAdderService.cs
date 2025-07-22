@@ -1,10 +1,8 @@
-﻿using ServiceContracts.DTO.CartItemDto;
-using ServiceContracts.Results;
+﻿using SportsShop.Core.ServiceContracts.DTO.CartItemDto;
+using SportsShop.Core.ServiceContracts.Results;
 
-namespace ServiceContracts.Interfaces.ICart
+namespace SportsShop.Core.ServiceContracts.Interfaces.ICart;
+public interface ICartAdderService
 {
-    public interface ICartAdderService
-    {
-        Task<CartItemResult> AddToCart(CartItemAddRequest cartItemAddRequest, Guid userId);
-    }
+    Task<CartItemResult> AddToCart(CartItemAddRequest cartItemAddRequest, Guid userId);
 }

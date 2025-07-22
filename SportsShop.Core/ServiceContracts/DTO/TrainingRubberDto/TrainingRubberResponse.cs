@@ -1,6 +1,6 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 
-namespace ServiceContracts.DTO.TrainingRubberDto
+namespace SportsShop.Core.ServiceContracts.DTO.TrainingRubberDto
 {
     public class TrainingRubberResponse
     {

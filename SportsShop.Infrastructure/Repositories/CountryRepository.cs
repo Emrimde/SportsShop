@@ -1,26 +1,24 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
-using Microsoft.EntityFrameworkCore;
-using RepositoryContracts;
+﻿using Microsoft.EntityFrameworkCore;
+using SportsShop.Core.Domain.Models;
+using SportsShop.Core.Domain.RepositoryContracts;
+using SportsShop.Infrastructure.DatabaseContext;
 
-namespace Repositories
+namespace SportsShop.Infrastructure.Repositories;
+public class CountryRepository : ICountryRepository
 {
-    public class CountryRepository : ICountryRepository
+    private readonly SportsShopDbContext _context;
+    public CountryRepository(SportsShopDbContext context)
     {
-        private readonly SportsShopDbContext _context;
-        public CountryRepository(SportsShopDbContext context)
-        {
-            _context = context;
-        }
+        _context = context;
+    }
 
-        public async Task<bool> CountryExists(int countryId)
-        {
-            return await _context.Countries.AnyAsync(item => item.Id == countryId);
-        }
+    public async Task<bool> CountryExists(int countryId)
+    {
+        return await _context.Countries.AnyAsync(item => item.Id == countryId);
+    }
 
-        public async Task<IEnumerable<Country>> GetAllCountries()
-        {
-            return await _context.Countries.AsNoTracking().ToListAsync();
-        }
+    public async Task<IEnumerable<Country>> GetAllCountries()
+    {
+        return await _context.Countries.AsNoTracking().ToListAsync();
     }
 }

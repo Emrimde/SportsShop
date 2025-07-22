@@ -1,33 +1,31 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace ServiceContracts.DTO.CartItemDto
+namespace SportsShop.Core.ServiceContracts.DTO.CartItemDto;
+public class CartItemAddRequest
 {
-    public class CartItemAddRequest
+    [Required]
+    [Range(1,4, ErrorMessage ="Wrong quantity number")]
+    public int Quantity { get; set; }
+    public int ProductId { get; set; }
+    public int Price { get; set; }
+    public string Type { get; set; } = default!;
+    public int CartId { get; set; } 
+    
+    public CartItem ToCartItem()
     {
-        [Required]
-        [Range(1,4, ErrorMessage =("Wrong quantity number"))]
-        public int Quantity { get; set; }
-        public int ProductId { get; set; }
-        public int Price { get; set; }
-        public string Type { get; set; } = default!;
-        public int CartId { get; set; } 
-        
-        public CartItem ToCartItem()
+        return new CartItem()
         {
-            return new CartItem()
-            {
-                Quantity = Quantity,
-                ProductId = ProductId,
-                Price = Price,
-                Type = Type,
-                CartId = CartId
-            };
-        }
+            Quantity = Quantity,
+            ProductId = ProductId,
+            Price = Price,
+            Type = Type,
+            CartId = CartId
+        };
+    }
 
-        public override string ToString()
-        {
-            return $"{{{nameof(Quantity)}={Quantity.ToString()}, {nameof(ProductId)}={ProductId.ToString()}, {nameof(Type)}={Type}}}";
-        }
+    public override string ToString()
+    {
+        return $"{{{nameof(Quantity)}={Quantity.ToString()}, {nameof(ProductId)}={ProductId.ToString()}, {nameof(Type)}={Type}}}";
     }
 }

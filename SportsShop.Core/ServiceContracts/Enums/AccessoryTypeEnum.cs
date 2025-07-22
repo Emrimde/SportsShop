@@ -1,9 +1,7 @@
-﻿namespace ServiceContracts.Enums
+﻿namespace SportsShop.Core.ServiceContracts.Enums;
+public enum AccessoryTypeEnum
 {
-    public enum AccessoryTypeEnum
-    {
-        GymnasticRing,
-        TrainingRubber,
-        WeightPlate
-    }
+    GymnasticRing,
+    TrainingRubber,
+    WeightPlate
 }

@@ -1,4 +1,5 @@
-﻿@model DrinkResponse
+﻿@using SportsShop.Core.ServiceContracts.DTO.DrinkDto
+@model DrinkResponse
 @{
     ViewBag.Title = "Drink details -" + Model.Name;
     string? returnUrl = ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString;

@@ -1,10 +1,8 @@
-﻿using ServiceContracts.DTO.GymnasticRingDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.GymnasticRingDto;
 
-namespace ServiceContracts.Interfaces.IGymnasticRing
+namespace SportsShop.Core.ServiceContracts.Interfaces.IGymnasticRing;
+public interface IGymnasticRingGetterService
 {
-    public interface IGymnasticRingGetterService
-    {
-        Task<IReadOnlyList<GymnasticRingResponse>> GetAllGymnasticRings();
-        Task<GymnasticRingResponse?> GetGymnasticRingById(int id);
-    }
+    Task<IReadOnlyList<GymnasticRingResponse>> GetAllGymnasticRings();
+    Task<GymnasticRingResponse?> GetGymnasticRingById(int id);
 }

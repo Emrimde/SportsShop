@@ -1,4 +1,4 @@
-﻿namespace ServiceContracts.Results;
+﻿namespace SportsShop.Core.ServiceContracts.Results;
     public class CartItemResult
     {
         public bool Success { get; set; }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.DTO.DrinkDto;
-using ServiceContracts.Interfaces.IDrink;
+using SportsShop.Core.ServiceContracts.DTO.DrinkDto;
+using SportsShop.Core.ServiceContracts.Interfaces.IDrink;
 
-namespace SportsShop.Controllers;
+namespace SportsShop.UI.Controllers;
     public class DrinksController : Controller
     {
         private readonly IDrinkGetterService _drinkGetterService;

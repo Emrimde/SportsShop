@@ -1,10 +1,8 @@
-﻿using ServiceContracts.Results;
+﻿using SportsShop.Core.ServiceContracts.Results;
 
-namespace ServiceContracts.Interfaces.ICart
+namespace SportsShop.Core.ServiceContracts.Interfaces.ICart;
+public interface ICartDeleterService
 {
-    public interface ICartDeleterService
-    {
-        Task<CartItemResult> RemoveFromCart(int productId, Guid userId);
-        Task ClearCart(Guid userId);
-    }
+    Task<CartItemResult> RemoveFromCart(int productId, Guid userId);
+    Task ClearCart(Guid userId);
 }

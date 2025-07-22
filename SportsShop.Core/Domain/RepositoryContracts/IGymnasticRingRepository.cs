@@ -1,10 +1,8 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 
-namespace RepositoryContracts
+namespace SportsShop.Core.Domain.RepositoryContracts;
+public interface IGymnasticRingRepository
 {
-    public interface IGymnasticRingRepository
-    {
-        Task<IEnumerable<GymnasticRing>> GetAllGymnasticRings();
-        Task<GymnasticRing?> GetGymnasticRingById(int id);
-    }
+    Task<IEnumerable<GymnasticRing>> GetAllGymnasticRings();
+    Task<GymnasticRing?> GetGymnasticRingById(int id);
 }

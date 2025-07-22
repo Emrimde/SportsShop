@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.DTO.ClothDto;
-using ServiceContracts.Interfaces.ICloth;
+using SportsShop.Core.ServiceContracts.DTO.ClothDto;
+using SportsShop.Core.ServiceContracts.Interfaces.ICloth;
 
-namespace SportsShop.Controllers;
+namespace SportsShop.UI.Controllers;
     public class ClothesController : Controller
     {
         private readonly IClothGetterService _clothGetterService;

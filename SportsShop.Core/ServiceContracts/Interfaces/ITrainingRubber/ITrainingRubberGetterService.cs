@@ -1,10 +1,8 @@
-﻿using ServiceContracts.DTO.TrainingRubberDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.TrainingRubberDto;
 
-namespace ServiceContracts.Interfaces.ITrainingRubber
+namespace SportsShop.Core.ServiceContracts.Interfaces.ITrainingRubber;
+public interface ITrainingRubberGetterService
 {
-    public interface ITrainingRubberGetterService
-    {
-        Task<IReadOnlyList<TrainingRubberResponse>> GetAllTrainingRubbers();
-        Task<TrainingRubberResponse?> GetTrainingRubberById(int id);
-    }
+    Task<IReadOnlyList<TrainingRubberResponse>> GetAllTrainingRubbers();
+    Task<TrainingRubberResponse?> GetTrainingRubberById(int id);
 }

@@ -1,10 +1,8 @@
-﻿using ServiceContracts.Results;
+﻿using SportsShop.Core.ServiceContracts.Results;
 
-namespace ServiceContracts.Interfaces.ICart
+namespace SportsShop.Core.ServiceContracts.Interfaces.ICart;
+public interface ICartUpdaterService
 {
-    public interface ICartUpdaterService
-    {
-        Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity);
-        Task<CartItemResult> UpdateQuantity(int cartItemId, int productId, int quantity, Guid userId);
-    }
+    Task UpdateCartItemQuantityIfInTheCart(int cartItemId, int quantity);
+    Task<CartItemResult> UpdateQuantity(int cartItemId, int productId, int quantity, Guid userId);
 }

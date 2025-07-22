@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Entities.Models
+namespace SportsShop.Core.Domain.Models;
+public class UserRole : IdentityRole<Guid>
 {
-    public class UserRole : IdentityRole<Guid>
-    {
-    }
 }

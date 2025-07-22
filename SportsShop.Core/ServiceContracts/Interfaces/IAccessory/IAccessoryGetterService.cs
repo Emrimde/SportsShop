@@ -1,7 +1,5 @@
-﻿namespace ServiceContracts.Interfaces.IAccessory
+﻿namespace SportsShop.Core.ServiceContracts.Interfaces.IAccessory;
+public interface IAccessoryGetterService
 {
-    public interface IAccessoryGetterService
-    {
-        Task<List<dynamic>> FilterAccessory(string type);
-    }
+    Task<List<dynamic>> FilterAccessory(string type);
 }

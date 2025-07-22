@@ -1,10 +1,8 @@
-﻿using ServiceContracts.DTO.SupplierDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.SupplierDto;
 
-namespace ServiceContracts.Interfaces.ISupplier
+namespace SportsShop.Core.ServiceContracts.Interfaces.ISupplier;
+public interface ISupplierGetterService
 {
-    public interface ISupplierGetterService
-    {
-        List<SupplierResponse> GetAllSuppliers();
-        Task<decimal> GetSupplierPriceById(int id);
-    }
+    List<SupplierResponse> GetAllSuppliers();
+    Task<decimal> GetSupplierPriceById(int id);
 }

@@ -1,28 +1,40 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Entities.Models;
-using Services;
-using ServiceContracts.Interfaces.Account;
-using Services.Accessory;
-using Services.Account;
-using ServiceContracts.Interfaces.IAccessory;
-using ServiceContracts.Interfaces.IDrink;
-using ServiceContracts.Interfaces.ISupplement;
-using ServiceContracts.Interfaces.ICloth;
-using ServiceContracts.Interfaces.IAddress;
-using Services.IAddress;
-using ServiceContracts.Interfaces.ICart;
-using ServiceContracts.Interfaces.ISupplier;
-using ServiceContracts.Interfaces.IOrder;
-using ServiceContracts.Interfaces.IWeightPlate;
-using ServiceContracts.Interfaces.IGymnasticRing;
-using ServiceContracts.Interfaces.ITrainingRubber;
 using RepositoryContracts;
-using Repositories;
-using ServiceContracts.Interfaces.ICountry;
-using ServiceContracts.Interfaces.IProduct;
-using SportsShop.Builders.ICheckoutBuilderService;
-using Entities.DatabaseContext;
+using SportsShop.Core.Domain.Models;
+using SportsShop.Core.Domain.RepositoryContracts;
+using SportsShop.Core.ServiceContracts.Interfaces.IAccessory;
+using SportsShop.Core.ServiceContracts.Interfaces.IAccount;
+using SportsShop.Core.ServiceContracts.Interfaces.IAddress;
+using SportsShop.Core.ServiceContracts.Interfaces.ICart;
+using SportsShop.Core.ServiceContracts.Interfaces.ICloth;
+using SportsShop.Core.ServiceContracts.Interfaces.ICountry;
+using SportsShop.Core.ServiceContracts.Interfaces.IDrink;
+using SportsShop.Core.ServiceContracts.Interfaces.IGymnasticRing;
+using SportsShop.Core.ServiceContracts.Interfaces.IOrder;
+using SportsShop.Core.ServiceContracts.Interfaces.IProduct;
+using SportsShop.Core.ServiceContracts.Interfaces.ISupplement;
+using SportsShop.Core.ServiceContracts.Interfaces.ISupplier;
+using SportsShop.Core.ServiceContracts.Interfaces.ITrainingRubber;
+using SportsShop.Core.ServiceContracts.Interfaces.IWeightPlate;
+using SportsShop.Core.Services.AddressServices;
+using SportsShop.Core.Services.CartServices;
+using SportsShop.Core.Services.ClothServices;
+using SportsShop.Core.Services.CountryServices;
+using SportsShop.Core.Services.DrinkServices;
+using SportsShop.Core.Services.GymnasticRingServices;
+using SportsShop.Core.Services.OrderServices;
+using SportsShop.Core.Services.ProductServices;
+using SportsShop.Core.Services.SupplementServices;
+using SportsShop.Core.Services.SupplierServices;
+using SportsShop.Core.Services.TrainingRubberServices;
+using SportsShop.Core.Services.WeightPlateServices;
+using SportsShop.Core.Services.AccessoryServices;
+using SportsShop.Core.Services.AccountServices;
+using SportsShop.Infrastructure.DatabaseContext;
+using SportsShop.Infrastructure.Repositories;
+using SportsShop.UI.Builders.CheckoutBuilderService;
+using SportsShop.Core.Services.AddressService;
 
 namespace SportsShop
 {
@@ -34,7 +46,7 @@ namespace SportsShop
 
 
             builder.Services.AddDbContext<SportsShopDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("Entities")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddControllersWithViews();
 

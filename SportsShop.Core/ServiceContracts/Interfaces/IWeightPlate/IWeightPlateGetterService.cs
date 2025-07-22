@@ -1,10 +1,8 @@
-﻿using ServiceContracts.DTO.WeightPlateDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.WeightPlateDto;
 
-namespace ServiceContracts.Interfaces.IWeightPlate
+namespace SportsShop.Core.ServiceContracts.Interfaces.IWeightPlate;
+public interface IWeightPlateGetterService
 {
-    public interface IWeightPlateGetterService
-    {
-        Task<IReadOnlyList<WeightPlateResponse>> GetAllWeightPlates();
-        Task<WeightPlateResponse?> GetWeightPlateById(int id);
-    }
+    Task<IReadOnlyList<WeightPlateResponse>> GetAllWeightPlates();
+    Task<WeightPlateResponse?> GetWeightPlateById(int id);
 }

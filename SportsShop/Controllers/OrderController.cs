@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceContracts.DTO.AddressDto;
-using ServiceContracts.DTO.OrderDto;
-using ServiceContracts.Interfaces.Account;
-using ServiceContracts.Interfaces.IOrder;
-using ServiceContracts.Results;
+using SportsShop.Core.ServiceContracts.DTO.AddressDto;
+using SportsShop.Core.ServiceContracts.DTO.OrderDto;
+using SportsShop.Core.ServiceContracts.Interfaces.IAccount;
+using SportsShop.Core.ServiceContracts.Interfaces.IOrder;
+using SportsShop.Core.ServiceContracts.Results;
 
-namespace SportsShop.Controllers;
+namespace SportsShop.UI.Controllers;
     public class OrderController : Controller
     {
         private readonly IAccountService _accountService;

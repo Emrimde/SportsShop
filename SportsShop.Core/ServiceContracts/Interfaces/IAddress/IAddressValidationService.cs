@@ -1,9 +1,7 @@
-﻿using ServiceContracts.DTO.AddressDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.AddressDto;
 
-namespace ServiceContracts.Interfaces.IAddress
+namespace SportsShop.Core.ServiceContracts.Interfaces.IAddress;
+public interface IAddressValidationService
 {
-    public interface IAddressValidationService
-    {
-        Task<bool> IsAddressValid(AddressAddRequest addressAddRequest);
-    }
+    Task<bool> IsAddressValid(AddressAddRequest addressAddRequest);
 }

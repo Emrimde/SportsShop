@@ -1,9 +1,7 @@
-﻿using ServiceContracts.DTO.OrderDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.OrderDto;
 
-namespace ServiceContracts.Interfaces.IOrder
+namespace SportsShop.Core.ServiceContracts.Interfaces.IOrder;
+public interface IOrderGetterService
 {
-    public interface IOrderGetterService
-    {
-        Task<IEnumerable<OrderResponse>> GetAllOrders(Guid userId);
-    }
+    Task<IEnumerable<OrderResponse>> GetAllOrders(Guid userId);
 }

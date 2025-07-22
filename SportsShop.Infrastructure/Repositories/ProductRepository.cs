@@ -1,9 +1,9 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
-using Microsoft.EntityFrameworkCore;
-using RepositoryContracts;
+﻿using Microsoft.EntityFrameworkCore;
+using SportsShop.Core.Domain.Models;
+using SportsShop.Core.Domain.RepositoryContracts;
+using SportsShop.Infrastructure.DatabaseContext;
 
-namespace Repositories;
+namespace SportsShop.Infrastructure.Repositories;
     public class ProductRepository : IProductRepository
     {
         private readonly SportsShopDbContext _context;

@@ -1,11 +1,9 @@
-﻿using ServiceContracts.DTO.ClothDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.ClothDto;
 
-namespace ServiceContracts.Interfaces.ICloth
+namespace SportsShop.Core.ServiceContracts.Interfaces.ICloth;
+public interface IClothGetterService
 {
-    public interface IClothGetterService
-    {
-        Task<IEnumerable<ClothResponse>> GetAllClothes();
-        Task<ClothResponse?> GetClothById(int id);
-        Task<List<ClothResponse>> FilterClothes(string size, string gender, string type);
-    }
+    Task<IEnumerable<ClothResponse>> GetAllClothes();
+    Task<ClothResponse?> GetClothById(int id);
+    Task<List<ClothResponse>> FilterClothes(string size, string gender, string type);
 }

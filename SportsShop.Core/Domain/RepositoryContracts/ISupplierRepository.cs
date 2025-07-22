@@ -1,9 +1,8 @@
-﻿using Entities.Models;
-namespace RepositoryContracts
+﻿using SportsShop.Core.Domain.Models;
+
+namespace SportsShop.Core.Domain.RepositoryContracts;
+public interface ISupplierRepository
 {
-    public interface ISupplierRepository
-    {
-        IQueryable<Supplier> GetAllSuppliers();
-        Task<decimal> GetSupplierPriceById(int id);
-    }
+    IQueryable<Supplier> GetAllSuppliers();
+    Task<decimal> GetSupplierPriceById(int id);
 }

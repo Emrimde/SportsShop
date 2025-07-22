@@ -1,10 +1,8 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 
-namespace RepositoryContracts
+namespace SportsShop.Core.Domain.RepositoryContracts;
+public interface ITrainingRubberRepository
 {
-    public interface ITrainingRubberRepository
-    {
-        Task<IEnumerable<TrainingRubber>> GetAllTrainingRubbers();
-        Task<TrainingRubber?> GetTrainingRubberById(int id);
-    }
+    Task<IEnumerable<TrainingRubber>> GetAllTrainingRubbers();
+    Task<TrainingRubber?> GetTrainingRubberById(int id);
 }

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SportsShop.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body style="background-color:#f0f0f2;">
     <header class="bg-black py-1" id="nav-1">
         <div class="container">
             <h5 class="text-center text-white">Maximalize your gains - GymSigma</h5>
@@ -75,48 +75,12 @@
         </div>
     </nav>
 
-
-
-    <div style="background-color:#f0f0f2;">
+    <div >
         @RenderBody()
     </div>
 
-
-    <footer class="bg-dark  footer text-muted py-4 ">
-        <div class="container">
-            <div class="row text-center text-md-start">
-                <div class="col-12 col-md-2 d-flex justify-content-center align-items-center mb-3 mb-md-0">
-                    <img class="img-thumbnail company-icon" src="~/images/gymsigma.png" />
-                </div>
-                <div class="col-6 col-md-2">
-                    <h5 class="fw-bold">Shopping</h5>
-                    <p>Delivery time and cost</p>
-                    <p>Payment methods</p>
-                </div>
-                <div class="col-6 col-md-2">
-                    <h5 class="fw-bold">Help</h5>
-                    <p>Customer Service</p>
-                    <p>Returns</p>
-                </div>
-                <div class="col-6 col-md-2">
-                    <h5 class="fw-bold">Information</h5>
-                    <p>Privacy Policy</p>
-                    <p>Terms of Service</p>
-                </div>
-                <div class="col-6 col-md-2">
-                    <h5 class="fw-bold">Follow us</h5>
-                    <p>Facebook</p>
-                    <p>Instagram</p>
-                </div>
-            </div>
-            <div class="text-center mt-3">
-                &copy; 2025 - SportsShop - <a class="text-light" asp-controller="Home" asp-action="Index">Home page</a>
-            </div>
-        </div>
+    <footer class="footer text-muted">
     </footer>
-
-
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,9 +1,7 @@
-﻿using ServiceContracts.DTO.AddressDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.AddressDto;
 
-namespace ServiceContracts.Interfaces.IAddress
+namespace SportsShop.Core.ServiceContracts.Interfaces.IAddress;
+public interface IAddressUpdaterService
 {
-    public interface IAddressUpdaterService
-    {
-        Task<AddressResponse?> UpdateAddress(AddressUpdateRequest model, Guid userId);
-    }
+    Task<AddressResponse?> UpdateAddress(AddressUpdateRequest model, Guid userId);
 }

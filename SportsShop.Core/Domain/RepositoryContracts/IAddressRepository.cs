@@ -1,14 +1,12 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 
-namespace RepositoryContracts
+namespace SportsShop.Core.Domain.RepositoryContracts;
+public interface IAddressRepository
 {
-    public interface IAddressRepository
-    {
-        Task<Address> AddAddress(Address model);
-        Task<bool> DeleteAddress(Address model);
-        Task<Address?> GetAddressById(int? id);
-        Task<IEnumerable<Address>> GetAllAddresses(Guid userId);
-        Task<int> GetAddressId(int id);
-        Task<Address?> UpdateAddress(Address model);
-    }
+    Task<Address> AddAddress(Address model);
+    Task<bool> DeleteAddress(Address model);
+    Task<Address?> GetAddressById(int? id);
+    Task<IEnumerable<Address>> GetAllAddresses(Guid userId);
+    Task<int> GetAddressId(int id);
+    Task<Address?> UpdateAddress(Address model);
 }

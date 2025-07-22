@@ -1,6 +1,6 @@
-﻿using Entities.Models;
+﻿using SportsShop.Core.Domain.Models;
 
-namespace ServiceContracts.DTO.WeightPlateDto
+namespace SportsShop.Core.ServiceContracts.DTO.WeightPlateDto
 {
     public class WeightPlateResponse
     {

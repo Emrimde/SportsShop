@@ -1,10 +1,8 @@
-﻿using ServiceContracts.DTO.CartItemDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.CartItemDto;
 
-namespace SportsShop.ViewModels
+namespace SportsShop.UI.ViewModels;
+public class CartViewModel
 {
-    public class CartViewModel
-    {
-        public IReadOnlyList<CartItemResponse> CartItems { get; set; } = new List<CartItemResponse>();
-        public int TotalCost { get; set; }
-    }
+    public IReadOnlyList<CartItemResponse> CartItems { get; set; } = new List<CartItemResponse>();
+    public int TotalCost { get; set; }
 }

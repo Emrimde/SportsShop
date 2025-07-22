@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServiceContracts.DTO.AccountDto;
+using SportsShop.Core.ServiceContracts.DTO.AccountDto;
 using System.Security.Claims;
 
-namespace ServiceContracts.Interfaces.Account
+namespace SportsShop.Core.ServiceContracts.Interfaces.IAccount;
+public interface IAccountService
 {
-    public interface IAccountService
-    {
-        Task<SignInResult> SignInAsync(SignInDto model);
-        Task<IdentityResult> RegisterAsync(RegisterDto model);
-        Guid GetUserId(ClaimsPrincipal user);
-    }
+    Task<SignInResult> SignInAsync(SignInDto model);
+    Task<IdentityResult> RegisterAsync(RegisterDto model);
+    Guid GetUserId(ClaimsPrincipal user);
 }

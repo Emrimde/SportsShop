@@ -1,37 +1,35 @@
-﻿using Entities.DatabaseContext;
-using Entities.Models;
-using Microsoft.EntityFrameworkCore;
-using RepositoryContracts;
+﻿using Microsoft.EntityFrameworkCore;
+using SportsShop.Core.Domain.Models;
+using SportsShop.Core.Domain.RepositoryContracts;
+using SportsShop.Infrastructure.DatabaseContext;
 
-namespace Repositories
+namespace SportsShop.Infrastructure.Repositories;
+public class ClothRepository : IClothRepository
 {
-    public class ClothRepository : IClothRepository
+    private readonly SportsShopDbContext _context;
+
+    public ClothRepository(SportsShopDbContext context)
     {
-        private readonly SportsShopDbContext _context;
+        _context = context;
+    }
 
-        public ClothRepository(SportsShopDbContext context)
-        {
-            _context = context;
-        }
+    public IQueryable<Cloth> FilterClothes(string size, string gender, string type)
+    {
+        return _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
+    }
 
-        public IQueryable<Cloth> FilterClothes(string size, string gender, string type)
-        {
-            return _context.Clothes.Include(item => item.Product).Where(item => item.Product.IsActive).AsQueryable();
-        }
+    public async Task<IEnumerable<Cloth>> GetAllClothes()
+    {
+        IEnumerable<Cloth> clothes = await _context.Clothes.AsNoTracking()
+            .Include(item => item.Product)
+            .Where(item => item.Product.IsActive)
+            .ToListAsync();
 
-        public async Task<IEnumerable<Cloth>> GetAllClothes()
-        {
-            IEnumerable<Cloth> clothes = await _context.Clothes.AsNoTracking()
-                .Include(item => item.Product)
-                .Where(item => item.Product.IsActive)
-                .ToListAsync();
+        return clothes;
+    }
 
-            return clothes;
-        }
-
-        public async Task<Cloth?> GetClothById(int id)
-        {
-            return await _context.Clothes.Include(item => item.Product).FirstOrDefaultAsync(item => item.Product.IsActive && item.ProductId == id);
-        }
+    public async Task<Cloth?> GetClothById(int id)
+    {
+        return await _context.Clothes.Include(item => item.Product).FirstOrDefaultAsync(item => item.Product.IsActive && item.ProductId == id);
     }
 }

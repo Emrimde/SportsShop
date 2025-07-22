@@ -1,9 +1,7 @@
-﻿using ServiceContracts.DTO.CountryDto;
+﻿using SportsShop.Core.ServiceContracts.DTO.CountryDto;
 
-namespace ServiceContracts.Interfaces.ICountry
+namespace SportsShop.Core.ServiceContracts.Interfaces.ICountry;
+public interface ICountryGetterService
 {
-    public interface ICountryGetterService
-    {
-        Task<IEnumerable<CountryResponse>> GetAllCountries();
-    }
+    Task<IEnumerable<CountryResponse>> GetAllCountries();
 }

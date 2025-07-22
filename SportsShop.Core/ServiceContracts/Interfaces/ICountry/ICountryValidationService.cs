@@ -1,7 +1,5 @@
-﻿namespace ServiceContracts.Interfaces.ICountry
+﻿namespace SportsShop.Core.ServiceContracts.Interfaces.ICountry;
+public interface ICountryValidationService
 {
-    public interface ICountryValidationService
-    {
-        Task<bool> IsCountryValid(int countryId);
-    }
+    Task<bool> IsCountryValid(int countryId);
 }
